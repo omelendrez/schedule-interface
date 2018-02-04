@@ -1,4 +1,4 @@
-# interface
+# schedule-interface
 
 > A Vue.js project
 
