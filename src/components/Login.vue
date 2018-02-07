@@ -30,34 +30,34 @@
 
 <script>
 export default {
-  name: 'Login',
-  data () {
+  name: "Login",
+  data() {
     return {
       form: {
-        user_name: '',
-        password: ''
+        user_name: "",
+        password: ""
       },
       show: true
-    }
+    };
   },
   methods: {
-    onSubmit (evt) {
-      evt.preventDefault()
-      alert(JSON.stringify(this.form))
+    onSubmit(evt) {
+      evt.preventDefault();
+      alert(JSON.stringify(this.form));
     },
-    onReset (evt) {
-      evt.preventDefault()
+    onReset(evt) {
+      evt.preventDefault();
       /* Reset our form values */
-      this.form.user_name = ''
-      this.form.password = ''
+      this.form.user_name = "";
+      this.form.password = "";
       /* Trick to reset/clear native browser form validation state */
-      this.show = false
+      this.show = false;
       this.$nextTick(() => {
-        this.show = true
-      })
+        this.show = true;
+      });
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -66,7 +66,7 @@ export default {
   top: 100px;
   margin: 0 auto;
   max-width: 400px;
-  background-color:#b2cecf;
+  background-color: #b2cecf;
 }
 #loginForm {
   padding: 10px;

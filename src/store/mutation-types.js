@@ -1,0 +1,2 @@
+export const LOAD_BRANCHES = 'LOAD_BRANCHES'
+export const SET_BRANCHES = 'SET_BRANCHES'

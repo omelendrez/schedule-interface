@@ -6,16 +6,17 @@
 
 <script>
 export default {
-  name: 'Home',
-  data () {
-    return {}
+  name: "Home",
+  data() {
+    return {};
   },
-  created () {
+  created() {
     if (!this.$root.$data.logged) {
-      this.$router.push({ name: 'Login' })
+      // root = main.js
+      this.$router.push({ name: "Branches" });
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
