@@ -14,8 +14,7 @@ new Vue({
   router,
   data () {
     return {
-      logged: false,
-      user_id: 0
+
     }
   },
   render: h => h(App)

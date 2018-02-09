@@ -21,14 +21,18 @@
         </b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Login</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
-
+      <b-button type="submit">Login</b-button>
+      <b-button type="reset">Reset</b-button>
     </b-form>
+    <b-alert variant="danger" :show="isLoginError">Credenciales incorrectas</b-alert>
+    <b-alert variant="success" :show="isLoginCorrect">Autorizado</b-alert>
   </b-card>
 </template>
 
 <script>
+import Store from "../store/store";
+import { setTimeout } from "timers";
+
 export default {
   name: "Login",
   data() {
@@ -37,13 +41,31 @@ export default {
         user_name: "",
         password: ""
       },
-      show: true
+      show: true,
+      isLoginError: false,
+      isLoginCorrect: false
     };
   },
   methods: {
     onSubmit(evt) {
+      this.isLoginError = false;
+      const self = this;
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
+      const payload = {
+        user_name: this.form.user_name,
+        password: this.form.password
+      };
+      Store.dispatch("LOGIN", payload);
+      setTimeout(() => {
+        if (Store.state.user.id) {
+          this.isLoginCorrect = true;
+          setTimeout(() => {
+            self.$router.push({ name: "Home" });
+          }, 800);
+        } else {
+          this.isLoginError = true;
+        }
+      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -56,6 +78,9 @@ export default {
         this.show = true;
       });
     }
+  },
+  created() {
+    Store.dispatch("LOGOUT_USER");
   }
 };
 </script>
@@ -66,7 +91,6 @@ export default {
   top: 100px;
   margin: 0 auto;
   max-width: 400px;
-  background-color: #b2cecf;
 }
 #loginForm {
   padding: 10px;

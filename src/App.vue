@@ -7,9 +7,11 @@
 <script>
 export default {
   name: "App"
-}
+};
 </script>
 
 <style>
-
+body {
+  background-color: lightgray;
+}
 </style>

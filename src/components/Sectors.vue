@@ -1,17 +1,17 @@
 <template>
-  <b-container class="branches">
+  <b-container class="sectors">
       <Header />
-      <h1>Locales</h1>
+      <h1>Sectores</h1>
       <div class="add-button">
         <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
       </div>
-      <b-table striped hover outlined :fields="fields" :items="branches.rows">
+      <b-table striped hover outlined :items="sectors.rows" :fields="fields">
         <template slot="acciones" slot-scope="cell">
           <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
           <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
         </template>
         <template slot="table-caption">
-        {{branches.count}} registros
+        {{sectors.count}} registros
         </template>
       </b-table>
   </b-container>
@@ -22,17 +22,13 @@ import Store from "../store/store";
 import Header from "./Header";
 
 export default {
-  name: "Branches",
+  name: "Sectors",
   data() {
     return {
       fields: [
         {
           key: "name",
           label: "Nombre"
-        },
-        {
-          key: "status.name",
-          label: "Status"
         },
         {
           key: "created_at",
@@ -49,35 +45,20 @@ export default {
   components: {
     Header
   },
-  methods: {
-    editItem(item) {
-      console.log("***item", item);
-    },
-    deleteItem(item) {
-      console.log("***item", item);
-    }
-  },
   computed: {
-    isLogged() {
-      return Store.state.user.id;
-    },
-    branches() {
-      return Store.state.branches;
+    sectors() {
+      return Store.state.sectors;
     }
   },
   created() {
-    if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
-    }
-    Store.dispatch("LOAD_BRANCHES");
+    Store.dispatch("LOAD_SECTORS");
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.branches {
+.sectors {
   background-color: white;
   padding-bottom: 60px;
 }

@@ -1,17 +1,17 @@
 <template>
-  <b-container class="branches">
+  <b-container class="users">
       <Header />
-      <h1>Locales</h1>
+      <h1>Usuarios</h1>
       <div class="add-button">
         <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
       </div>
-      <b-table striped hover outlined :fields="fields" :items="branches.rows">
+      <b-table striped hover outlined :items="users.rows" :fields="fields">
         <template slot="acciones" slot-scope="cell">
           <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
           <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
         </template>
         <template slot="table-caption">
-        {{branches.count}} registros
+        {{users.count}} registros
         </template>
       </b-table>
   </b-container>
@@ -22,13 +22,22 @@ import Store from "../store/store";
 import Header from "./Header";
 
 export default {
-  name: "Branches",
+  name: "Users",
   data() {
     return {
       fields: [
         {
-          key: "name",
+          key: "user_name",
+          label: "Usuario",
+          sortable: true
+        },
+        {
+          key: "full_name",
           label: "Nombre"
+        },
+        {
+          key: "profile.name",
+          label: "Perfil"
         },
         {
           key: "status.name",
@@ -49,35 +58,20 @@ export default {
   components: {
     Header
   },
-  methods: {
-    editItem(item) {
-      console.log("***item", item);
-    },
-    deleteItem(item) {
-      console.log("***item", item);
-    }
-  },
   computed: {
-    isLogged() {
-      return Store.state.user.id;
-    },
-    branches() {
-      return Store.state.branches;
+    users() {
+      return Store.state.users;
     }
   },
   created() {
-    if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
-    }
-    Store.dispatch("LOAD_BRANCHES");
+    Store.dispatch("LOAD_USERS");
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.branches {
+.users {
   background-color: white;
   padding-bottom: 60px;
 }

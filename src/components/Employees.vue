@@ -1,19 +1,19 @@
 <template>
-  <b-container class="branches">
+  <b-container class="employees">
       <Header />
-      <h1>Locales</h1>
+      <h1>Empleados</h1>
       <div class="add-button">
         <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
       </div>
-      <b-table striped hover outlined :fields="fields" :items="branches.rows">
+      <b-table striped hover outlined :items="employees.rows" :fields="fields">
         <template slot="acciones" slot-scope="cell">
           <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
           <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
         </template>
-        <template slot="table-caption">
-        {{branches.count}} registros
-        </template>
-      </b-table>
+      <template slot="table-caption">
+       {{employees.count}} registros
+    </template>
+    </b-table>
   </b-container>
 </template>
 
@@ -22,17 +22,38 @@ import Store from "../store/store";
 import Header from "./Header";
 
 export default {
-  name: "Branches",
+  name: "Employees",
   data() {
     return {
       fields: [
         {
-          key: "name",
+          key: "badge",
+          label: "Legajo",
+          sortable: true
+        },
+        {
+          key: "first_name",
           label: "Nombre"
         },
         {
-          key: "status.name",
-          label: "Status"
+          key: "last_name",
+          label: "Apellido"
+        },
+        {
+          key: "sector.name",
+          label: "Sector"
+        },
+        {
+          key: "position.name",
+          label: "Función"
+        },
+        {
+          key: "joining_date",
+          label: "Ingreso"
+        },
+        {
+          key: "branch.name",
+          label: "Local"
         },
         {
           key: "created_at",
@@ -49,35 +70,20 @@ export default {
   components: {
     Header
   },
-  methods: {
-    editItem(item) {
-      console.log("***item", item);
-    },
-    deleteItem(item) {
-      console.log("***item", item);
-    }
-  },
   computed: {
-    isLogged() {
-      return Store.state.user.id;
-    },
-    branches() {
-      return Store.state.branches;
+    employees() {
+      return Store.state.employees;
     }
   },
   created() {
-    if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
-    }
-    Store.dispatch("LOAD_BRANCHES");
+    Store.dispatch("LOAD_EMPLOYEES");
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.branches {
+.employees {
   background-color: white;
   padding-bottom: 60px;
 }
