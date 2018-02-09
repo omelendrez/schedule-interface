@@ -18,3 +18,6 @@ export const SET_EMPLOYEES = 'SET_EMPLOYEES'
 
 export const LOAD_USERS = 'LOAD_USERS'
 export const SET_USERS = 'SET_USERS'
+
+export const ADD_ITEM = 'ADD_ITEM'
+export const SET_RECORD = 'SET_RECORD'

@@ -3,11 +3,11 @@
       <Header />
       <h1>Locales</h1>
       <div class="add-button">
-        <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
+        <b-button @click="addItem" variant="primary">Agregar</b-button>
       </div>
       <b-table striped hover outlined :fields="fields" :items="branches.rows">
         <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Modificar</b-btn>
           <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
         </template>
         <template slot="table-caption">
@@ -50,8 +50,13 @@ export default {
     Header
   },
   methods: {
+    addItem() {
+      Store.dispatch("ADD_ITEM", { id: 0, name: "" });
+      this.$router.push({ name: "BranchAdd" });
+    },
     editItem(item) {
-      console.log("***item", item);
+      Store.dispatch("ADD_ITEM", item);
+      this.$router.push({ name: "BranchAdd" });
     },
     deleteItem(item) {
       console.log("***item", item);

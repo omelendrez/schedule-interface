@@ -1,5 +1,6 @@
 <template>
-  <b-card no-block id="addCard">
+  <b-container class="branch-add">
+      <Header />
     <h1>Local</h1>
   <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
   <b-form-group
@@ -14,14 +15,16 @@
   <b-form-input id="name" :state="state" v-model.trim="form.name"></b-form-input>
   </b-form-group>
 
-      <b-button type="submit">Guardar</b-button>
-      <b-button type="reset">Volver</b-button>
+      <b-button type="submit" variant="primary">Guardar</b-button>
+      <b-button type="reset" variant="info" class="to-right">Volver</b-button>
 
     </b-form>
-  </b-card>
+  </b-container>
 </template>
 
 <script>
+import Store from "../store/store";
+import Header from "./Header";
 export default {
   name: "BranchAdd",
   data() {
@@ -32,7 +35,13 @@ export default {
       }
     };
   },
+  components: {
+    Header
+  },
   computed: {
+    item() {
+      return Store.state.record;
+    },
     state() {
       return this.form.name.length >= 4;
     },
@@ -41,11 +50,11 @@ export default {
         return "";
       }
       if (this.form.name.length > 0) {
-        return "Ingrese al menos 4 letras";
+        return "Ingrese al menos 4 caracteres";
       }
     },
     validFeedback() {
-      return this.state ? "Correcto" : "";
+      return this.state ? "Válido" : "";
     }
   },
   methods: {
@@ -63,19 +72,25 @@ export default {
         this.$router.push({ name: "Branches" });
       });
     }
+  },
+  created() {
+    if (this.item) {
+      this.form.name = this.item.name;
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#addCard {
-  top: 100px;
-  margin: 0 auto;
-  max-width: 60%;
+.branch-add {
   background-color: white;
+  padding-bottom: 60px;
 }
-#addForm {
-  padding: 10px;
+input {
+  max-width: 40%;
+}
+.to-right {
+  float: right;
 }
 </style>

@@ -83,8 +83,15 @@ export default new Vuex.Store({
       commit(types.SET_USERS, {
         payload: users.data
       })
-    }
+    },
 
+    [types.ADD_ITEM]({
+      commit
+    }, item) {
+      commit(types.SET_RECORD, {
+        payload: item
+      })
+    }
   },
 
   mutations: {
@@ -126,6 +133,13 @@ export default new Vuex.Store({
       payload
     }) => {
       state.users = payload
+    },
+
+    [types.SET_RECORD]: (state, {
+      payload
+    }) => {
+      state.record = payload
     }
+
   }
 })
