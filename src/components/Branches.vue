@@ -20,6 +20,7 @@
 <script>
 import Store from "../store/store";
 import Header from "./Header";
+import { setTimeout } from "timers";
 
 export default {
   name: "Branches",
@@ -59,7 +60,10 @@ export default {
       this.$router.push({ name: "BranchAdd" });
     },
     deleteItem(item) {
-      console.log("***item", item);
+      Store.dispatch("DELETE_BRANCH", item);
+      setTimeout(() => {
+        Store.dispatch("LOAD_BRANCHES");
+      }, 500);
     }
   },
   computed: {

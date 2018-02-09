@@ -91,6 +91,18 @@ export default new Vuex.Store({
       commit(types.SET_RECORD, {
         payload: item
       })
+    },
+
+    [types.SAVE_BRANCH]({
+      commit
+    }, item) {
+      Branches.saveBranch(item)
+    },
+
+    [types.DELETE_BRANCH]({
+      commit
+    }, item) {
+      Branches.deleteBranch(item.id)
     }
   },
 
@@ -140,6 +152,5 @@ export default new Vuex.Store({
     }) => {
       state.record = payload
     }
-
   }
 })

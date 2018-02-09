@@ -21,3 +21,6 @@ export const SET_USERS = 'SET_USERS'
 
 export const ADD_ITEM = 'ADD_ITEM'
 export const SET_RECORD = 'SET_RECORD'
+
+export const SAVE_BRANCH = 'SAVE_BRANCH'
+export const DELETE_BRANCH = 'DELETE_BRANCH'

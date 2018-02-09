@@ -31,6 +31,7 @@ export default {
     return {
       form: {
         name: "",
+        id: 0,
         show: true
       }
     };
@@ -39,6 +40,9 @@ export default {
     Header
   },
   computed: {
+    isLogged() {
+      return Store.state.user.id;
+    },
     item() {
       return Store.state.record;
     },
@@ -60,7 +64,10 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
+      Store.dispatch("SAVE_BRANCH", this.form);
+      setTimeout(() => {
+        this.$router.push({ name: "Branches" });
+      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -74,8 +81,13 @@ export default {
     }
   },
   created() {
+    if (!this.isLogged) {
+      this.$router.push({ name: "Login" });
+      return;
+    }
     if (this.item) {
       this.form.name = this.item.name;
+      this.form.id = this.item.id;
     }
   }
 };
