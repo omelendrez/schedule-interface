@@ -1,19 +1,19 @@
 <template>
   <b-container class="positions">
-      <Header />
-      <h1>Funciones</h1>
-      <div class="add-button">
-        <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
-      </div>
-      <b-table striped hover outlined :items="positions.rows" :fields="fields">
-        <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-          <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
-        </template>
-        <template slot="table-caption">
+    <Header />
+    <h1>Funciones</h1>
+    <div class="add-button">
+      <b-button @click="addItem" variant="primary">Agregar</b-button>
+    </div>
+    <b-table striped hover outlined :items="positions.rows" :fields="fields">
+      <template slot="acciones" slot-scope="cell">
+        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+        <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
+      </template>
+      <template slot="table-caption">
         {{positions.count}} registros
-        </template>
-      </b-table>
+      </template>
+    </b-table>
   </b-container>
 </template>
 
@@ -22,7 +22,7 @@ import Store from "../store/store";
 import Header from "./Header";
 
 export default {
-  name: "Branches",
+  name: "Positions",
   data() {
     return {
       fields: [
@@ -49,12 +49,35 @@ export default {
   components: {
     Header
   },
+  methods: {
+    addItem() {
+      Store.dispatch("ADD_ITEM", { id: 0, name: "", sector_id: 0 });
+      this.$router.push({ name: "PositionAdd" });
+    },
+    editItem(item) {
+      Store.dispatch("ADD_ITEM", item);
+      this.$router.push({ name: "PositionAdd" });
+    },
+    deleteItem(item) {
+      Store.dispatch("DELETE_POSITION", item);
+      setTimeout(() => {
+        Store.dispatch("LOAD_POSITIONS");
+      }, 500);
+    }
+  },
   computed: {
+    isLogged() {
+      return Store.state.user.id;
+    },
     positions() {
       return Store.state.positions;
     }
   },
   created() {
+    if (!this.isLogged) {
+      this.$router.push({ name: "Login" });
+      return;
+    }
     Store.dispatch("LOAD_POSITIONS");
   }
 };

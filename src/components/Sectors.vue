@@ -1,19 +1,19 @@
 <template>
   <b-container class="sectors">
-      <Header />
-      <h1>Sectores</h1>
-      <div class="add-button">
-        <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
-      </div>
-      <b-table striped hover outlined :items="sectors.rows" :fields="fields">
-        <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-          <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
-        </template>
-        <template slot="table-caption">
+    <Header />
+    <h1>Sectores</h1>
+    <div class="add-button">
+      <b-button @click="addItem" variant="primary">Agregar</b-button>
+    </div>
+    <b-table striped hover outlined :items="sectors.rows" :fields="fields">
+      <template slot="acciones" slot-scope="cell">
+        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+        <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
+      </template>
+      <template slot="table-caption">
         {{sectors.count}} registros
-        </template>
-      </b-table>
+      </template>
+    </b-table>
   </b-container>
 </template>
 
@@ -45,12 +45,35 @@ export default {
   components: {
     Header
   },
+  methods: {
+    addItem() {
+      Store.dispatch("ADD_ITEM", { id: 0, name: "" });
+      this.$router.push({ name: "SectorAdd" });
+    },
+    editItem(item) {
+      Store.dispatch("ADD_ITEM", item);
+      this.$router.push({ name: "SectorAdd" });
+    },
+    deleteItem(item) {
+      Store.dispatch("DELETE_SECTOR", item);
+      setTimeout(() => {
+        Store.dispatch("LOAD_SECTORS");
+      }, 500);
+    }
+  },
   computed: {
+    isLogged() {
+      return Store.state.user.id;
+    },
     sectors() {
       return Store.state.sectors;
     }
   },
   created() {
+    if (!this.isLogged) {
+      this.$router.push({ name: "Login" });
+      return;
+    }
     Store.dispatch("LOAD_SECTORS");
   }
 };

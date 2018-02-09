@@ -1,19 +1,19 @@
 <template>
   <b-container class="users">
-      <Header />
-      <h1>Usuarios</h1>
-      <div class="add-button">
-        <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
-      </div>
-      <b-table striped hover outlined :items="users.rows" :fields="fields">
-        <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-          <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
-        </template>
-        <template slot="table-caption">
+    <Header />
+    <h1>Usuarios</h1>
+    <div class="add-button">
+      <b-button @click="addItem" variant="primary">Agregar</b-button>
+    </div>
+    <b-table striped hover outlined :items="users.rows" :fields="fields">
+      <template slot="acciones" slot-scope="cell">
+        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+        <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
+      </template>
+      <template slot="table-caption">
         {{users.count}} registros
-        </template>
-      </b-table>
+      </template>
+    </b-table>
   </b-container>
 </template>
 
@@ -58,12 +58,42 @@ export default {
   components: {
     Header
   },
+  methods: {
+    addItem() {
+      Store.dispatch("ADD_ITEM", {
+        id: 0,
+        user_name: "",
+        full_name: "",
+        profile_id: 0
+      });
+      this.$router.push({ name: "UserAdd" });
+    },
+    editItem(item) {
+      Store.dispatch("ADD_ITEM", item);
+      this.$router.push({ name: "UserAdd" });
+    },
+    deleteItem(item) {
+      Store.dispatch("DELETE_USER", item);
+      setTimeout(() => {
+        Store.dispatch("LOAD_USERS");
+      }, 500);
+    }
+  },
   computed: {
+    isLogged() {
+      return Store.state.user.id;
+    },
     users() {
       return Store.state.users;
     }
   },
   created() {
+    if (!this.isLogged) {
+      this.$router.push({ name: "Login" });
+      return;
+    }
+    Store.dispatch("LOAD_PROFILES");
+    Store.dispatch("LOAD_STATUS");
     Store.dispatch("LOAD_USERS");
   }
 };

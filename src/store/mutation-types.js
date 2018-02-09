@@ -13,6 +13,12 @@ export const SET_SECTORS = 'SET_SECTORS'
 export const LOAD_POSITIONS = 'LOAD_POSITIONS'
 export const SET_POSITIONS = 'SET_POSITIONS'
 
+export const LOAD_PROFILES = 'LOAD_PROFILES'
+export const SET_PROFILES = 'SET_PROFILES'
+
+export const LOAD_STATUS = 'LOAD_STATUS'
+export const SET_STATUS = 'SET_STATUS'
+
 export const LOAD_EMPLOYEES = 'LOAD_EMPLOYEES'
 export const SET_EMPLOYEES = 'SET_EMPLOYEES'
 
@@ -24,3 +30,12 @@ export const SET_RECORD = 'SET_RECORD'
 
 export const SAVE_BRANCH = 'SAVE_BRANCH'
 export const DELETE_BRANCH = 'DELETE_BRANCH'
+
+export const SAVE_SECTOR = 'SAVE_SECTOR'
+export const DELETE_SECTOR = 'DELETE_SECTOR'
+
+export const SAVE_POSITION = 'SAVE_POSITION'
+export const DELETE_POSITION = 'DELETE_POSITION'
+
+export const SAVE_USER = 'SAVE_USER'
+export const DELETE_USER = 'DELETE_USER'
