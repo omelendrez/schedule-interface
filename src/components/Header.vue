@@ -16,6 +16,11 @@
             <b-nav-item href="#/employees">Empleados</b-nav-item>
             <b-nav-item href="#/users">Usuarios</b-nav-item>
         </b-navbar-nav>
+        <b-navbar-nav>
+          <b-nav-item href="#/availability">Disponibilidad</b-nav-item>
+          <b-nav-item href="#/budgets">Presupuestos</b-nav-item>
+          <b-nav-item href="#/grid">Grilla</b-nav-item>
+        </b-navbar-nav>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
@@ -33,14 +38,6 @@
 
     </b-navbar>
 
-    <!-- navbar-1.vue -->
-    <div v-if="isLogged">
-      <b-nav pills>
-        <b-nav-item href="#/availability">Disponibilidad</b-nav-item>
-        <b-nav-item href="#/budgets">Presupuestos</b-nav-item>
-        <b-nav-item href="#/grid">Grilla</b-nav-item>
-      </b-nav>
-    </div>
   </div>
 
 </template>

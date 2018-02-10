@@ -1,19 +1,19 @@
 <template>
-  <b-container class="sectors">
-      <Header />
-      <h1>Sectores</h1>
-      <div class="add-button">
-        <b-button href="#/branch_add" size="sm" variant="primary">Agregar</b-button>
-      </div>
-      <b-table striped hover outlined :items="sectors.rows" :fields="fields">
-        <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-          <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
-        </template>
-        <template slot="table-caption">
+  <b-container class="sectors" fluid>
+    <Header />
+    <h1>Sectores</h1>
+    <div class="add-button">
+      <b-button @click="addItem" variant="info">Agregar</b-button>
+    </div>
+      <b-table hover outlined :items="sectors.rows" :fields="fields" head-variant="light">
+      <template slot="acciones" slot-scope="cell">
+        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+        <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
+      </template>
+      <template slot="table-caption">
         {{sectors.count}} registros
-        </template>
-      </b-table>
+      </template>
+    </b-table>
   </b-container>
 </template>
 
@@ -28,29 +28,58 @@ export default {
       fields: [
         {
           key: "name",
-          label: "Nombre"
+          label: "Nombre",
+          sortable: true
         },
         {
           key: "created_at",
-          label: "Creado"
+          label: "Creado",
+          class: "text-center"
         },
         {
           key: "updated_at",
-          label: "Modificado"
+          label: "Modificado",
+          class: "text-center"
         },
-        "acciones"
+        {
+          key: "acciones",
+          class: "text-center"
+        }
       ]
     };
   },
   components: {
     Header
   },
+  methods: {
+    addItem() {
+      Store.dispatch("ADD_ITEM", { id: 0, name: "" });
+      this.$router.push({ name: "Sector" });
+    },
+    editItem(item) {
+      Store.dispatch("ADD_ITEM", item);
+      this.$router.push({ name: "Sector" });
+    },
+    deleteItem(item) {
+      Store.dispatch("DELETE_SECTOR", item);
+      setTimeout(() => {
+        Store.dispatch("LOAD_SECTORS");
+      }, 500);
+    }
+  },
   computed: {
+    isLogged() {
+      return Store.state.user.id;
+    },
     sectors() {
       return Store.state.sectors;
     }
   },
   created() {
+    if (!this.isLogged) {
+      this.$router.push({ name: "Login" });
+      return;
+    }
     Store.dispatch("LOAD_SECTORS");
   }
 };
@@ -60,7 +89,7 @@ export default {
 <style scoped>
 .sectors {
   background-color: white;
-  padding-bottom: 60px;
+  padding-bottom: 10px;
 }
 .add-button {
   margin: 20px;

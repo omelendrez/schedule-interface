@@ -1,63 +1,99 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from '@/components/Home'
-import Login from '@/components/Login'
-import Header from '@/components/Header'
-import Branches from '@/components/Branches'
-import BranchAdd from '@/components/BranchAdd'
-import Sectors from '@/components/Sectors'
-import Positions from '@/components/Positions'
-import Employees from '@/components/Employees'
-import Users from '@/components/Users'
+import Vue from "vue";
+import Router from "vue-router";
+import Home from "@/components/Home";
+import Login from "@/components/Login";
+import Header from "@/components/Header";
+import Availability from "@/components/Availability";
+import AvailabilityEdit from "@/components/AvailabilityEdit";
+import Branches from "@/components/Branches";
+import Branch from "@/components/Branch";
+import Sectors from "@/components/Sectors";
+import Sector from "@/components/Sector";
+import Positions from "@/components/Positions";
+import Position from "@/components/Position";
+import Employees from "@/components/Employees";
+import Employee from "@/components/Employee";
+import Users from "@/components/Users";
+import User from "@/components/User";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Home',
+      path: "/",
+      name: "Home",
       component: Home
     },
     {
-      path: '/login',
-      name: 'Login',
+      path: "/login",
+      name: "Login",
       component: Login
     },
     {
-      path: '/header',
-      name: 'Header',
+      path: "/header",
+      name: "Header",
       component: Header
     },
     {
-      path: '/branches',
-      name: 'Branches',
+      path: "/availability",
+      name: "Availability",
+      component: Availability
+    },
+    {
+      path: "/availability_edit",
+      name: "AvailabilityEdit",
+      component: AvailabilityEdit
+    },
+    {
+      path: "/branches",
+      name: "Branches",
       component: Branches
     },
     {
-      path: '/branch_add',
-      name: 'BranchAdd',
-      component: BranchAdd
+      path: "/branch",
+      name: "Branch",
+      component: Branch
     },
     {
-      path: '/sectors',
-      name: 'Sectors',
+      path: "/sectors",
+      name: "Sectors",
       component: Sectors
     },
     {
-      path: '/positions',
-      name: 'Positions',
+      path: "/sector",
+      name: "Sector",
+      component: Sector
+    },
+    {
+      path: "/positions",
+      name: "Positions",
       component: Positions
     },
     {
-      path: '/employees',
-      name: 'Employees',
+      path: "/position",
+      name: "Position",
+      component: Position
+    },
+    {
+      path: "/employees",
+      name: "Employees",
       component: Employees
     },
     {
-      path: '/users',
-      name: 'Users',
+      path: "/employee",
+      name: "Employee",
+      component: Employee
+    },
+    {
+      path: "/users",
+      name: "Users",
       component: Users
+    },
+    {
+      path: "/user",
+      name: "User",
+      component: User
     }
   ]
-})
+});

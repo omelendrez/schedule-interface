@@ -1,6 +1,5 @@
 <template>
-  <b-container class="branch-add">
-      <Header />
+  <b-container class="branch">
     <h1>Local</h1>
   <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
   <b-form-group
@@ -15,8 +14,8 @@
   <b-form-input id="name" :state="state" v-model.trim="form.name"></b-form-input>
   </b-form-group>
 
-      <b-button type="submit" variant="primary">Guardar</b-button>
-      <b-button type="reset" variant="info" class="to-right">Volver</b-button>
+      <b-button type="submit" variant="info">Guardar</b-button>
+      <b-button type="reset" class="to-right">Volver</b-button>
 
     </b-form>
   </b-container>
@@ -24,21 +23,22 @@
 
 <script>
 import Store from "../store/store";
-import Header from "./Header";
+
 export default {
-  name: "BranchAdd",
+  name: "Branch",
   data() {
     return {
       form: {
         name: "",
+        id: 0,
         show: true
       }
     };
   },
-  components: {
-    Header
-  },
   computed: {
+    isLogged() {
+      return Store.state.user.id;
+    },
     item() {
       return Store.state.record;
     },
@@ -60,12 +60,13 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
+      Store.dispatch("SAVE_BRANCH", this.form);
+      setTimeout(() => {
+        this.$router.push({ name: "Branches" });
+      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
-      /* Reset our form values */
-      this.form.name = "";
       /* Trick to reset/clear native browser form validation state */
       this.form.show = false;
       this.$nextTick(() => {
@@ -74,8 +75,13 @@ export default {
     }
   },
   created() {
+    if (!this.isLogged) {
+      this.$router.push({ name: "Login" });
+      return;
+    }
     if (this.item) {
       this.form.name = this.item.name;
+      this.form.id = this.item.id;
     }
   }
 };
@@ -83,9 +89,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.branch-add {
+.branch {
   background-color: white;
-  padding-bottom: 60px;
+  padding: 60px;
 }
 input {
   max-width: 40%;
