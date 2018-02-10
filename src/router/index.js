@@ -7,6 +7,8 @@ import Availability from "@/components/Availability";
 import AvailabilityEdit from "@/components/AvailabilityEdit";
 import Branches from "@/components/Branches";
 import Branch from "@/components/Branch";
+import Budgets from "@/components/Budgets";
+import Budget from "@/components/Budget";
 import Sectors from "@/components/Sectors";
 import Sector from "@/components/Sector";
 import Positions from "@/components/Positions";
@@ -54,6 +56,16 @@ export default new Router({
       path: "/branch",
       name: "Branch",
       component: Branch
+    },
+    {
+      path: "/budgets",
+      name: "Budgets",
+      component: Budgets
+    },
+    {
+      path: "/budget",
+      name: "Budget",
+      component: Budget
     },
     {
       path: "/sectors",

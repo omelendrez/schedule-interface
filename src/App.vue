@@ -12,6 +12,7 @@ export default {
 
 <style>
 body {
+  font-family: Roboto, "Open Sans", sans-serif;
   background-color: #eaeaea;
 }
 </style>

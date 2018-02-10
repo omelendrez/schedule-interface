@@ -2,9 +2,18 @@
   <b-container class="users" fluid>
     <Header />
     <h1>Usuarios</h1>
+
     <div class="add-button">
       <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
+
+    <b-form-group class="filter-form">
+      <b-input-group>
+        <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
+        <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
+      </b-input-group>
+    </b-form-group>
+
     <b-table hover outlined :items="users.rows" :fields="fields" head-variant="light">
       <template slot="acciones" slot-scope="cell" v-if="cell.item.user_name!=='omar.melendrez'">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
@@ -15,6 +24,9 @@
         {{users.count}} registros
       </template>
     </b-table>
+
+    <b-pagination :total-rows="users.count" :per-page="perPage" v-model="currentPage" />
+
     <b-modal id="modal-center" title="Inactivar Usuario" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea inactivar al usuario <strong>{{ selectedItem.user_name }} ({{ selectedItem.full_name }})</strong>?</p>
     </b-modal>
@@ -30,6 +42,9 @@ export default {
   name: "Users",
   data() {
     return {
+      perPage: 10,
+      currentPage: 1,
+      filter: null,
       show: false,
       selectedItem: {
         user_name: "",
@@ -134,5 +149,11 @@ export default {
 .add-button {
   margin: 20px;
   float: right;
+}
+.filter-form {
+  max-width: 30%;
+}
+.reset-button {
+  margin-left: 10px;
 }
 </style>

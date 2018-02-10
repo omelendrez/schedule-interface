@@ -1,18 +1,30 @@
 <template>
   <b-container class="availability" fluid>
-      <Header />
-      <h1>Disponibilidad horaria del personal</h1>
-      <div class="add-button">
-        <b-button @click="addItem" variant="info">Agregar</b-button>
-      </div>
-      <b-table hover outlined :items="availability.rows" :fields="fields" head-variant="light">
-        <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-        </template>
-        <template slot="table-caption">
-        {{availability.count}} registros
-        </template>
-      </b-table>
+    <Header />
+    <h1>Disponibilidad horaria del personal</h1>
+
+    <b-form-group class="filter-form">
+      <b-input-group>
+        <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
+        <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
+      </b-input-group>
+    </b-form-group>
+
+    <div class="add-button">
+      <b-button @click="addItem" variant="info">Agregar</b-button>
+    </div>
+
+    <b-table hover outlined :items="availability.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+      <template slot="acciones" slot-scope="cell">
+        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+      </template>
+      <template slot="table-caption">
+      {{availability.count}} registros
+      </template>
+    </b-table>
+
+    <b-pagination :total-rows="availability.count" :per-page="perPage" v-model="currentPage" />
+
   </b-container>
 </template>
 
@@ -24,6 +36,9 @@ export default {
   name: "Availability",
   data() {
     return {
+      perPage: 10,
+      currentPage: 1,
+      filter: null,
       fields: [
         {
           key: "employee.badge",
@@ -151,5 +166,11 @@ export default {
 .add-button {
   margin: 20px;
   float: right;
+}
+.filter-form {
+  max-width: 30%;
+}
+.reset-button {
+  margin-left: 10px;
 }
 </style>

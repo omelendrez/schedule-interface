@@ -1,28 +1,28 @@
 <template>
   <b-container class="user">
     <h1>Usuario</h1>
+
     <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
 
-      <b-form-group id="profile_id" description="Seleccione un perfil." label="Perfil" label-for="profile_id">
+      <b-form-group horizontal id="user_name" label="Nombre de usuario" label-for="user_name">
+        <b-form-input id="user_name" v-model.trim="form.user_name"></b-form-input>
+      </b-form-group>
+
+      <b-form-group horizontal id="full_name" label="Nombre completo" label-for="full_name">
+        <b-form-input id="full_name" v-model.trim="form.full_name"></b-form-input>
+      </b-form-group>
+
+      <b-form-group horizontal id="profile_id" label="Perfil" label-for="profile_id">
         <b-form-select v-model="form.profile_id" :options="profiles" class="mb-3" />
       </b-form-group>
 
-      <b-form-group id="user_name" description="Ingrese el nombre de usuario." label="Nombre de usuario" label-for="user_name" :invalid-feedback="invalidFeedback" :valid-feedback="validFeedback" :state="state">
-        <b-form-input id="user_name" :state="state" v-model.trim="form.user_name"></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="full_name" description="Ingrese el nombre de usuario." label="Nombre completo" label-for="full_name">
-        <b-form-input id="full_name" :state="state" v-model.trim="form.full_name"></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="status_id" description="Seleccione un status." label="Status" label-for="status_id">
-        <b-form-select v-model="form.status_id" :options="status" class="mb-3" />
-      </b-form-group>
-
-      <b-button type="submit" variant="info">Guardar</b-button>
-      <b-button type="reset" class="to-right">Volver</b-button>
+      <div class="buttons">
+        <b-button type="submit" variant="info">Guardar</b-button>
+        <b-button type="reset" class="to-right">Volver</b-button>
+      </div>
 
     </b-form>
+
   </b-container>
 </template>
 
@@ -53,17 +53,6 @@ export default {
         options.push({
           value: profiles[i].id,
           text: profiles[i].name
-        });
-      }
-      return options;
-    },
-    status() {
-      const status = Store.state.status.rows;
-      const options = [];
-      for (let i = 0; i < status.length; i++) {
-        options.push({
-          value: status[i].id,
-          text: status[i].name
         });
       }
       return options;
@@ -116,8 +105,7 @@ export default {
       this.form.id = this.item.id;
       this.form.user_name = this.item.user_name;
       this.form.full_name = this.item.full_name;
-      this.form.profile_id = this.item.profile_id;
-      this.form.status_id = this.item.status_id;
+      this.form.profile_id = this.item.profile_id
     }
   }
 };
@@ -129,11 +117,15 @@ export default {
   background-color: white;
   padding: 60px;
 }
-input,
-select {
-  max-width: 40%;
+#addForm {
+  margin: 0 auto;
+  max-width: 800px;
+  padding-top: 40px;
 }
 .to-right {
   float: right;
+}
+.buttons {
+  margin: 0 auto;
 }
 </style>
