@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import Avaliability from "./../services/availability";
 import Branches from "./../services/branches";
+import Budgets from "./../services/budgets";
 import Sectors from "./../services/sectors";
 import Positions from "./../services/positions";
 import Profiles from "./../services/profiles";
@@ -17,6 +18,7 @@ Vue.use(Vuex);
 const state = {
   availability: [],
   branches: [],
+  budgets: [],
   sectors: [],
   positions: [],
   profiles: [],
@@ -98,6 +100,13 @@ export default new Vuex.Store({
       });
     },
 
+    async [types.LOAD_BUDGETS]({ commit }) {
+      const budgets = await Budgets.fetchBudgets();
+      commit(types.SET_BUDGETS, {
+        payload: budgets.data
+      });
+    },
+
     [types.ADD_ITEM]({ commit }, item) {
       commit(types.SET_RECORD, {
         payload: item
@@ -146,8 +155,15 @@ export default new Vuex.Store({
 
     [types.SAVE_AVAILABILITY]({ commit }, item) {
       Avaliability.saveAvailability(item);
-    }
+    },
 
+    [types.SAVE_BUDGET]({ commit }, item) {
+      Budgets.saveBudget(item);
+    },
+
+    [types.DELETE_BUDGET]({ commit }, item) {
+      Budgets.deleteBudget(item.id);
+    }
   },
 
   mutations: {
@@ -193,6 +209,11 @@ export default new Vuex.Store({
 
     [types.SET_AVAILABILITY]: (state, { payload }) => {
       state.availability = payload;
+    },
+
+    [types.SET_BUDGETS]: (state, { payload }) => {
+      state.budgets = payload;
     }
+
   }
 });
