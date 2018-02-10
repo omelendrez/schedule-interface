@@ -1,7 +1,7 @@
 <template>
-  <b-container class="home">
+  <b-container class="home" fluid>
     <Header />
-    <b-jumbotron header="Turnos" lead="Administrador de programación de turnos" >
+    <b-jumbotron header="Turnos" lead="Administrador de programación de turnos"  bg-variant="info" text-variant="white" border-variant="dark">
     </b-jumbotron>
   </b-container>
 </template>
@@ -33,8 +33,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.home {
-  background-color: white;
-  padding-bottom: 60px;
-}
 </style>

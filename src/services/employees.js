@@ -1,7 +1,7 @@
 import HTTP from '../components/http-common'
 
 export default {
-  fetchEmployees () {
+  fetchEmployees() {
     return HTTP.get('employee')
   },
   saveEmployee(payload) {

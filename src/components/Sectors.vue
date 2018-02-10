@@ -1,11 +1,11 @@
 <template>
-  <b-container class="sectors">
+  <b-container class="sectors" fluid>
     <Header />
     <h1>Sectores</h1>
     <div class="add-button">
       <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
-    <b-table striped hover outlined :items="sectors.rows" :fields="fields">
+      <b-table hover outlined :items="sectors.rows" :fields="fields" head-variant="light">
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
@@ -28,7 +28,8 @@ export default {
       fields: [
         {
           key: "name",
-          label: "Nombre"
+          label: "Nombre",
+          sortable: true
         },
         {
           key: "created_at",
@@ -88,7 +89,7 @@ export default {
 <style scoped>
 .sectors {
   background-color: white;
-  padding-bottom: 60px;
+  padding-bottom: 10px;
 }
 .add-button {
   margin: 20px;

@@ -97,7 +97,7 @@ export default {
 <style scoped>
 .position {
   background-color: white;
-  padding-bottom: 60px;
+  padding-bottom: 10px;
 }
 #addForm {
   margin: 0 auto;

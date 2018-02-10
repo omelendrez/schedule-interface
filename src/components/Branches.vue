@@ -1,11 +1,11 @@
 <template>
-  <b-container class="branches">
+  <b-container class="branches" fluid>
       <Header />
       <h1>Locales</h1>
       <div class="add-button">
         <b-button @click="addItem" variant="info">Agregar</b-button>
       </div>
-      <b-table striped hover outlined :fields="fields" :items="branches.rows">
+      <b-table hover outlined :items="branches.rows" :fields="fields" head-variant="light">
         <template slot="acciones" slot-scope="cell">
           <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
           <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item)">Inactivar</b-btn>
@@ -30,7 +30,8 @@ export default {
       fields: [
         {
           key: "name",
-          label: "Nombre"
+          label: "Nombre",
+          sortable: true
         },
         {
           key: "status.name",
@@ -95,7 +96,7 @@ export default {
 <style scoped>
 .branches {
   background-color: white;
-  padding-bottom: 60px;
+  padding-bottom: 10px;
 }
 .add-button {
   margin: 20px;

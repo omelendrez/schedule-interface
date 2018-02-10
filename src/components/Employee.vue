@@ -27,11 +27,11 @@
     </b-form-group>
 
     <b-form-group horizontal id="sector_id" label="Sector" label-for="sector_id">
-      <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" />
+      <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" @change="updateChild" />
     </b-form-group>
 
     <b-form-group horizontal id="position_id" label="Función" label-for="position_id">
-      <b-form-select v-model="form.position_id" :options="positions" class="mb-3" />
+      <b-form-select v-model="form.position_id" :options="filteredPositions" class="mb-3" />
     </b-form-group>
 
     <div class="buttons">
@@ -61,6 +61,7 @@ export default {
         joining_date: "",
         branch_id: 0
       },
+      filteredPositions: [],
       show: true
     };
   },
@@ -93,22 +94,26 @@ export default {
       }
       return options;
     },
-    positions() {
-      const positions = Store.state.positions.rows;
-      const options = [];
-      for (let i = 0; i < positions.length; i++) {
-        options.push({
-          value: positions[i].id,
-          text: positions[i].name
-        });
-      }
-      return options;
-    },
     item() {
       return Store.state.record;
     }
   },
   methods: {
+    updateChild() {
+      this.$nextTick(() => {
+        const positions = Store.state.positions.rows;
+        const options = [];
+        for (let i = 0; i < positions.length; i++) {
+          if (positions[i].sector_id === this.form.sector_id) {
+            options.push({
+              value: positions[i].id,
+              text: positions[i].name
+            });
+          }
+        }
+        this.filteredPositions = options;
+      });
+    },
     onSubmit(evt) {
       evt.preventDefault();
       Store.dispatch("SAVE_EMPLOYEE", this.form);
@@ -139,6 +144,7 @@ export default {
       this.form.position_id = this.item.position_id;
       this.form.joining_date = this.item.joining_date;
       this.form.branch_id = this.item.branch_id;
+      this.updateChild();
     }
   }
 };

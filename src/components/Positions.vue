@@ -1,11 +1,11 @@
 <template>
-  <b-container class="positions">
+  <b-container class="positions" fluid>
     <Header />
     <h1>Funciones</h1>
     <div class="add-button">
       <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
-    <b-table striped hover outlined :items="positions.rows" :fields="fields">
+    <b-table hover outlined :items="positions.rows" :fields="fields" head-variant="light">
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
@@ -25,14 +25,18 @@ export default {
   name: "Positions",
   data() {
     return {
+      currentPage: 1,
+      perPage: 5,
       fields: [
         {
           key: "sector.name",
-          label: "Sector"
+          label: "Sector",
+          sortable: true
         },
         {
           key: "name",
-          label: "Nombre"
+          label: "Función",
+          sortable: true
         },
         {
           key: "created_at",
@@ -92,7 +96,7 @@ export default {
 <style scoped>
 .positions {
   background-color: white;
-  padding-bottom: 60px;
+  padding-bottom: 10px;
 }
 .add-button {
   margin: 20px;
