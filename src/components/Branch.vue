@@ -1,5 +1,5 @@
 <template>
-  <b-container class="branch-add">
+  <b-container class="branch">
       <Header />
     <h1>Local</h1>
   <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
@@ -15,8 +15,8 @@
   <b-form-input id="name" :state="state" v-model.trim="form.name"></b-form-input>
   </b-form-group>
 
-      <b-button type="submit" variant="primary">Guardar</b-button>
-      <b-button type="reset" variant="info" class="to-right">Volver</b-button>
+      <b-button type="submit" variant="info">Guardar</b-button>
+      <b-button type="reset" class="to-right">Volver</b-button>
 
     </b-form>
   </b-container>
@@ -26,7 +26,7 @@
 import Store from "../store/store";
 import Header from "./Header";
 export default {
-  name: "BranchAdd",
+  name: "Branch",
   data() {
     return {
       form: {
@@ -71,8 +71,6 @@ export default {
     },
     onReset(evt) {
       evt.preventDefault();
-      /* Reset our form values */
-      this.form.name = "";
       /* Trick to reset/clear native browser form validation state */
       this.form.show = false;
       this.$nextTick(() => {
@@ -95,7 +93,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.branch-add {
+.branch {
   background-color: white;
   padding-bottom: 60px;
 }

@@ -1,5 +1,5 @@
 <template>
-  <b-container class="user-add">
+  <b-container class="user">
     <Header />
     <h1>Usuario</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
@@ -20,8 +20,8 @@
         <b-form-select v-model="form.status_id" :options="status" class="mb-3" />
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Guardar</b-button>
-      <b-button type="reset" variant="info" class="to-right">Volver</b-button>
+      <b-button type="submit" variant="info">Guardar</b-button>
+      <b-button type="reset" class="to-right">Volver</b-button>
 
     </b-form>
   </b-container>
@@ -31,7 +31,7 @@
 import Store from "../store/store";
 import Header from "./Header";
 export default {
-  name: "UserAdd",
+  name: "User",
   data() {
     return {
       form: {
@@ -129,7 +129,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.user-add {
+.user {
   background-color: white;
   padding-bottom: 60px;
 }

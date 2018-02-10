@@ -125,7 +125,16 @@ export default new Vuex.Store({
 
     [types.DELETE_USER]({ commit }, item) {
       Users.deleteUser(item.id);
+    },
+
+    [types.SAVE_EMPLOYEE]({ commit }, item) {
+      Employees.saveEmployee(item);
+    },
+
+    [types.DELETE_EMPLOYEE]({ commit }, item) {
+      Employees.deleteEmployee(item.id);
     }
+
   },
 
   mutations: {

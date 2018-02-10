@@ -3,7 +3,7 @@
     <Header />
     <h1>Sectores</h1>
     <div class="add-button">
-      <b-button @click="addItem" variant="primary">Agregar</b-button>
+      <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
     <b-table striped hover outlined :items="sectors.rows" :fields="fields">
       <template slot="acciones" slot-scope="cell">
@@ -32,13 +32,18 @@ export default {
         },
         {
           key: "created_at",
-          label: "Creado"
+          label: "Creado",
+          class: "text-center"
         },
         {
           key: "updated_at",
-          label: "Modificado"
+          label: "Modificado",
+          class: "text-center"
         },
-        "acciones"
+        {
+          key: "acciones",
+          class: "text-center"
+        }
       ]
     };
   },
@@ -48,11 +53,11 @@ export default {
   methods: {
     addItem() {
       Store.dispatch("ADD_ITEM", { id: 0, name: "" });
-      this.$router.push({ name: "SectorAdd" });
+      this.$router.push({ name: "Sector" });
     },
     editItem(item) {
       Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "SectorAdd" });
+      this.$router.push({ name: "Sector" });
     },
     deleteItem(item) {
       Store.dispatch("DELETE_SECTOR", item);

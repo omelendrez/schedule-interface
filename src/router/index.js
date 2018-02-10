@@ -4,14 +4,15 @@ import Home from "@/components/Home";
 import Login from "@/components/Login";
 import Header from "@/components/Header";
 import Branches from "@/components/Branches";
-import BranchAdd from "@/components/BranchAdd";
+import Branch from "@/components/Branch";
 import Sectors from "@/components/Sectors";
-import SectorAdd from "@/components/SectorAdd";
+import Sector from "@/components/Sector";
 import Positions from "@/components/Positions";
-import PositionAdd from "@/components/PositionAdd";
+import Position from "@/components/Position";
 import Employees from "@/components/Employees";
+import Employee from "@/components/Employee";
 import Users from "@/components/Users";
-import UserAdd from "@/components/UserAdd";
+import User from "@/components/User";
 
 Vue.use(Router);
 
@@ -38,9 +39,9 @@ export default new Router({
       component: Branches
     },
     {
-      path: "/branch_add",
-      name: "BranchAdd",
-      component: BranchAdd
+      path: "/branch",
+      name: "Branch",
+      component: Branch
     },
     {
       path: "/sectors",
@@ -48,9 +49,9 @@ export default new Router({
       component: Sectors
     },
     {
-      path: "/sector_add",
-      name: "SectorAdd",
-      component: SectorAdd
+      path: "/sector",
+      name: "Sector",
+      component: Sector
     },
     {
       path: "/positions",
@@ -58,9 +59,9 @@ export default new Router({
       component: Positions
     },
     {
-      path: "/position_add",
-      name: "PositionAdd",
-      component: PositionAdd
+      path: "/position",
+      name: "Position",
+      component: Position
     },
     {
       path: "/employees",
@@ -68,14 +69,19 @@ export default new Router({
       component: Employees
     },
     {
+      path: "/employee",
+      name: "Employee",
+      component: Employee
+    },
+    {
       path: "/users",
       name: "Users",
       component: Users
     },
     {
-      path: "/user_add",
-      name: "UserAdd",
-      component: UserAdd
+      path: "/user",
+      name: "User",
+      component: User
     }
   ]
 });

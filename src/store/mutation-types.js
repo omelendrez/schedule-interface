@@ -39,3 +39,6 @@ export const DELETE_POSITION = 'DELETE_POSITION'
 
 export const SAVE_USER = 'SAVE_USER'
 export const DELETE_USER = 'DELETE_USER'
+
+export const SAVE_EMPLOYEE = 'SAVE_EMPLOYEE'
+export const DELETE_EMPLOYEE = 'DELETE_EMPLOYEE'

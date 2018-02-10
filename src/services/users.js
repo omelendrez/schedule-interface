@@ -8,7 +8,6 @@ export default {
     return HTTP.get("login", { params: payload });
   },
   saveUser(payload) {
-    console.log("***saveUser", payload);
     if (payload.id === 0) {
       return HTTP.post("user", payload);
     } else {

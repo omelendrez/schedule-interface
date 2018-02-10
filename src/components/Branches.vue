@@ -3,12 +3,13 @@
       <Header />
       <h1>Locales</h1>
       <div class="add-button">
-        <b-button @click="addItem" variant="primary">Agregar</b-button>
+        <b-button @click="addItem" variant="info">Agregar</b-button>
       </div>
       <b-table striped hover outlined :fields="fields" :items="branches.rows">
         <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Modificar</b-btn>
-          <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
+          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+          <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item)">Inactivar</b-btn>
+          <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item)">Reactivar</b-btn>
         </template>
         <template slot="table-caption">
         {{branches.count}} registros
@@ -33,17 +34,23 @@ export default {
         },
         {
           key: "status.name",
-          label: "Status"
+          label: "Status",
+          class: "text-center"
         },
         {
           key: "created_at",
-          label: "Creado"
+          label: "Creado",
+          class: "text-center"
         },
         {
           key: "updated_at",
-          label: "Modificado"
+          label: "Modificado",
+          class: "text-center"
         },
-        "acciones"
+        {
+          key: "acciones",
+          class: "text-center"
+        }
       ]
     };
   },
@@ -53,11 +60,11 @@ export default {
   methods: {
     addItem() {
       Store.dispatch("ADD_ITEM", { id: 0, name: "" });
-      this.$router.push({ name: "BranchAdd" });
+      this.$router.push({ name: "Branch" });
     },
     editItem(item) {
       Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "BranchAdd" });
+      this.$router.push({ name: "Branch" });
     },
     deleteItem(item) {
       Store.dispatch("DELETE_BRANCH", item);
