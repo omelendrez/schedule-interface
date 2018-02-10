@@ -1,6 +1,5 @@
 <template>
   <b-container class="position">
-    <Header />
     <h1>Función</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
@@ -23,7 +22,7 @@
 
 <script>
 import Store from "../store/store";
-import Header from "./Header";
+
 export default {
   name: "Position",
   data() {
@@ -35,9 +34,6 @@ export default {
       },
       show: true
     };
-  },
-  components: {
-    Header
   },
   computed: {
     isLogged() {
@@ -97,7 +93,7 @@ export default {
 <style scoped>
 .position {
   background-color: white;
-  padding-bottom: 10px;
+  padding: 60px;
 }
 #addForm {
   margin: 0 auto;

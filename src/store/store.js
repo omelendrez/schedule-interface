@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import Avaliability from "./../services/availability";
 import Branches from "./../services/branches";
 import Sectors from "./../services/sectors";
 import Positions from "./../services/positions";
@@ -14,6 +15,7 @@ import * as types from "../store/mutation-types";
 Vue.use(Vuex);
 
 const state = {
+  availability: [],
   branches: [],
   sectors: [],
   positions: [],
@@ -89,6 +91,13 @@ export default new Vuex.Store({
       });
     },
 
+    async [types.LOAD_AVAILABILITY]({ commit }) {
+      const availability = await Avaliability.fetchAvailability();
+      commit(types.SET_AVAILABILITY, {
+        payload: availability.data
+      });
+    },
+
     [types.ADD_ITEM]({ commit }, item) {
       commit(types.SET_RECORD, {
         payload: item
@@ -133,6 +142,10 @@ export default new Vuex.Store({
 
     [types.DELETE_EMPLOYEE]({ commit }, item) {
       Employees.deleteEmployee(item.id);
+    },
+
+    [types.SAVE_AVAILABILITY]({ commit }, item) {
+      Avaliability.saveAvailability(item);
     }
 
   },
@@ -176,6 +189,10 @@ export default new Vuex.Store({
 
     [types.SET_RECORD]: (state, { payload }) => {
       state.record = payload;
+    },
+
+    [types.SET_AVAILABILITY]: (state, { payload }) => {
+      state.availability = payload;
     }
   }
 });

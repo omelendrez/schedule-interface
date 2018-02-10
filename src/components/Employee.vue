@@ -1,6 +1,5 @@
 <template>
   <b-container class="employee">
-    <Header />
 
     <h1>Empleado</h1>
 
@@ -46,7 +45,7 @@
 
 <script>
 import Store from "../store/store";
-import Header from "./Header";
+
 export default {
   name: "Employee",
   data() {
@@ -64,9 +63,6 @@ export default {
       filteredPositions: [],
       show: true
     };
-  },
-  components: {
-    Header
   },
   computed: {
     isLogged() {
@@ -154,7 +150,7 @@ export default {
 <style scoped>
 .employee {
   background-color: white;
-  padding-bottom: 60px;
+  padding: 60px;
 }
 #addForm {
   margin: 0 auto;

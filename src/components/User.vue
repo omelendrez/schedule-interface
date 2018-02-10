@@ -1,6 +1,5 @@
 <template>
   <b-container class="user">
-    <Header />
     <h1>Usuario</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
 
@@ -29,7 +28,7 @@
 
 <script>
 import Store from "../store/store";
-import Header from "./Header";
+
 export default {
   name: "User",
   data() {
@@ -42,9 +41,6 @@ export default {
         show: true
       }
     };
-  },
-  components: {
-    Header
   },
   computed: {
     isLogged() {
@@ -131,7 +127,7 @@ export default {
 <style scoped>
 .user {
   background-color: white;
-  padding-bottom: 60px;
+  padding: 60px;
 }
 input,
 select {

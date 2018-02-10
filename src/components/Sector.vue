@@ -1,6 +1,5 @@
 <template>
   <b-container class="sector">
-      <Header />
     <h1>Sector</h1>
   <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
   <b-form-group
@@ -24,7 +23,7 @@
 
 <script>
 import Store from "../store/store";
-import Header from "./Header";
+
 export default {
   name: "Sector",
   data() {
@@ -35,9 +34,6 @@ export default {
         show: true
       }
     };
-  },
-  components: {
-    Header
   },
   computed: {
     isLogged() {
@@ -97,7 +93,7 @@ export default {
 <style scoped>
 .sector {
   background-color: white;
-  padding-bottom: 60px;
+  padding: 60px;
 }
 input {
   max-width: 40%;

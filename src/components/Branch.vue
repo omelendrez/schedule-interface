@@ -1,6 +1,5 @@
 <template>
   <b-container class="branch">
-      <Header />
     <h1>Local</h1>
   <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
   <b-form-group
@@ -24,7 +23,7 @@
 
 <script>
 import Store from "../store/store";
-import Header from "./Header";
+
 export default {
   name: "Branch",
   data() {
@@ -35,9 +34,6 @@ export default {
         show: true
       }
     };
-  },
-  components: {
-    Header
   },
   computed: {
     isLogged() {
@@ -95,7 +91,7 @@ export default {
 <style scoped>
 .branch {
   background-color: white;
-  padding-bottom: 60px;
+  padding: 60px;
 }
 input {
   max-width: 40%;
