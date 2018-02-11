@@ -2,8 +2,8 @@
   <b-container class="grid" fluid>
     <Header />
     <h1>Grilla</h1>
-
-    <div class="input-container">
+    <h2 class="pull-right">{{ formatedDate }}</h2>
+    <div class="input-container no-print">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
         <b-form-select v-model="form.branch_id" :options="branches"/>
       </b-form-group>
@@ -19,7 +19,10 @@
 
     </div>
 
-    <b-table small cellpadding="0" border-collapse="collapse" :items="rows" :fields="fields" head-variant="light">
+    <b-table small :items="rows" :fields="fields" head-variant="light">
+      <template slot="fullName" slot-scope="data">
+        {{data.item.badge}} - {{data.item.last_name}}, {{data.item.first_name}}
+      </template>
     </b-table>
 
     <b-modal id="modal-center" title="Borrar Presupuesto" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
@@ -48,16 +51,8 @@ export default {
       },
       fields: [
         {
-          key: "badge",
-          label: "Legajo"
-        },
-        {
-          key: "first_name",
-          label: "Nombre"
-        },
-        {
-          key: "last_name",
-          label: "Apellido"
+          key: "fullName",
+          label: "Empleado"
         },
         {
           key: "sector",
@@ -222,13 +217,12 @@ export default {
         rows.push(record);
       }
       this.rows = rows;
-      console.log("***", rows, data);
     }
   },
   watch: {
-    schedules: function() {
+    schedules() {
       const records = Store.state.schedules.count;
-      this.errorMessage = "No se encontraron registros";
+      this.errorMessage = "No se encontraron registros para este día";
       this.showError = !records;
       this.showGrid();
     }
@@ -239,6 +233,12 @@ export default {
     },
     schedules() {
       return Store.state.schedules;
+    },
+    formatedDate() {
+      return `${this.form.date.substr(-2)}-${this.form.date.substr(
+        5,
+        2
+      )}-${this.form.date.substr(0, 4)}`;
     },
     dataOk() {
       return this.form.date !== "" && this.form.branch_id !== 0;
@@ -267,7 +267,7 @@ export default {
 <style scoped>
 .grid {
   background-color: white;
-  padding-bottom: 60px;
+  height: 100%;
 }
 .add-button {
   margin: 20px;
@@ -280,5 +280,17 @@ export default {
   max-width: 30%;
   margin: 0 auto;
   text-align: center;
+}
+@media print {
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+  @page {
+    size: landscape;
+  }
+}
+.pull-right {
+  float: right;
 }
 </style>

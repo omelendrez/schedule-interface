@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/components/Home";
 import Login from "@/components/Login";
+import ChangePassword from "@/components/ChangePassword";
 import Header from "@/components/Header";
 import Availability from "@/components/Availability";
 import AvailabilityEdit from "@/components/AvailabilityEdit";
@@ -32,6 +33,11 @@ export default new Router({
       path: "/login",
       name: "Login",
       component: Login
+    },
+    {
+      path: "/change_password",
+      name: "ChangePassword",
+      component: ChangePassword
     },
     {
       path: "/header",

@@ -28,6 +28,7 @@ const state = {
   employees: [],
   users: [],
   user: [],
+  password: [],
   record: []
 };
 
@@ -36,15 +37,22 @@ export default new Vuex.Store({
   actions: {
     async [types.LOGIN]({ commit }, payload) {
       const user = await Users.login(payload);
-      if (!user.id) {
-        commit(types.SET_USER, {
-          payload: user.data
-        });
-      }
+      commit(types.SET_USER, {
+        payload: user.data
+      });
     },
 
-    async [types.LOGOUT_USER]({ commit }) {
-      commit(types.RESET_USER);
+    [types.LOGOUT_USER]({ commit }) {
+      commit(types.SET_USER, {
+        payload: { id: null }
+      });
+    },
+
+    async [types.CHANGE_PASSWORD]({ commit }, item) {
+      const user = await Users.changePassword(item);
+      commit(types.CHANGE_PASSWORD_ALERT, {
+        payload: user.data
+      });
     },
 
     async [types.LOAD_BRANCHES]({ commit }) {
@@ -180,10 +188,6 @@ export default new Vuex.Store({
       state.user = payload;
     },
 
-    [types.RESET_USER]: state => {
-      state.user = {};
-    },
-
     [types.SET_BRANCHES]: (state, { payload }) => {
       state.branches = payload;
     },
@@ -226,6 +230,11 @@ export default new Vuex.Store({
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
       state.schedules = payload;
+    },
+
+    [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
+      state.password = payload;
     }
+
   }
 });
