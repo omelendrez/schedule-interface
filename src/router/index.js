@@ -9,6 +9,7 @@ import Branches from "@/components/Branches";
 import Branch from "@/components/Branch";
 import Budgets from "@/components/Budgets";
 import Budget from "@/components/Budget";
+import Grid from "@/components/Grid";
 import Sectors from "@/components/Sectors";
 import Sector from "@/components/Sector";
 import Positions from "@/components/Positions";
@@ -66,6 +67,11 @@ export default new Router({
       path: "/budget",
       name: "Budget",
       component: Budget
+    },
+    {
+      path: "/grid",
+      name: "Grid",
+      component: Grid
     },
     {
       path: "/sectors",

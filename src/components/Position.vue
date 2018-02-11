@@ -11,6 +11,10 @@
         <b-form-input id="name" v-model.trim="form.name"></b-form-input>
       </b-form-group>
 
+      <b-form-group horizontal id="color" label="Color" label-for="color">
+        <b-form-input id="color" type="color" v-model.trim="form.color"></b-form-input>
+      </b-form-group>
+
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
@@ -30,6 +34,7 @@ export default {
       form: {
         id: 0,
         name: "",
+        color: "",
         sector_id: 0
       },
       show: true
@@ -83,6 +88,7 @@ export default {
     if (this.item) {
       this.form.id = this.item.id;
       this.form.name = this.item.name;
+      this.form.color = this.item.color;
       this.form.sector_id = this.item.sector_id;
     }
   }

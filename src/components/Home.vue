@@ -26,7 +26,9 @@ export default {
   created() {
     if (!this.isLogged) {
       this.$router.push({ name: "Login" });
+      return false;
     }
+    Store.dispatch("LOAD_BRANCHES");
   }
 };
 </script>

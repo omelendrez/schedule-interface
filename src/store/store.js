@@ -5,6 +5,7 @@ import Avaliability from "./../services/availability";
 import Branches from "./../services/branches";
 import Budgets from "./../services/budgets";
 import Sectors from "./../services/sectors";
+import Schedule from "./../services/schedule";
 import Positions from "./../services/positions";
 import Profiles from "./../services/profiles";
 import Status from "./../services/status";
@@ -22,6 +23,7 @@ const state = {
   sectors: [],
   positions: [],
   profiles: [],
+  schedules: [],
   status: [],
   employees: [],
   users: [],
@@ -104,6 +106,13 @@ export default new Vuex.Store({
       const budgets = await Budgets.fetchBudgets();
       commit(types.SET_BUDGETS, {
         payload: budgets.data
+      });
+    },
+
+    async [types.LOAD_SCHEDULES]({ commit }, payload) {
+      const schedules = await Schedule.fetchBudgetSchedules(payload);
+      commit(types.SET_SCHEDULES, {
+        payload: schedules.data
       });
     },
 
@@ -213,7 +222,10 @@ export default new Vuex.Store({
 
     [types.SET_BUDGETS]: (state, { payload }) => {
       state.budgets = payload;
-    }
+    },
 
+    [types.SET_SCHEDULES]: (state, { payload }) => {
+      state.schedules = payload;
+    }
   }
 });

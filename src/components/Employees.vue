@@ -7,29 +7,30 @@
         <b-button @click="addItem" variant="info">Agregar</b-button>
       </div>
 
-    <b-form-group class="filter-form">
-      <b-input-group>
-        <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
-        <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
-      </b-input-group>
-    </b-form-group>
+      <b-form-group class="filter-form">
+        <b-input-group>
+          <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
+          <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
+        </b-input-group>
+      </b-form-group>
 
-    <b-table hover outlined :items="employees.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
-      <template slot="acciones" slot-scope="cell">
-        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-        <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
-        <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
+      <b-table hover outlined :items="employees.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+        <template slot="acciones" slot-scope="cell">
+          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+          <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
+          <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
+        </template>
+      <template slot="table-caption">
+        {{employees.count}} registros
       </template>
-    <template slot="table-caption">
-      {{employees.count}} registros
-    </template>
-  </b-table>
+    </b-table>
 
-  <b-pagination :total-rows="employees.count" :per-page="perPage" v-model="currentPage" />
+    <b-pagination :total-rows="employees.count" :per-page="perPage" v-model="currentPage" />
 
-  <b-modal id="modal-center" title="Inactivar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-    <p class="my-4">Está seguro que desea inactivar al empleado <strong>{{ selectedItem.badge }} - {{ selectedItem.first_name }} {{ selectedItem.last_name }}</strong>?</p>
-  </b-modal>
+    <b-modal id="modal-center" title="Inactivar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
+      <p class="my-4">Está seguro que desea inactivar al empleado <strong>{{ selectedItem.badge }} - {{ selectedItem.first_name }} {{ selectedItem.last_name }}</strong>?</p>
+    </b-modal>
+
   </b-container>
 </template>
 
