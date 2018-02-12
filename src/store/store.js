@@ -20,7 +20,15 @@ const state = {
   availability: [],
   branches: [],
   budgets: [],
-  budget: [],
+  budget: {
+    rows: {
+      id: 0,
+      date: "",
+      hours: 0,
+      footer: ""
+    },
+    count: 1
+  },
   sectors: [],
   positions: [],
   profiles: [],
@@ -230,6 +238,10 @@ export default new Vuex.Store({
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
+      const hours = payload.schedule.rows.reduce(function (prevVal, elem, index, array) {
+        return prevVal + elem.to - elem.from;
+      }, 0);
+      payload.schedule["scheduled"] = hours
       state.schedules = payload.schedule;
       state.budget = payload.budget;
     },

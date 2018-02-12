@@ -1,7 +1,15 @@
 <template>
   <b-container class="grid" fluid>
     <Header />
+
+    <div v-show="!showForm" class="pull-right no-print">
+      <b-btn variant="success" @click.stop="closeGrid">Volver</b-btn>
+      <b-btn variant="info" @click.stop="editForm">Modificar</b-btn>
+      <b-btn variant="primary" @click.stop="printForm">Imprimir</b-btn>
+    </div>
+
     <h2 v-show="!showForm">Grilla de programación del {{ formatedDate }}</h2>
+
     <div class="input-container no-print" v-show="showForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
         <b-form-select v-model="form.branch_id" :options="branches"/>
@@ -11,22 +19,18 @@
         <b-form-input type="date" v-model="form.date"/>
       </b-form-group>
 
-      <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Mostrar</b-btn>
+      <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar</b-btn>
 
       <b-alert variant="danger" :show="showError">{{ errorMessage }}</b-alert>
       <b-alert variant="success" :show="showMessage">{{ message }}</b-alert>
 
-    </div>
-    <div v-show="!showForm" class="no-print">
-      <b-btn variant="info" @click.stop="closeGrid">Volver</b-btn>
-      <b-btn variant="success" @click.stop="printForm">Imprimir</b-btn>
     </div>
 
     <div v-show="!showForm">
       <h5>
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
-      <b-table small :items="rows" :fields="fields" head-variant="light">
+      <b-table small bordered :items="rows" :fields="fields" head-variant="light">
         <template slot="fullName" slot-scope="data">
           {{data.item.last_name}}, {{data.item.first_name}}
         </template>
@@ -187,18 +191,6 @@ export default {
       };
       Store.dispatch("LOAD_SCHEDULES", data);
     },
-    addItem() {
-      Store.dispatch("ADD_ITEM", { id: 0 });
-      this.$router.push({ name: "GridEdit" });
-    },
-    editItem(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "GridEdit" });
-    },
-    deleteItem(item) {
-      this.selectedItem = item;
-      this.show = true;
-    },
     handleOk() {
       Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
       setTimeout(() => {
@@ -206,34 +198,37 @@ export default {
       }, 500);
     },
     showGrid() {
-      const rows = [];
       const data = Store.state.schedules.rows;
+      let i = 0;
       let employeeId = 0;
       let record = {};
-      for (const item in data) {
-        const field = data[item];
-        if (field["employee_id"] !== employeeId) {
-          employeeId = field["employee_id"];
-          record = {};
-          record.badge = field["employee.badge"];
-          record.first_name = field["employee.first_name"];
-          record.last_name = field["employee.last_name"];
-          record.sector = field["sector.name"];
-          record.position = field["position.name"];
+      const rows = [];
+      while (i < data.length) {
+        const item = data[i];
+        if (item.employee_id !== employeeId) {
+          if (employeeId !== 0) {
+            rows.push(record);
+            record = {};
+          }
+          employeeId = item.employee_id;
+          record.badge = item["employee.badge"];
+          record.first_name = item["employee.first_name"];
+          record.last_name = item["employee.last_name"];
+          record.sector = item["sector.name"];
+          record.position = item["position.name"];
         }
         for (let i = 7; i < 25; i++) {
           let hour = `0${i.toString()}`;
           hour = hour.substr(hour.length - 2);
-          if (field["from"] <= i && field["to"] > i) {
+          if (item["from"] <= i && item["to"] > i) {
             record[`h${hour}`] = `<div title="${
-              field["position.name"]
-            }" style="background-color:${
-              field["position.color"]
-            }">&nbsp;</div>`;
+              item["position.name"]
+            }" style="background-color:${item["position.color"]}">&nbsp;</div>`;
           }
         }
-        rows.push(record);
+        i++;
       }
+      rows.push(record);
       this.rows = rows;
     }
   },
@@ -247,11 +242,14 @@ export default {
     }
   },
   computed: {
+    budget() {
+      return Store.state.budget.rows.hours;
+    },
     totalHoursBudget() {
       return Store.state.budget.rows.hours;
     },
     totalScheduledHours() {
-      return Store.state.budget.rows.scheduled;
+      return Store.state.schedules.scheduled;
     },
     footer() {
       return Store.state.budget.rows.footer;
@@ -295,16 +293,14 @@ export default {
 <style scoped>
 .grid {
   background-color: white;
-}
-.add-button {
-  margin: 20px;
-  float: right;
+  padding-bottom: 60px;
 }
 .load-button {
   margin-bottom: 20px;
 }
 .input-container {
   max-width: 30%;
+  margin: 0 auto;
   margin-top: 20px;
   text-align: center;
 }
