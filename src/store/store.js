@@ -84,6 +84,13 @@ export default new Vuex.Store({
       });
     },
 
+    async [types.LOAD_SECTOR_POSITIONS]({ commit }, item) {
+      const positions = await Positions.fetchSectorPositions(item);
+      commit(types.SET_POSITIONS, {
+        payload: positions.data
+      });
+    },
+
     async [types.LOAD_PROFILES]({ commit }) {
       const profiles = await Profiles.fetchProfiles();
       commit(types.SET_PROFILES, {
@@ -100,6 +107,13 @@ export default new Vuex.Store({
 
     async [types.LOAD_EMPLOYEES]({ commit }) {
       const employees = await Employees.fetchEmployees();
+      commit(types.SET_EMPLOYEES, {
+        payload: employees.data
+      });
+    },
+
+    async [types.LOAD_BRANCH_EMPLOYEES]({ commit }, item) {
+      const employees = await Employees.fetchBranchEmployees(item);
       commit(types.SET_EMPLOYEES, {
         payload: employees.data
       });
@@ -189,7 +203,16 @@ export default new Vuex.Store({
 
     [types.DELETE_BUDGET]({ commit }, item) {
       Budgets.deleteBudget(item.id);
+    },
+
+    [types.SAVE_SCHEDULE]({ commit }, item) {
+      Schedule.saveSchedule(item);
+    },
+
+    [types.DELETE_SCHEDULE]({ commit }, item) {
+      Schedule.deleteSchedule(item.id);
     }
+
   },
 
   mutations: {

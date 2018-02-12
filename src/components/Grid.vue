@@ -3,9 +3,9 @@
     <Header />
 
     <div v-show="!showForm" class="pull-right no-print">
-      <b-btn variant="success" @click.stop="closeGrid">Volver</b-btn>
-      <b-btn variant="info" @click.stop="editForm">Modificar</b-btn>
-      <b-btn variant="primary" @click.stop="printForm">Imprimir</b-btn>
+      <b-btn variant="success" @click.stop="closeGrid">Cambiar fecha</b-btn>
+      <b-btn variant="info" @click.stop="editGrid">Modificar grilla</b-btn>
+      <b-btn variant="primary" @click.stop="printGrid">Imprimir grilla</b-btn>
     </div>
 
     <h2 v-show="!showForm">Grilla de programación del {{ formatedDate }}</h2>
@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       show: false,
-      showForm: true,
+      showForm: false,
       message: "",
       errorMessage: "",
       showMessage: false,
@@ -173,11 +173,14 @@ export default {
     Header
   },
   methods: {
+    editGrid() {
+      this.$router.push({ name: "GridList" });
+    },
     closeGrid() {
       this.rows = [];
       this.showForm = true;
     },
-    printForm() {
+    printGrid() {
       this.$nextTick(() => {
         window.print();
       });
@@ -211,6 +214,7 @@ export default {
             record = {};
           }
           employeeId = item.employee_id;
+          record.id = item["id"];
           record.badge = item["employee.badge"];
           record.first_name = item["employee.first_name"];
           record.last_name = item["employee.last_name"];
@@ -229,13 +233,15 @@ export default {
         i++;
       }
       rows.push(record);
-      this.rows = rows;
+      if (rows[0].id) {
+        this.rows = rows;
+      }
     }
   },
   watch: {
     schedules() {
       const records = Store.state.budget.count;
-      this.errorMessage = "No se encontraron registros para este día";
+      this.errorMessage = "Falta cargar el presupuesto para ese día";
       this.showError = !records;
       this.showForm = !records;
       this.showGrid();
@@ -243,7 +249,7 @@ export default {
   },
   computed: {
     budget() {
-      return Store.state.budget.rows.hours;
+      return Store.state.budget.rows;
     },
     totalHoursBudget() {
       return Store.state.budget.rows.hours;
@@ -285,6 +291,14 @@ export default {
     if (!this.isLogged) {
       this.$router.push({ name: "Login" });
     }
+    this.showForm = false;
+    if (this.budget && this.budget.id) {
+      this.form.branch_id = this.budget.branch_id;
+      this.form.date = this.budget.date;
+      this.loadData();
+    } else {
+      this.showForm = true;
+    }
   }
 };
 </script>
@@ -314,6 +328,7 @@ export default {
   }
 }
 .pull-right {
+  margin-top: 18px;
   float: right;
 }
 </style>

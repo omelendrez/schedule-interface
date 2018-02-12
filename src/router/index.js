@@ -11,6 +11,8 @@ import Branch from "@/components/Branch";
 import Budgets from "@/components/Budgets";
 import Budget from "@/components/Budget";
 import Grid from "@/components/Grid";
+import GridList from "@/components/GridList";
+import GridEdit from "@/components/GridEdit";
 import Sectors from "@/components/Sectors";
 import Sector from "@/components/Sector";
 import Positions from "@/components/Positions";
@@ -78,6 +80,16 @@ export default new Router({
       path: "/grid",
       name: "Grid",
       component: Grid
+    },
+    {
+      path: "/grid_list",
+      name: "GridList",
+      component: GridList
+    },
+    {
+      path: "/grid_edit",
+      name: "GridEdit",
+      component: GridEdit
     },
     {
       path: "/sectors",
