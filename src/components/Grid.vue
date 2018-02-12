@@ -1,9 +1,8 @@
 <template>
   <b-container class="grid" fluid>
     <Header />
-    <h1>Grilla</h1>
-    <h2 class="pull-right">{{ formatedDate }}</h2>
-    <div class="input-container no-print">
+    <h2 v-show="!showForm">Grilla de programación del {{ formatedDate }}</h2>
+    <div class="input-container no-print" v-show="showForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
         <b-form-select v-model="form.branch_id" :options="branches"/>
       </b-form-group>
@@ -12,18 +11,31 @@
         <b-form-input type="date" v-model="form.date"/>
       </b-form-group>
 
-      <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar grilla</b-btn>
+      <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Mostrar</b-btn>
 
       <b-alert variant="danger" :show="showError">{{ errorMessage }}</b-alert>
       <b-alert variant="success" :show="showMessage">{{ message }}</b-alert>
 
     </div>
+    <div v-show="!showForm" class="no-print">
+      <b-btn variant="info" @click.stop="closeGrid">Volver</b-btn>
+      <b-btn variant="success" @click.stop="printForm">Imprimir</b-btn>
+    </div>
 
-    <b-table small :items="rows" :fields="fields" head-variant="light">
-      <template slot="fullName" slot-scope="data">
-        {{data.item.badge}} - {{data.item.last_name}}, {{data.item.first_name}}
-      </template>
-    </b-table>
+    <div v-show="!showForm">
+      <h5>
+        Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
+      </h5>
+      <b-table small :items="rows" :fields="fields" head-variant="light">
+        <template slot="fullName" slot-scope="data">
+          {{data.item.last_name}}, {{data.item.first_name}}
+        </template>
+      </b-table>
+
+      <b-card title="Mensaje" class="mb-2">
+        <p class="card-text"> {{ footer }} </p>
+      </b-card>
+    </div>
 
     <b-modal id="modal-center" title="Borrar Presupuesto" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea borrar este registro?</p>
@@ -41,6 +53,7 @@ export default {
   data() {
     return {
       show: false,
+      showForm: true,
       message: "",
       errorMessage: "",
       showMessage: false,
@@ -57,10 +70,6 @@ export default {
         {
           key: "sector",
           label: "Sector"
-        },
-        {
-          key: "position",
-          label: "Función"
         },
         {
           key: "h07",
@@ -160,6 +169,15 @@ export default {
     Header
   },
   methods: {
+    closeGrid() {
+      this.rows = [];
+      this.showForm = true;
+    },
+    printForm() {
+      this.$nextTick(() => {
+        window.print();
+      });
+    },
     loadData() {
       this.showError = false;
       this.showMessage = false;
@@ -206,7 +224,7 @@ export default {
         for (let i = 7; i < 25; i++) {
           let hour = `0${i.toString()}`;
           hour = hour.substr(hour.length - 2);
-          if (field["from"] <= i && field["to"] >= i) {
+          if (field["from"] <= i && field["to"] > i) {
             record[`h${hour}`] = `<div title="${
               field["position.name"]
             }" style="background-color:${
@@ -221,13 +239,23 @@ export default {
   },
   watch: {
     schedules() {
-      const records = Store.state.schedules.count;
+      const records = Store.state.budget.count;
       this.errorMessage = "No se encontraron registros para este día";
       this.showError = !records;
+      this.showForm = !records;
       this.showGrid();
     }
   },
   computed: {
+    totalHoursBudget() {
+      return Store.state.budget.rows.hours;
+    },
+    totalScheduledHours() {
+      return Store.state.budget.rows.scheduled;
+    },
+    footer() {
+      return Store.state.budget.rows.footer;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -235,10 +263,10 @@ export default {
       return Store.state.schedules;
     },
     formatedDate() {
-      return `${this.form.date.substr(-2)}-${this.form.date.substr(
+      return `${this.form.date.substr(-2)}/${this.form.date.substr(
         5,
         2
-      )}-${this.form.date.substr(0, 4)}`;
+      )}/${this.form.date.substr(0, 4)}`;
     },
     dataOk() {
       return this.form.date !== "" && this.form.branch_id !== 0;
@@ -267,7 +295,6 @@ export default {
 <style scoped>
 .grid {
   background-color: white;
-  height: 100%;
 }
 .add-button {
   margin: 20px;
@@ -278,7 +305,7 @@ export default {
 }
 .input-container {
   max-width: 30%;
-  margin: 0 auto;
+  margin-top: 20px;
   text-align: center;
 }
 @media print {

@@ -11,6 +11,15 @@
       <b-form-group horizontal id="hours" label="Horas" label-for="hours">
         <b-form-input id="hours" v-model.trim="form.hours"></b-form-input>
       </b-form-group>
+      <b-form-group horizontal id="footer" label="Mensaje" label-for="footer">
+      <b-form-textarea
+        id="footer"
+        v-model="form.footer"
+        placeholder="Escriba el mensaje que quiere mostrar al pie de la Grilla de programación"
+        :rows="3"
+        :max-rows="6">
+      </b-form-textarea>
+      </b-form-group>
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
@@ -30,7 +39,8 @@ export default {
         id: 0,
         date: "",
         hours: 0,
-        branch_id: 0
+        branch_id: 0,
+        footer: ""
       },
       show: true
     };
@@ -81,6 +91,7 @@ export default {
       this.form.id = this.item.id;
       this.form.date = this.item._date;
       this.form.hours = this.item.hours;
+      this.form.footer = this.item.footer;
       this.form.branch_id = this.item.branch_id;
     }
   }

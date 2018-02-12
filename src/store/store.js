@@ -20,6 +20,7 @@ const state = {
   availability: [],
   branches: [],
   budgets: [],
+  budget: [],
   sectors: [],
   positions: [],
   profiles: [],
@@ -229,7 +230,8 @@ export default new Vuex.Store({
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
-      state.schedules = payload;
+      state.schedules = payload.schedule;
+      state.budget = payload.budget;
     },
 
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
