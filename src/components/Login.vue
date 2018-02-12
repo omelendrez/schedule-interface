@@ -1,4 +1,6 @@
 <template>
+<div>
+  <Header />
   <b-card no-block id="loginCard">
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="loginForm">
       <b-form-group>
@@ -27,11 +29,12 @@
     <b-alert variant="danger" :show="isLoginError">Credenciales incorrectas</b-alert>
     <b-alert variant="success" :show="isLoginCorrect">Autorizado</b-alert>
   </b-card>
+</div>
 </template>
 
 <script>
 import Store from "../store/store";
-import { setTimeout } from "timers";
+import Header from "./Header";
 
 export default {
   name: "Login",
@@ -46,26 +49,37 @@ export default {
       isLoginCorrect: false
     };
   },
+  components: {
+    Header
+  },
+  watch: {
+    user: function() {
+      const user = Store.state.user;
+      if (user.id === null) {
+        return;
+      }
+      if (user.id > 0) {
+        this.isLoginCorrect = true;
+        this.$router.push({ name: "Home" });
+      } else {
+        this.isLoginError = true;
+      }
+    }
+  },
+  computed: {
+    user() {
+      return Store.state.user;
+    }
+  },
   methods: {
     onSubmit(evt) {
       this.isLoginError = false;
-      const self = this;
       evt.preventDefault();
       const payload = {
         user_name: this.form.user_name,
         password: this.form.password
       };
       Store.dispatch("LOGIN", payload);
-      setTimeout(() => {
-        if (Store.state.user.id) {
-          this.isLoginCorrect = true;
-          setTimeout(() => {
-            self.$router.push({ name: "Home" });
-          }, 800);
-        } else {
-          this.isLoginError = true;
-        }
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -78,6 +92,9 @@ export default {
         this.show = true;
       });
     }
+  },
+  isLogged() {
+    return Store.state.user.id;
   },
   created() {
     Store.dispatch("LOGOUT_USER");

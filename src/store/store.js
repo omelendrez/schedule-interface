@@ -5,6 +5,7 @@ import Avaliability from "./../services/availability";
 import Branches from "./../services/branches";
 import Budgets from "./../services/budgets";
 import Sectors from "./../services/sectors";
+import Schedule from "./../services/schedule";
 import Positions from "./../services/positions";
 import Profiles from "./../services/profiles";
 import Status from "./../services/status";
@@ -19,13 +20,24 @@ const state = {
   availability: [],
   branches: [],
   budgets: [],
+  budget: {
+    rows: {
+      id: 0,
+      date: "",
+      hours: 0,
+      footer: ""
+    },
+    count: 1
+  },
   sectors: [],
   positions: [],
   profiles: [],
+  schedules: [],
   status: [],
   employees: [],
   users: [],
   user: [],
+  password: [],
   record: []
 };
 
@@ -34,15 +46,22 @@ export default new Vuex.Store({
   actions: {
     async [types.LOGIN]({ commit }, payload) {
       const user = await Users.login(payload);
-      if (!user.id) {
-        commit(types.SET_USER, {
-          payload: user.data
-        });
-      }
+      commit(types.SET_USER, {
+        payload: user.data
+      });
     },
 
-    async [types.LOGOUT_USER]({ commit }) {
-      commit(types.RESET_USER);
+    [types.LOGOUT_USER]({ commit }) {
+      commit(types.SET_USER, {
+        payload: { id: null }
+      });
+    },
+
+    async [types.CHANGE_PASSWORD]({ commit }, item) {
+      const user = await Users.changePassword(item);
+      commit(types.CHANGE_PASSWORD_ALERT, {
+        payload: user.data
+      });
     },
 
     async [types.LOAD_BRANCHES]({ commit }) {
@@ -104,6 +123,13 @@ export default new Vuex.Store({
       const budgets = await Budgets.fetchBudgets();
       commit(types.SET_BUDGETS, {
         payload: budgets.data
+      });
+    },
+
+    async [types.LOAD_SCHEDULES]({ commit }, payload) {
+      const schedules = await Schedule.fetchBudgetSchedules(payload);
+      commit(types.SET_SCHEDULES, {
+        payload: schedules.data
       });
     },
 
@@ -171,10 +197,6 @@ export default new Vuex.Store({
       state.user = payload;
     },
 
-    [types.RESET_USER]: state => {
-      state.user = {};
-    },
-
     [types.SET_BRANCHES]: (state, { payload }) => {
       state.branches = payload;
     },
@@ -213,6 +235,19 @@ export default new Vuex.Store({
 
     [types.SET_BUDGETS]: (state, { payload }) => {
       state.budgets = payload;
+    },
+
+    [types.SET_SCHEDULES]: (state, { payload }) => {
+      const hours = payload.schedule.rows.reduce(function (prevVal, elem, index, array) {
+        return prevVal + elem.to - elem.from;
+      }, 0);
+      payload.schedule["scheduled"] = hours
+      state.schedules = payload.schedule;
+      state.budget = payload.budget;
+    },
+
+    [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
+      state.password = payload;
     }
 
   }

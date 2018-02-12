@@ -15,7 +15,7 @@
     </b-form-group>
 
     <b-table hover outlined :items="users.rows" :fields="fields" head-variant="light">
-      <template slot="acciones" slot-scope="cell" v-if="cell.item.user_name!=='omar.melendrez'">
+      <template slot="acciones" slot-scope="cell" v-if="cell.item.id !== user.id">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
         <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
@@ -123,6 +123,9 @@ export default {
   computed: {
     isLogged() {
       return Store.state.user.id;
+    },
+    user() {
+      return Store.state.user;
     },
     users() {
       return Store.state.users;

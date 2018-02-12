@@ -14,6 +14,9 @@ export default {
       return HTTP.put(`user/${payload.id}`, payload);
     }
   },
+  changePassword(payload) {
+    return HTTP.put(`user/${payload.id}/password`, payload);
+  },
   deleteUser(payload) {
     return HTTP.delete(`user/${payload}`);
   }
