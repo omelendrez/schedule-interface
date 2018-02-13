@@ -59,6 +59,9 @@ export default {
       return Store.state.budget.rows;
     },
     employees() {
+      if (!Store.state.employees.rows) {
+        return [];
+      }
       const employees = Store.state.employees.rows;
       const options = [];
       for (let i = 0; i < employees.length; i++) {
@@ -72,6 +75,9 @@ export default {
       return options;
     },
     sectors() {
+      if (!Store.state.sectors.rows) {
+        return [];
+      }
       const sectors = Store.state.sectors.rows;
       const options = [];
       for (let i = 0; i < sectors.length; i++) {
@@ -81,6 +87,12 @@ export default {
         });
       }
       return options;
+    },
+    positions() {
+      if (Store.state.positions.rows) {
+        this.updateChild();
+      }
+      return Store.state.positions;
     }
   },
   methods: {
@@ -128,10 +140,12 @@ export default {
       this.$router.push({ name: "Login" });
       return;
     }
+    Store.dispatch("LOAD_POSITIONS");
+    Store.dispatch("LOAD_SECTORS");
     Store.dispatch("LOAD_BRANCH_EMPLOYEES", {
       branch_id: this.budget.branch_id
     });
-    Store.dispatch("LOAD_SECTORS");
+
     if (this.item) {
       this.form.id = this.item.id;
       this.form.employee_id = this.item.employee_id;
@@ -140,26 +154,15 @@ export default {
       this.form.from = this.item.from;
       this.form.to = this.item.to;
     }
-    this.$nextTick(() => {
-      const positions = Store.state.positions.rows;
-      const options = [];
-      for (let i = 0; i < positions.length; i++) {
-        if (positions[i].sector_id === this.form.sector_id) {
-          options.push({
-            value: positions[i].id,
-            text: positions[i].name
-          });
-        }
-      }
-      this.filteredPositions = options;
-    });
+
+    this.updateChild();
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.budget {
+.grid-edit {
   background-color: white;
   padding: 60px;
 }

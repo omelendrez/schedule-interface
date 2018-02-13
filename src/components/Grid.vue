@@ -8,7 +8,7 @@
       <b-btn variant="primary" @click.stop="printGrid">Imprimir grilla</b-btn>
     </div>
 
-    <h2 v-show="!showForm">Grilla de programación del {{ formatedDate }}</h2>
+    <h4 v-show="!showForm">Grilla de programación {{ budget["branch.name"] }} para el {{ formatedDate }}</h4>
 
     <div class="input-container no-print" v-show="showForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
@@ -30,7 +30,7 @@
       <h5>
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
-      <b-table small bordered :items="rows" :fields="fields" head-variant="light">
+      <b-table small :items="rows" :fields="fields" head-variant="light">
         <template slot="fullName" slot-scope="data">
           {{data.item.last_name}}, {{data.item.first_name}}
         </template>
@@ -39,6 +39,10 @@
       <b-card title="Mensaje" class="mb-2">
         <p class="card-text"> {{ footer }} </p>
       </b-card>
+
+      <b-table small :items="colors" :fields="colorFields" head-variant="light" class="compact">
+      </b-table>
+
     </div>
 
     <b-modal id="modal-center" title="Borrar Presupuesto" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
@@ -69,104 +73,117 @@ export default {
       fields: [
         {
           key: "fullName",
-          label: "Empleado"
+          label: "Empleado",
+          class: "p-1"
         },
         {
           key: "sector",
-          label: "Sector"
+          label: "Sector",
+          class: "p-1"
         },
         {
           key: "h07",
           label: "07",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h08",
           label: "08",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h09",
           label: "09",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h10",
           label: "10",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h11",
           label: "11",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h12",
           label: "12",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h13",
           label: "13",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h14",
           label: "14",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h15",
           label: "15",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h16",
           label: "16",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h17",
           label: "17",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h18",
           label: "18",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h19",
           label: "19",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h20",
           label: "20",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h21",
           label: "21",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h22",
           label: "22",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h23",
           label: "23",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         },
         {
           key: "h24",
           label: "24",
-          class: "text-center"
+          class: "text-center p-0 pt-1 pb-1"
         }
       ],
-      rows: []
+      rows: [],
+      colors: [],
+      colorFields: [
+        {
+          key: "color",
+          label: "&nbsp;"
+        },
+        {
+          key: "sector_position",
+          label: "Sector / Función"
+        }
+      ]
     };
   },
   components: {
@@ -205,9 +222,28 @@ export default {
       let i = 0;
       let employeeId = 0;
       let record = {};
+      let colors = {};
       const rows = [];
+      const colorRows = [];
       while (i < data.length) {
         const item = data[i];
+        colors.sector_position = `${item["sector.name"]} / ${
+          item["position.name"]
+        }`;
+        colors.color = `<div style="background-color:${
+          item["position.color"]
+        }">&nbsp;</div>`;
+        if (
+          !colorRows.find(child => {
+            return (
+              child.sector_position ===
+              `${item["sector.name"]} / ${item["position.name"]}`
+            );
+          })
+        ) {
+          colorRows.push(colors);
+        }
+        colors = {};
         if (item.employee_id !== employeeId) {
           if (employeeId !== 0) {
             rows.push(record);
@@ -235,7 +271,18 @@ export default {
       rows.push(record);
       if (rows[0].id) {
         this.rows = rows;
+        colorRows.sort(this.compare);
+        this.colors = colorRows;
       }
+    },
+    compare(a, b) {
+      if (a.sector_position < b.sector_position) {
+        return -1;
+      }
+      if (a.sector_position > b.sector_position) {
+        return 1;
+      }
+      return 0;
     }
   },
   watch: {
@@ -267,10 +314,13 @@ export default {
       return Store.state.schedules;
     },
     formatedDate() {
-      return `${this.form.date.substr(-2)}/${this.form.date.substr(
-        5,
-        2
-      )}/${this.form.date.substr(0, 4)}`;
+      const budget = Store.state.budget.rows;
+      if (budget.date) {
+        return `${budget.date.substr(-2)}/${budget.date.substr(
+          5,
+          2
+        )}/${budget.date.substr(0, 4)}`;
+      }
     },
     dataOk() {
       return this.form.date !== "" && this.form.branch_id !== 0;
@@ -326,9 +376,20 @@ export default {
   @page {
     size: landscape;
   }
+  .grid {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+  }
 }
 .pull-right {
   margin-top: 18px;
   float: right;
+}
+.compact {
+  width: 300px;
+}
+.table-sm td {
+  color: red;
+  width: 20px !important;
 }
 </style>

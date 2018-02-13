@@ -3,10 +3,14 @@
     <Header />
 
     <div class="pull-right no-print">
-      <b-btn variant="success" href="/#/grid">Volver</b-btn>
+      <b-btn variant="success" href="/#/grid">Volver a grilla</b-btn>
     </div>
 
-    <h1>Programa</h1>
+    <h4 v-show="!showForm">Grilla de programación {{ budget["branch.name"] }} para el {{ formatedDate }}</h4>
+
+    <h5>
+      Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
+    </h5>
 
     <div class="add-button">
       <b-button @click="addItem" variant="info">Agregar</b-button>
@@ -22,6 +26,9 @@
     <b-table hover outlined :items="schedules.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
         <template slot="fullName" slot-scope="data">
           {{data.item["employee.last_name"]}}, {{data.item["employee.first_name"]}}
+        </template>
+        <template slot="hours" slot-scope="data">
+          {{data.item["to"]-data.item["from"]}}
         </template>
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
@@ -90,6 +97,12 @@ export default {
           class: "text-center"
         },
         {
+          key: "hours",
+          label: "Horas",
+          variant: "danger",
+          class: "text-center"
+        },
+        {
           key: "created_at",
           label: "Creado",
           class: "text-center"
@@ -145,12 +158,30 @@ export default {
     },
     budget() {
       return Store.state.budget.rows;
+    },
+    totalHoursBudget() {
+      return Store.state.budget.rows.hours;
+    },
+    totalScheduledHours() {
+      return Store.state.schedules.scheduled;
+    },
+    formatedDate() {
+      const budget = Store.state.budget.rows;
+      if (budget.date) {
+        return `${budget.date.substr(-2)}/${budget.date.substr(
+          5,
+          2
+        )}/${budget.date.substr(0, 4)}`;
+      }
     }
   },
   created() {
     if (!this.isLogged) {
       this.$router.push({ name: "Login" });
+      return;
     }
+    Store.dispatch("LOAD_POSITIONS");
+    Store.dispatch("LOAD_SECTORS");
   }
 };
 </script>

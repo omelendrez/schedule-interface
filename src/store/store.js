@@ -29,8 +29,8 @@ const state = {
     },
     count: 1
   },
-  sectors: [],
-  positions: [],
+  sectors: [{ rows: [] }],
+  positions: [{ rows: [] }],
   profiles: [],
   schedules: [],
   status: [],
