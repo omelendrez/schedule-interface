@@ -188,7 +188,6 @@ export default new Vuex.Store({
 
     async [types.SAVE_EMPLOYEE]({ commit }, item) {
       const employee = Employees.saveEmployee(item);
-      console.log(employee.data)
       commit(types.SET_RESULTS, {
         payload: employee.data
       });
