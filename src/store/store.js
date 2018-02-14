@@ -186,8 +186,12 @@ export default new Vuex.Store({
       Users.deleteUser(item.id);
     },
 
-    [types.SAVE_EMPLOYEE]({ commit }, item) {
-      Employees.saveEmployee(item);
+    async [types.SAVE_EMPLOYEE]({ commit }, item) {
+      const employee = Employees.saveEmployee(item);
+      console.log(employee.data)
+      commit(types.SET_RESULTS, {
+        payload: employee.data
+      });
     },
 
     [types.DELETE_EMPLOYEE]({ commit }, item) {
@@ -226,7 +230,6 @@ export default new Vuex.Store({
         payload: schedule.data
       });
     }
-
   },
 
   mutations: {
@@ -275,13 +278,19 @@ export default new Vuex.Store({
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
-      const hours = payload.schedule.rows.reduce(function (prevVal, elem, index, array) {
+      const hours = payload.schedule.rows.reduce(function(
+        prevVal,
+        elem,
+        index,
+        array
+      ) {
         return prevVal + elem.to - elem.from;
-      }, 0);
-      payload.schedule["scheduled"] = hours
+      },
+      0);
+      payload.schedule["scheduled"] = hours;
       state.schedules = payload.schedule;
       state.budget = payload.budget;
-      state.results = payload
+      state.results = payload;
     },
 
     [types.SET_RESULTS]: (state, { payload }) => {
@@ -291,6 +300,5 @@ export default new Vuex.Store({
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
       state.password = payload;
     }
-
   }
 });

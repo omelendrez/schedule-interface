@@ -5,38 +5,38 @@
 
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
-    <b-form-group horizontal id="badge" label="Legajo" label-for="badge">
-      <b-form-input id="badge" v-model.trim="form.badge"></b-form-input>
-    </b-form-group>
+      <b-form-group horizontal id="badge" label="Legajo" label-for="badge">
+        <b-form-input id="badge" v-model.trim="form.badge" required></b-form-input>
+      </b-form-group>
 
-    <b-form-group horizontal id="first_name" label="Nombre" label-for="first_name">
-      <b-form-input id="first_name" v-model.trim="form.first_name"></b-form-input>
-    </b-form-group>
+      <b-form-group horizontal id="first_name" label="Nombre" label-for="first_name">
+        <b-form-input id="first_name" v-model.trim="form.first_name" required></b-form-input>
+      </b-form-group>
 
-    <b-form-group horizontal id="last_name" label="Apellido" label-for="last_name">
-      <b-form-input id="last_name" v-model.trim="form.last_name"></b-form-input>
-    </b-form-group>
+      <b-form-group horizontal id="last_name" label="Apellido" label-for="last_name">
+        <b-form-input id="last_name" v-model.trim="form.last_name" required></b-form-input>
+      </b-form-group>
 
-    <b-form-group horizontal id="joining_date" label="Fecha de ingreso" label-for="joining_date">
-      <b-form-input id="joining_date" v-model.trim="form.joining_date" type="date"></b-form-input>
-    </b-form-group>
+      <b-form-group horizontal id="joining_date" label="Fecha de ingreso" label-for="joining_date">
+        <b-form-input id="joining_date" v-model.trim="form.joining_date" type="date" required></b-form-input>
+      </b-form-group>
 
-    <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-      <b-form-select  v-model="form.branch_id" :options="branches" class="mb-3"  />
-    </b-form-group>
+      <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
+        <b-form-select v-model="form.branch_id" :options="branches" class="mb-3" required/>
+      </b-form-group>
 
-    <b-form-group horizontal id="sector_id" label="Sector" label-for="sector_id">
-      <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" @change="updateChild" />
-    </b-form-group>
+      <b-form-group horizontal id="sector_id" label="Sector" label-for="sector_id">
+        <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" @change="updateChild" required/>
+      </b-form-group>
 
-    <b-form-group horizontal id="position_id" label="Función" label-for="position_id">
-      <b-form-select v-model="form.position_id" :options="filteredPositions" class="mb-3" />
-    </b-form-group>
+      <b-form-group horizontal id="position_id" label="Función" label-for="position_id">
+        <b-form-select v-model="form.position_id" :options="filteredPositions" class="mb-3" required/>
+      </b-form-group>
 
-    <div class="buttons">
-      <b-button type="submit" variant="info">Guardar</b-button>
-      <b-button type="reset" class="to-right">Volver</b-button>
-    </div>
+      <div class="buttons">
+        <b-button type="submit" variant="info">Guardar</b-button>
+        <b-button type="reset" class="to-right">Volver</b-button>
+      </div>
 
     </b-form>
 
@@ -92,6 +92,16 @@ export default {
     },
     item() {
       return Store.state.record;
+    },
+    results() {
+      return Store.state.results;
+    }
+  },
+  watch: {
+    results() {
+      this.$nextTick(() => {
+        this.$router.push({ name: "Employees" });
+      });
     }
   },
   methods: {
@@ -113,9 +123,6 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       Store.dispatch("SAVE_EMPLOYEE", this.form);
-      setTimeout(() => {
-        this.$router.push({ name: "Employees" });
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
