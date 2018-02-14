@@ -24,6 +24,12 @@
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
 
+      <b-alert variant="danger" :show="errorShow">{{ errorMsg }}</b-alert>
+
+    <b-modal id="modal-center" title="Guardar registro" v-model="warningShow" @ok="handleOk" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
+      <p class="my-4"><strong>{{ warningMsg }}</strong>, desea grabar de todos modos?</p>
+    </b-modal>
+
     </b-form>
 
   </b-container>
@@ -45,10 +51,47 @@ export default {
         position_id: 0
       },
       show: true,
-      filteredPositions: []
+      filteredPositions: [],
+      errorShow: false,
+      errorMsg: "",
+      warningShow: false,
+      warningMsg: ""
     };
   },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.id) {
+        const data = {
+          date: this.budget.date,
+          branch_id: this.budget.branch_id
+        };
+        Store.dispatch("LOAD_SCHEDULES", data);
+      } else {
+        if (results.error) {
+          switch (results.error.type) {
+            case 0:
+              Store.dispatch("SAVE_SCHEDULE", this.form);
+              break;
+            case 1:
+              this.errorMsg = results.error.message;
+              this.errorShow = true;
+              break;
+            case 2:
+              this.warningMsg = results.error.message;
+              this.warningShow = true;
+              break;
+          }
+        } else {
+          this.$router.push({ name: "GridList" });
+        }
+      }
+    }
+  },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -98,18 +141,10 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
+      this.warningShow = false;
+      this.errorShow = false;
       this.form["budget_id"] = this.budget.id;
-      Store.dispatch("SAVE_SCHEDULE", this.form);
-      setTimeout(() => {
-        const data = {
-          date: this.budget.date,
-          branch_id: this.budget.branch_id
-        };
-        Store.dispatch("LOAD_SCHEDULES", data);
-        setTimeout(() => {
-          this.$router.push({ name: "GridList" });
-        }, 500);
-      }, 500);
+      Store.dispatch("SCHEDULE_VERIFY_INPUT", this.form);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -133,6 +168,10 @@ export default {
         }
         this.filteredPositions = options;
       });
+    },
+    handleOk() {
+      this.form["budget_id"] = this.budget.id;
+      Store.dispatch("SAVE_SCHEDULE", this.form);
     }
   },
   created() {
@@ -176,5 +215,6 @@ export default {
 }
 .buttons {
   margin: 0 auto;
+  margin-bottom: 18px;
 }
 </style>

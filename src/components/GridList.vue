@@ -6,7 +6,7 @@
       <b-btn variant="success" href="/#/grid">Volver a grilla</b-btn>
     </div>
 
-    <h4 v-show="!showForm">Grilla de programación {{ budget["branch.name"] }} para el {{ formatedDate }}</h4>
+    <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ formatedDate }}</h4>
 
     <h5>
       Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
@@ -51,7 +51,6 @@
 <script>
 import Store from "../store/store";
 import Header from "./Header";
-import { setTimeout } from "timers";
 
 export default {
   name: "GridList",
@@ -137,19 +136,25 @@ export default {
     },
     handleOk() {
       Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
-      setTimeout(() => {
-        this.loadData();
-      }, 500);
-    },
-    loadData() {
-      const data = {
-        date: this.budget.date,
-        branch_id: this.budget.branch_id
-      };
-      Store.dispatch("LOAD_SCHEDULES", data);
+    }
+  },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results) {
+        const data = {
+          date: this.budget.date,
+          branch_id: this.budget.branch_id
+        };
+        Store.dispatch("LOAD_SCHEDULES", data);
+      }
+      return Store.state.results;
     }
   },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -165,6 +170,7 @@ export default {
     totalScheduledHours() {
       return Store.state.schedules.scheduled;
     },
+
     formatedDate() {
       const budget = Store.state.budget.rows;
       if (budget.date) {

@@ -3,13 +3,13 @@
     <h1>Presupuesto</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-        <b-form-select v-model="form.branch_id" :options="branches"/>
+        <b-form-select v-model="form.branch_id" :options="branches" required/>
       </b-form-group>
       <b-form-group horizontal id="date" label="Día" label-for="date">
-        <b-form-input id="date" type="date" v-model.trim="form.date"></b-form-input>
+        <b-form-input id="date" type="date" v-model.trim="form.date" required></b-form-input>
       </b-form-group>
       <b-form-group horizontal id="hours" label="Horas" label-for="hours">
-        <b-form-input id="hours" v-model.trim="form.hours"></b-form-input>
+        <b-form-input id="hours" v-model.trim="form.hours" required></b-form-input>
       </b-form-group>
       <b-form-group horizontal id="footer" label="Mensaje" label-for="footer">
       <b-form-textarea
@@ -67,6 +67,7 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
+      this.form.footer = this.form.footer ? this.form.footer : "";
       Store.dispatch("SAVE_BUDGET", this.form);
       setTimeout(() => {
         this.$router.push({ name: "Budgets" });

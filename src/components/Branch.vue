@@ -3,7 +3,7 @@
     <h1>Local</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
       <b-form-group horizontal id="name" label="Nombre" label-for="name">
-        <b-form-input id="name" v-model.trim="form.name"></b-form-input>
+        <b-form-input id="name" v-model.trim="form.name" required></b-form-input>
       </b-form-group>
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>

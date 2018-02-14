@@ -1,6 +1,8 @@
 export const ADD_ITEM = 'ADD_ITEM'
 export const SET_RECORD = 'SET_RECORD'
 
+export const SET_RESULTS = 'SET_RESULTS'
+
 export const LOGIN = 'LOGIN'
 export const SET_USER = 'SET_USER'
 export const LOGOUT_USER = 'LOGOUT_USER'
@@ -53,3 +55,4 @@ export const LOAD_SCHEDULES = 'LOAD_SCHEDULES'
 export const SET_SCHEDULES = 'SET_SCHEDULES'
 export const SAVE_SCHEDULE = 'SAVE_SCHEDULE'
 export const DELETE_SCHEDULE = 'DELETE_SCHEDULE'
+export const SCHEDULE_VERIFY_INPUT = 'SCHEDULE_VERIFY_INPUT'

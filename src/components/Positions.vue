@@ -26,7 +26,7 @@
 
     <b-pagination :total-rows="positions.count" :per-page="perPage" v-model="currentPage" />
 
-    <b-modal id="modal-center" title="Eliminar función" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
+    <b-modal id="modal-center" title="Eliminar función" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea eliminar la función <strong>{{ selectedItem.name }} </strong>?</p>
     </b-modal>
 
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     addItem() {
-      Store.dispatch("ADD_ITEM", { id: 0, name: "", sector_id: 0 });
+      Store.dispatch("ADD_ITEM", { id: 0, name: "", sector_id: 0, color: "" });
       this.$router.push({ name: "Position" });
     },
     editItem(item) {
@@ -120,6 +120,7 @@ export default {
       return;
     }
     Store.dispatch("LOAD_POSITIONS");
+    Store.dispatch("LOAD_SECTORS");
   }
 };
 </script>
