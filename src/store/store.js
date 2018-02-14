@@ -38,7 +38,8 @@ const state = {
   users: [],
   user: [],
   password: [],
-  record: []
+  record: [],
+  results: []
 };
 
 export default new Vuex.Store({
@@ -205,12 +206,25 @@ export default new Vuex.Store({
       Budgets.deleteBudget(item.id);
     },
 
-    [types.SAVE_SCHEDULE]({ commit }, item) {
-      Schedule.saveSchedule(item);
+    async [types.SAVE_SCHEDULE]({ commit }, payload) {
+      const schedule = await Schedule.saveSchedule(payload);
+      commit(types.SET_RESULTS, {
+        payload: schedule.data
+      });
     },
 
-    [types.DELETE_SCHEDULE]({ commit }, item) {
-      Schedule.deleteSchedule(item.id);
+    async [types.SCHEDULE_VERIFY_INPUT]({ commit }, payload) {
+      const schedule = await Schedule.verifySchedule(payload);
+      commit(types.SET_RESULTS, {
+        payload: schedule.data
+      });
+    },
+
+    async [types.DELETE_SCHEDULE]({ commit }, item) {
+      const schedule = await Schedule.deleteSchedule(item.id);
+      commit(types.SET_RESULTS, {
+        payload: schedule.data
+      });
     }
 
   },
@@ -267,6 +281,11 @@ export default new Vuex.Store({
       payload.schedule["scheduled"] = hours
       state.schedules = payload.schedule;
       state.budget = payload.budget;
+      state.results = payload
+    },
+
+    [types.SET_RESULTS]: (state, { payload }) => {
+      state.results = payload;
     },
 
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
