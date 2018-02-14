@@ -4,21 +4,23 @@
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
       <b-form-group horizontal id="sector_id" label="Sector" label-for="sector_id">
-        <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" />
+        <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3"  required/>
       </b-form-group>
 
       <b-form-group horizontal id="name" label="Nombre" label-for="name">
-        <b-form-input id="name" v-model.trim="form.name"></b-form-input>
+        <b-form-input id="name" v-model.trim="form.name" required></b-form-input>
       </b-form-group>
 
       <b-form-group horizontal id="color" label="Color" label-for="color">
-        <b-form-input id="color" type="color" v-model.trim="form.color"></b-form-input>
+        <b-form-input id="color" type="color" v-model.trim="form.color" @change="cleanError" required></b-form-input>
       </b-form-group>
 
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
+
+      <b-alert variant="danger" :show="errorShow">{{ errorMsg }}</b-alert>
 
     </b-form>
   </b-container>
@@ -34,10 +36,12 @@ export default {
       form: {
         id: 0,
         name: "",
-        color: "",
+        color: "#ffffff",
         sector_id: 0
       },
-      show: true
+      show: true,
+      errorShow: false,
+      errorMsg: ""
     };
   },
   computed: {
@@ -62,6 +66,11 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
+      if (!this.form.color.length) {
+        this.errorShow = true;
+        this.errorMsg = "Debe asignar un color distinto de negro";
+        return false;
+      }
       Store.dispatch("SAVE_POSITION", this.form);
       setTimeout(() => {
         this.$router.push({ name: "Positions" });
@@ -77,6 +86,10 @@ export default {
       this.$nextTick(() => {
         this.$router.push({ name: "Positions" });
       });
+    },
+    cleanError() {
+      this.errorShow = false;
+      this.errorMsg = "";
     }
   },
   created() {
@@ -84,7 +97,6 @@ export default {
       this.$router.push({ name: "Login" });
       return;
     }
-    Store.dispatch("LOAD_SECTORS");
     if (this.item) {
       this.form.id = this.item.id;
       this.form.name = this.item.name;
@@ -111,5 +123,6 @@ export default {
 }
 .buttons {
   margin: 0 auto;
+  margin-bottom: 18px;
 }
 </style>
