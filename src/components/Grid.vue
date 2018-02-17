@@ -205,6 +205,7 @@ export default {
     loadData() {
       this.showError = false;
       this.showMessage = false;
+      localStorage.setItem("form", JSON.stringify(this.form));
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
@@ -348,7 +349,12 @@ export default {
       this.form.date = this.budget.date;
       this.loadData();
     } else {
-      this.showForm = true;
+      if (localStorage.getItem("form")) {
+        this.form = JSON.parse(localStorage.getItem("form"));
+        this.loadData();
+      } else {
+        this.showForm = true;
+      }
     }
   }
 };
