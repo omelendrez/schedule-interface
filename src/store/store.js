@@ -292,7 +292,26 @@ export default new Vuex.Store({
     },
 
     [types.SET_POSITIONS]: (state, { payload }) => {
-      state.positions = payload;
+      const positions = payload.rows;
+      const records = []
+      let record = {}
+      for (let i = 0; i < positions.length; i++) {
+        record = {
+          id: positions[i].id,
+          created_at: positions[i].created_at,
+          name: positions[i].name,
+          color: positions[i].color,
+          div: `<div style="background-color:${positions[i].color};">&nbsp;</div>`,
+          sector_id: positions[i].sector_id,
+          updated_at: positions[i].updated_at,
+          "sector.name": positions[i]["sector.name"]
+        }
+        records.push(record)
+      }
+      state.positions = {
+        rows: records,
+        count: payload.count
+      }
     },
 
     [types.SET_PROFILES]: (state, { payload }) => {

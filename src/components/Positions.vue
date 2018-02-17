@@ -36,7 +36,6 @@
 <script>
 import Store from "../store/store";
 import Header from "./Header";
-import { setTimeout } from "timers";
 
 export default {
   name: "Positions",
@@ -59,6 +58,11 @@ export default {
           key: "name",
           label: "Función",
           sortable: true
+        },
+        {
+          key: "div",
+          label: "Color",
+          class: "text-center"
         },
         {
           key: "created_at",
@@ -87,9 +91,7 @@ export default {
     },
     editItem(item) {
       Store.dispatch("ADD_ITEM", item);
-      setTimeout(() => {
-        this.$router.push({ name: "Position" });
-      }, 500);
+      this.$router.push({ name: "Position" });
     },
     deleteItem(item, type) {
       this.selectedItem = item;

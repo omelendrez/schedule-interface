@@ -8,7 +8,8 @@
                       type="text"
                       v-model="form.user_name"
                       required
-                      autocomplete="false"
+                      autofocus="true"
+                      autocomplete="username"
                       placeholder="Usuario">
         </b-form-input>
       </b-form-group>
@@ -18,7 +19,7 @@
                       type="password"
                       v-model="form.password"
                       required
-                      autocomplete="false"
+                      autocomplete="current-password"
                       placeholder="Password">
         </b-form-input>
       </b-form-group>
