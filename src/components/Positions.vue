@@ -101,12 +101,21 @@ export default {
     },
     handleOk() {
       Store.dispatch("DELETE_POSITION", this.selectedItem);
-      setTimeout(() => {
-        Store.dispatch("LOAD_POSITIONS");
-      }, 500);
+    }
+  },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      Store.dispatch("LOAD_POSITIONS");
     }
   },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },

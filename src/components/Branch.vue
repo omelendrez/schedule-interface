@@ -27,7 +27,19 @@ export default {
       }
     };
   },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      this.$router.push({ name: "Branches" });
+    }
+  },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -39,9 +51,6 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       Store.dispatch("SAVE_BRANCH", this.form);
-      setTimeout(() => {
-        this.$router.push({ name: "Branches" });
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();

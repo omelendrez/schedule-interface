@@ -44,7 +44,19 @@ export default {
       errorMsg: ""
     };
   },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      this.$router.push({ name: "Positions" });
+    }
+  },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -72,9 +84,6 @@ export default {
         return false;
       }
       Store.dispatch("SAVE_POSITION", this.form);
-      setTimeout(() => {
-        this.$router.push({ name: "Positions" });
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();

@@ -133,7 +133,19 @@ export default {
   components: {
     Header
   },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      this.$router.push({ name: "Availability" });
+    }
+  },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -176,9 +188,6 @@ export default {
         su: this.form.su + "-" + this.form.su2
       };
       Store.dispatch("SAVE_AVAILABILITY", data);
-      setTimeout(() => {
-        this.$router.push({ name: "Availability" });
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();

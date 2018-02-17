@@ -26,7 +26,7 @@
 
     <b-pagination :total-rows="sectors.count" :per-page="perPage" v-model="currentPage" />
 
-    <b-modal id="modal-center" title="Eliminar sector" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
+    <b-modal id="modal-center" title="Eliminar sector" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea eliminar el sector <strong>{{ selectedItem.name }} </strong>?</p>
     </b-modal>
 
@@ -93,12 +93,21 @@ export default {
     },
     handleOk() {
       Store.dispatch("DELETE_SECTOR", this.selectedItem);
-      setTimeout(() => {
-        Store.dispatch("LOAD_SECTORS");
-      }, 500);
+    }
+  },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      Store.dispatch("LOAD_SECTORS");
     }
   },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },

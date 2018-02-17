@@ -132,12 +132,21 @@ export default {
     },
     handleOk() {
       Store.dispatch("DELETE_EMPLOYEE", this.selectedItem);
-      setTimeout(() => {
-        Store.dispatch("LOAD_EMPLOYEES");
-      }, 500);
+    }
+  },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      Store.dispatch("LOAD_EMPLOYEES");
     }
   },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },

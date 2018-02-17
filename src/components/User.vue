@@ -5,21 +5,23 @@
     <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
 
       <b-form-group horizontal id="user_name" label="Nombre de usuario" label-for="user_name">
-        <b-form-input id="user_name" v-model.trim="form.user_name"></b-form-input>
+        <b-form-input id="user_name" v-model.trim="form.user_name" required></b-form-input>
       </b-form-group>
 
       <b-form-group horizontal id="full_name" label="Nombre completo" label-for="full_name">
-        <b-form-input id="full_name" v-model.trim="form.full_name"></b-form-input>
+        <b-form-input id="full_name" v-model.trim="form.full_name" required></b-form-input>
       </b-form-group>
 
       <b-form-group horizontal id="profile_id" label="Perfil" label-for="profile_id">
-        <b-form-select v-model="form.profile_id" :options="profiles" class="mb-3" />
+        <b-form-select v-model="form.profile_id" :options="profiles" class="mb-3"  required/>
       </b-form-group>
 
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
+
+      <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
 
     </b-form>
 
@@ -39,10 +41,26 @@ export default {
         full_name: "",
         profile_id: 0,
         show: true
-      }
+      },
+      errorShow: false,
+      errorMessage: ""
     };
   },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        this.errorMessage = results.message;
+        this.errorShow = results.error;
+        return;
+      }
+      this.$router.push({ name: "Users" });
+    }
+  },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -79,9 +97,6 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       Store.dispatch("SAVE_USER", this.form);
-      setTimeout(() => {
-        this.$router.push({ name: "Users" });
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -105,7 +120,7 @@ export default {
       this.form.id = this.item.id;
       this.form.user_name = this.item.user_name;
       this.form.full_name = this.item.full_name;
-      this.form.profile_id = this.item.profile_id
+      this.form.profile_id = this.item.profile_id;
     }
   }
 };
@@ -127,5 +142,6 @@ export default {
 }
 .buttons {
   margin: 0 auto;
+  margin-bottom: 18px;
 }
 </style>
