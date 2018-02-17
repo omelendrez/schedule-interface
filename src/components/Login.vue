@@ -1,5 +1,5 @@
 <template>
-<div>
+<b-container class="login" fluid>
   <Header />
   <b-card no-block id="loginCard">
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="loginForm">
@@ -29,7 +29,7 @@
     <b-alert variant="danger" :show="isLoginError">Credenciales incorrectas</b-alert>
     <b-alert variant="success" :show="isLoginCorrect">Autorizado</b-alert>
   </b-card>
-</div>
+</b-container>
 </template>
 
 <script>

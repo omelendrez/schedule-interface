@@ -342,6 +342,7 @@ export default {
       this.$router.push({ name: "Login" });
     }
     this.showForm = false;
+    Store.dispatch("SET_MENU_OPTION", this.$route.path);
     if (this.budget && this.budget.id) {
       this.form.branch_id = this.budget.branch_id;
       this.form.date = this.budget.date;

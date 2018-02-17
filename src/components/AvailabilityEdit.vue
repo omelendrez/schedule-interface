@@ -7,7 +7,7 @@
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
     <b-form-group  id="employee_id" label="Empleado" label-for="employee_id">
-      <b-form-select v-model="form.employee_id" :options="employees" class="mb-3" @change="verify" />
+      <b-form-select v-model="form.employee_id" :options="employees" class="mb-3" @change="verify" required/>
     </b-form-group>
 
     <b-row  class="text-center bg-info">

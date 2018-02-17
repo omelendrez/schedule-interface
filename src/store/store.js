@@ -17,6 +17,7 @@ import * as types from "../store/mutation-types";
 Vue.use(Vuex);
 
 const state = {
+  option: false,
   availability: [],
   branches: [],
   budgets: [],
@@ -45,6 +46,12 @@ const state = {
 export default new Vuex.Store({
   state,
   actions: {
+    [types.SET_MENU_OPTION]({ commit }, option) {
+      commit(types.ASSIGN_MENU_OPTION, {
+        payload: option
+      });
+    },
+
     [types.ADD_ITEM]({ commit }, item) {
       commit(types.SET_RECORD, {
         payload: item
@@ -268,6 +275,10 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    [types.ASSIGN_MENU_OPTION]: (state, { payload }) => {
+      state.option = payload;
+    },
+
     [types.SET_USER]: (state, { payload }) => {
       state.user = payload;
     },

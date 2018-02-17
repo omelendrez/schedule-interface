@@ -1,3 +1,6 @@
+export const SET_MENU_OPTION = 'SET_MENU_OPTION'
+export const ASSIGN_MENU_OPTION = 'ASSIGN_MENU_OPTION'
+
 export const ADD_ITEM = 'ADD_ITEM'
 export const SET_RECORD = 'SET_RECORD'
 

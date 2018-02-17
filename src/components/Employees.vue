@@ -159,6 +159,7 @@ export default {
       this.$router.push({ name: "Login" });
       return;
     }
+    Store.dispatch("SET_MENU_OPTION", this.$route.path);
     Store.dispatch("LOAD_EMPLOYEES");
     Store.dispatch("LOAD_BRANCHES");
     Store.dispatch("LOAD_SECTORS");

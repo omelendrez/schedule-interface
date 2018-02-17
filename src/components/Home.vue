@@ -28,6 +28,7 @@ export default {
       this.$router.push({ name: "Login" });
       return false;
     }
+    Store.dispatch("SET_MENU_OPTION", this.$route.path);
     Store.dispatch("LOAD_BRANCHES");
   }
 };
