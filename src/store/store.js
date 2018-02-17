@@ -45,6 +45,12 @@ const state = {
 export default new Vuex.Store({
   state,
   actions: {
+    [types.ADD_ITEM]({ commit }, item) {
+      commit(types.SET_RECORD, {
+        payload: item
+      });
+    },
+
     async [types.LOGIN]({ commit }, payload) {
       const user = await Users.login(payload);
       commit(types.SET_USER, {
@@ -148,65 +154,95 @@ export default new Vuex.Store({
       });
     },
 
-    [types.ADD_ITEM]({ commit }, item) {
-      commit(types.SET_RECORD, {
-        payload: item
+    async [types.SAVE_BRANCH]({ commit }, item) {
+      const branch = await Branches.saveBranch(item);
+      commit(types.SET_RESULTS, {
+        payload: branch.data
+      })
+    },
+
+    async [types.DELETE_BRANCH]({ commit }, item) {
+      const branch = await Branches.deleteBranch(item.id);
+      commit(types.SET_RESULTS, {
+        payload: branch.data
+      })
+    },
+
+    async [types.SAVE_SECTOR]({ commit }, item) {
+      const sector = await Sectors.saveSector(item);
+      commit(types.SET_RESULTS, {
+        payload: sector.data
+      })
+    },
+
+    async [types.DELETE_SECTOR]({ commit }, item) {
+      const sector = await Sectors.deleteSector(item.id);
+      commit(types.SET_RESULTS, {
+        payload: sector.data
+      })
+    },
+
+    async [types.SAVE_POSITION]({ commit }, item) {
+      const position = await Positions.savePosition(item);
+      commit(types.SET_RESULTS, {
+        payload: position.data
       });
     },
 
-    [types.SAVE_BRANCH]({ commit }, item) {
-      Branches.saveBranch(item);
+    async [types.DELETE_POSITION]({ commit }, item) {
+      const position = await Positions.deletePosition(item.id);
+      commit(types.SET_RESULTS, {
+        payload: position.data
+      })
     },
 
-    [types.DELETE_BRANCH]({ commit }, item) {
-      Branches.deleteBranch(item.id);
+    async [types.SAVE_USER]({ commit }, item) {
+      const user = await Users.saveUser(item);
+      commit(types.SET_RESULTS, {
+        payload: user.data
+      });
     },
 
-    [types.SAVE_SECTOR]({ commit }, item) {
-      Sectors.saveSector(item);
-    },
-
-    [types.DELETE_SECTOR]({ commit }, item) {
-      Sectors.deleteSector(item.id);
-    },
-
-    [types.SAVE_POSITION]({ commit }, item) {
-      Positions.savePosition(item);
-    },
-
-    [types.DELETE_POSITION]({ commit }, item) {
-      Positions.deletePosition(item.id);
-    },
-
-    [types.SAVE_USER]({ commit }, item) {
-      Users.saveUser(item);
-    },
-
-    [types.DELETE_USER]({ commit }, item) {
-      Users.deleteUser(item.id);
+    async [types.DELETE_USER]({ commit }, item) {
+      const user = await Users.deleteUser(item.id);
+      commit(types.SET_RESULTS, {
+        payload: user.data
+      });
     },
 
     async [types.SAVE_EMPLOYEE]({ commit }, item) {
-      const employee = Employees.saveEmployee(item);
+      const employee = await Employees.saveEmployee(item);
       commit(types.SET_RESULTS, {
         payload: employee.data
       });
     },
 
-    [types.DELETE_EMPLOYEE]({ commit }, item) {
-      Employees.deleteEmployee(item.id);
+    async [types.DELETE_EMPLOYEE]({ commit }, item) {
+      const employee = await Employees.deleteEmployee(item.id);
+      commit(types.SET_RESULTS, {
+        payload: employee.data
+      })
     },
 
-    [types.SAVE_AVAILABILITY]({ commit }, item) {
-      Avaliability.saveAvailability(item);
+    async [types.SAVE_AVAILABILITY]({ commit }, item) {
+      const availability = await Avaliability.saveAvailability(item);
+      commit(types.SET_RESULTS, {
+        payload: availability.data
+      })
     },
 
-    [types.SAVE_BUDGET]({ commit }, item) {
-      Budgets.saveBudget(item);
+    async [types.SAVE_BUDGET]({ commit }, item) {
+      const budget = await Budgets.saveBudget(item);
+      commit(types.SET_RESULTS, {
+        payload: budget.data
+      })
     },
 
-    [types.DELETE_BUDGET]({ commit }, item) {
-      Budgets.deleteBudget(item.id);
+    async [types.DELETE_BUDGET]({ commit }, item) {
+      const budget = await Budgets.deleteBudget(item.id);
+      commit(types.SET_RESULTS, {
+        payload: budget.data
+      })
     },
 
     async [types.SAVE_SCHEDULE]({ commit }, payload) {
@@ -277,7 +313,7 @@ export default new Vuex.Store({
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
-      const hours = payload.schedule.rows.reduce(function(
+      const hours = payload.schedule.rows.reduce(function (
         prevVal,
         elem,
         index,

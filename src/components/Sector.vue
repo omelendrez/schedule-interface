@@ -27,7 +27,19 @@ export default {
       }
     };
   },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      this.$router.push({ name: "Sectors" });
+    }
+  },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -53,9 +65,6 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       Store.dispatch("SAVE_SECTOR", this.form);
-      setTimeout(() => {
-        this.$router.push({ name: "Sectors" });
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -97,4 +106,5 @@ export default {
 }
 .buttons {
   margin: 0 auto;
-}</style>
+}
+</style>

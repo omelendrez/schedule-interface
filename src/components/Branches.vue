@@ -37,7 +37,6 @@
 <script>
 import Store from "../store/store";
 import Header from "./Header";
-import { setTimeout } from "timers";
 
 export default {
   name: "Branches",
@@ -100,12 +99,21 @@ export default {
     },
     handleOk() {
       Store.dispatch("DELETE_BRANCH", this.selectedItem);
-      setTimeout(() => {
-        Store.dispatch("LOAD_BRANCHES");
-      }, 500);
+    }
+  },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      Store.dispatch("LOAD_BRANCHES");
     }
   },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },

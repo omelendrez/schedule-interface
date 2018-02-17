@@ -99,9 +99,7 @@ export default {
   },
   watch: {
     results() {
-      this.$nextTick(() => {
-        this.$router.push({ name: "Employees" });
-      });
+      this.$router.push({ name: "Employees" });
     }
   },
   methods: {

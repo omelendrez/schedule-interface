@@ -36,7 +36,6 @@
 <script>
 import Store from "../store/store";
 import Header from "./Header";
-import { setTimeout } from "timers";
 
 export default {
   name: "Budgets",
@@ -107,12 +106,21 @@ export default {
     },
     handleOk() {
       Store.dispatch("DELETE_BUDGET", this.selectedItem);
-      setTimeout(() => {
-        Store.dispatch("LOAD_BUDGETS");
-      }, 500);
+    }
+  },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        return;
+      }
+      Store.dispatch("LOAD_BUDGETS");
     }
   },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },

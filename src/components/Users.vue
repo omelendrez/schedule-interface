@@ -107,9 +107,6 @@ export default {
     },
     handleOk() {
       Store.dispatch("DELETE_USER", this.selectedItem);
-      setTimeout(() => {
-        Store.dispatch("LOAD_USERS");
-      }, 500);
     },
     deleteItem(item, type) {
       this.selectedItem = item;
@@ -118,6 +115,11 @@ export default {
       } else {
         this.handleOk();
       }
+    }
+  },
+  watch: {
+    results() {
+      Store.dispatch("LOAD_USERS");
     }
   },
   computed: {
@@ -129,6 +131,9 @@ export default {
     },
     users() {
       return Store.state.users;
+    },
+    results() {
+      return Store.state.results;
     }
   },
   created() {

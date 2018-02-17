@@ -24,6 +24,7 @@
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
+      <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
     </b-form>
   </b-container>
 </template>
@@ -42,10 +43,26 @@ export default {
         branch_id: 0,
         footer: ""
       },
-      show: true
+      show: true,
+      errorShow: false,
+      errorMessage: ""
     };
   },
+  watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.error) {
+        this.errorMessage = results.message;
+        this.errorShow = results.error;
+        return;
+      }
+      this.$router.push({ name: "Budgets" });
+    }
+  },
   computed: {
+    results() {
+      return Store.state.results;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -69,9 +86,6 @@ export default {
       evt.preventDefault();
       this.form.footer = this.form.footer ? this.form.footer : "";
       Store.dispatch("SAVE_BUDGET", this.form);
-      setTimeout(() => {
-        this.$router.push({ name: "Budgets" });
-      }, 500);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -115,5 +129,6 @@ export default {
 }
 .buttons {
   margin: 0 auto;
+  margin-bottom: 18px;
 }
 </style>
