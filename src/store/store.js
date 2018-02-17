@@ -32,6 +32,7 @@ const state = {
   },
   sectors: [{ rows: [] }],
   positions: [{ rows: [] }],
+  positionSector: [],
   profiles: [],
   schedules: [],
   status: [],
@@ -271,7 +272,15 @@ export default new Vuex.Store({
       commit(types.SET_RESULTS, {
         payload: schedule.data
       });
+    },
+
+    async [types.LOAD_POSITION_SECTOR]({ commit }, payload) {
+      const position = await Positions.fetchPositionSector();
+      commit(types.SET_POSITION_SECTOR, {
+        payload: position.data
+      });
     }
+
   },
 
   mutations: {
@@ -364,6 +373,21 @@ export default new Vuex.Store({
 
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
       state.password = payload;
+    },
+
+    [types.SET_POSITION_SECTOR]: (state, { payload }) => {
+      const positions = payload.rows
+      const formatted = []
+      let record = {}
+      for (let i = 0; i < positions.length; i++) {
+        record = {
+          text: `${positions[i]["sector.name"]} / ${positions[i].name}`,
+          value: positions[i].id
+        }
+        formatted.push(record)
+      }
+      state.positionSector = formatted;
     }
+
   }
 });

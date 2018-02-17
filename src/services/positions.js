@@ -14,6 +14,9 @@ export default {
   fetchSectorPositions(payload) {
     return HTTP.get(`position/${payload.sector_id}/sector`, payload)
   },
+  fetchPositionSector() {
+    return HTTP.get(`position/sector`)
+  },
   deletePosition(payload) {
     return HTTP.delete(`position/${payload}`);
   }
