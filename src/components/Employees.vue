@@ -14,7 +14,7 @@
         </b-input-group>
       </b-form-group>
 
-      <b-table hover outlined :items="employees.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+      <b-table hover outlined small :items="employees.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
         <template slot="fullName" slot-scope="cell">
           {{cell.item["badge"]}} - {{cell.item["last_name"]}}, {{cell.item["first_name"]}}
         </template>
@@ -45,7 +45,7 @@ export default {
   name: "Employees",
   data() {
     return {
-      perPage: 10,
+      perPage: 15,
       currentPage: 1,
       filter: null,
       show: false,
@@ -103,6 +103,7 @@ export default {
     },
     editItem(item) {
       Store.dispatch("ADD_ITEM", item);
+      Store.dispatch("LOAD_EMPLOYEE", item);
       this.$router.push({ name: "Employee" });
     },
     deleteItem(item, type) {

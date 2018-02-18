@@ -4,7 +4,7 @@
     <h1>Empleado</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-card no-body>
-          <b-tabs card>
+          <b-tabs card v-model="tabIndex">
             <b-tab title="Info del empleado" active>
 
               <b-form-group horizontal id="badge" label="Legajo" label-for="badge">
@@ -30,7 +30,7 @@
 
             <b-tab title="Asignaciones">
               <b-form-group class="assignations">
-                <b-form-checkbox-group stacked v-model="form.selected" :options="positions" />
+                <b-form-checkbox-group stacked v-model="form.selectedPositions" :options="positions" />
               </b-form-group>
             </b-tab>
 
@@ -47,64 +47,64 @@
               <b-row class="m-1">
                 <b-col cols="2"><label>Lunes</label></b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.mo_from"></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_0_from"></b-form-input>
                 </b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.mo_to" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_0_to" ></b-form-input>
                 </b-col>
               </b-row>
               <b-row class="m-1">
                 <b-col cols="2"><label>Martes</label></b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.tu_from" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_1_from" ></b-form-input>
                 </b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.tu_to" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_1_to" ></b-form-input>
                 </b-col>
               </b-row>
               <b-row class="m-1">
                 <b-col cols="2"><label>Miércoles</label></b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.we_from" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_2_from" ></b-form-input>
                 </b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.we_to" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_2_to" ></b-form-input>
                 </b-col>
               </b-row>
               <b-row class="m-1">
                 <b-col cols="2"><label>Jueves</label></b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.th_from" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_3_from" ></b-form-input>
                 </b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.th_to" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_3_to" ></b-form-input>
                 </b-col>
               </b-row>
               <b-row class="m-1">
                 <b-col cols="2"><label>Viernes</label></b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.fr_from" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_4_from" ></b-form-input>
                 </b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.fr_to" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_4_to" ></b-form-input>
                 </b-col>
               </b-row>
               <b-row class="m-1">
                 <b-col cols="2"><label>Sábado</label></b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.sa_from" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_5_from" ></b-form-input>
                 </b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.sa_to" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_5_to" ></b-form-input>
                 </b-col>
               </b-row>
               <b-row class="m-1">
                 <b-col cols="2"><label>Domingo</label></b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.su_from" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_6_from" ></b-form-input>
                 </b-col>
                 <b-col cols="2">
-                  <b-form-input type="text" v-model="form.su_to" ></b-form-input>
+                  <b-form-input type="text" v-model="form.fld_6_to" ></b-form-input>
                 </b-col>
               </b-row>
             </b-tab>
@@ -115,6 +115,8 @@
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
+
+      <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
 
     </b-form>
 
@@ -135,22 +137,25 @@ export default {
         last_name: "",
         joining_date: "",
         branch_id: 0,
-        mo_from: "",
-        mo_to: "",
-        tu_from: "",
-        tu_to: "",
-        we_from: "",
-        we_to: "",
-        th_from: "",
-        th_to: "",
-        fr_from: "",
-        fr_to: "",
-        sa_from: "",
-        sa_to: "",
-        su_from: "",
-        su_to: "",
-        selected: []
+        fld_0_from: "",
+        fld_0_to: "",
+        fld_1_from: "",
+        fld_1_to: "",
+        fld_2_from: "",
+        fld_2_to: "",
+        fld_3_from: "",
+        fld_3_to: "",
+        fld_4_from: "",
+        fld_4_to: "",
+        fld_5_from: "",
+        fld_5_to: "",
+        fld_6_from: "",
+        fld_6_to: "",
+        selectedPositions: []
       },
+      errorShow: false,
+      errorMessage: "",
+      tabIndex: 0,
       show: true,
       fields: [
         {
@@ -161,7 +166,29 @@ export default {
       ]
     };
   },
+  watch: {
+    employee() {
+      const avail = Store.state.employee.availabilities;
+      for (let i = 0; i < avail.length; i++) {
+        const item = avail[i];
+        const from = `fld_${item.week_day}_from`;
+        this.form[from] = item.from;
+        const to = `fld_${item.week_day}_to`;
+        this.form[to] = item.to;
+      }
+      const pos = Store.state.employee.employee_positions;
+      for (let i = 0; i < pos.length; i++) {
+        this.form.selectedPositions.push(pos[i].position_id);
+      }
+    },
+    results() {
+      this.$router.push({ name: "Employees" });
+    }
+  },
   computed: {
+    employee() {
+      return Store.state.employee;
+    },
     isLogged() {
       return Store.state.user.id;
     },
@@ -186,16 +213,28 @@ export default {
       return Store.state.results;
     }
   },
-  watch: {
-    results() {
-      this.$router.push({ name: "Employees" });
-    }
-  },
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      console.log(this.form);
-      // Store.dispatch("SAVE_EMPLOYEE", this.form);
+      this.errorMessage = "";
+      this.errorShow = false;
+      const form = this.form;
+      let formData = {};
+      for (var prop in form) {
+        if (form.hasOwnProperty(prop)) {
+          const item = form[prop];
+          if (item.length || prop === "id" || prop === "branch_id") {
+            formData[prop] = item;
+          }
+        }
+      }
+      if (!formData.selectedPositions) {
+        this.tabIndex = 1;
+        this.errorMessage = "Olvidaste las asingaciones!";
+        this.errorShow = true;
+        return;
+      }
+      Store.dispatch("SAVE_EMPLOYEE", formData);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -240,14 +279,15 @@ export default {
 .buttons {
   margin: 0 auto;
   margin-top: 18px;
+  margin-bottom: 18px;
 }
 .assignations {
   padding: 10px;
 }
-.header {
+.hours-tab .header {
   font-weight: bold;
 }
-.center {
+.hours-tab .header .center {
   text-align: center;
 }
 .hours-tab input {

@@ -14,7 +14,7 @@
       </b-input-group>
     </b-form-group>
 
-    <b-table hover outlined :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+    <b-table hover outlined small :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item, 1)">Eliminar</b-btn>
@@ -41,7 +41,7 @@ export default {
   name: "Positions",
   data() {
     return {
-      perPage: 10,
+      perPage: 15,
       currentPage: 1,
       filter: null,
       show: false,

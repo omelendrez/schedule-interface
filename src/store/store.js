@@ -37,6 +37,7 @@ const state = {
   schedules: [],
   status: [],
   employees: [],
+  employee: [],
   users: [],
   user: [],
   password: [],
@@ -124,6 +125,13 @@ export default new Vuex.Store({
       const employees = await Employees.fetchEmployees();
       commit(types.SET_EMPLOYEES, {
         payload: employees.data
+      });
+    },
+
+    async [types.LOAD_EMPLOYEE]({ commit }, item) {
+      const employee = await Employees.fetchEmployee(item);
+      commit(types.SET_EMPLOYEE, {
+        payload: employee.data
       });
     },
 
@@ -310,7 +318,7 @@ export default new Vuex.Store({
           created_at: positions[i].created_at,
           name: positions[i].name,
           color: positions[i].color,
-          div: `<div style="background-color:${positions[i].color};">&nbsp;</div>`,
+          div: `<div style="background-color:${positions[i].color};width:90px;border-radius:4px;" class="mx-auto">&nbsp;</div>`,
           sector_id: positions[i].sector_id,
           updated_at: positions[i].updated_at,
           "sector.name": positions[i]["sector.name"]
@@ -333,6 +341,10 @@ export default new Vuex.Store({
 
     [types.SET_EMPLOYEES]: (state, { payload }) => {
       state.employees = payload;
+    },
+
+    [types.SET_EMPLOYEE]: (state, { payload }) => {
+      state.employee = payload;
     },
 
     [types.SET_USERS]: (state, { payload }) => {

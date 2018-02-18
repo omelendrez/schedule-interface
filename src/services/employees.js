@@ -4,6 +4,9 @@ export default {
   fetchEmployees() {
     return HTTP.get('employee')
   },
+  fetchEmployee(payload) {
+    return HTTP.get(`employee/${payload.id}`)
+  },
   fetchBranchEmployees(payload) {
     return HTTP.get(`employee/${payload.branch_id}/branch`, payload)
   },
