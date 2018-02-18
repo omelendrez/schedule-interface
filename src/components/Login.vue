@@ -1,5 +1,5 @@
 <template>
-<div>
+<b-container class="login" fluid>
   <Header />
   <b-card no-block id="loginCard">
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="loginForm">
@@ -8,7 +8,8 @@
                       type="text"
                       v-model="form.user_name"
                       required
-                      autocomplete="false"
+                      autofocus="true"
+                      autocomplete="username"
                       placeholder="Usuario">
         </b-form-input>
       </b-form-group>
@@ -18,7 +19,7 @@
                       type="password"
                       v-model="form.password"
                       required
-                      autocomplete="false"
+                      autocomplete="current-password"
                       placeholder="Password">
         </b-form-input>
       </b-form-group>
@@ -29,7 +30,7 @@
     <b-alert variant="danger" :show="isLoginError">Credenciales incorrectas</b-alert>
     <b-alert variant="success" :show="isLoginCorrect">Autorizado</b-alert>
   </b-card>
-</div>
+</b-container>
 </template>
 
 <script>

@@ -17,6 +17,7 @@ import * as types from "../store/mutation-types";
 Vue.use(Vuex);
 
 const state = {
+  option: false,
   availability: [],
   branches: [],
   budgets: [],
@@ -31,10 +32,12 @@ const state = {
   },
   sectors: [{ rows: [] }],
   positions: [{ rows: [] }],
+  positionSector: [],
   profiles: [],
   schedules: [],
   status: [],
   employees: [],
+  employee: [],
   users: [],
   user: [],
   password: [],
@@ -45,6 +48,12 @@ const state = {
 export default new Vuex.Store({
   state,
   actions: {
+    [types.SET_MENU_OPTION]({ commit }, option) {
+      commit(types.ASSIGN_MENU_OPTION, {
+        payload: option
+      });
+    },
+
     [types.ADD_ITEM]({ commit }, item) {
       commit(types.SET_RECORD, {
         payload: item
@@ -116,6 +125,13 @@ export default new Vuex.Store({
       const employees = await Employees.fetchEmployees();
       commit(types.SET_EMPLOYEES, {
         payload: employees.data
+      });
+    },
+
+    async [types.LOAD_EMPLOYEE]({ commit }, item) {
+      const employee = await Employees.fetchEmployee(item);
+      commit(types.SET_EMPLOYEE, {
+        payload: employee.data
       });
     },
 
@@ -264,10 +280,22 @@ export default new Vuex.Store({
       commit(types.SET_RESULTS, {
         payload: schedule.data
       });
+    },
+
+    async [types.LOAD_POSITION_SECTOR]({ commit }, payload) {
+      const position = await Positions.fetchPositionSector();
+      commit(types.SET_POSITION_SECTOR, {
+        payload: position.data
+      });
     }
+
   },
 
   mutations: {
+    [types.ASSIGN_MENU_OPTION]: (state, { payload }) => {
+      state.option = payload;
+    },
+
     [types.SET_USER]: (state, { payload }) => {
       state.user = payload;
     },
@@ -281,7 +309,26 @@ export default new Vuex.Store({
     },
 
     [types.SET_POSITIONS]: (state, { payload }) => {
-      state.positions = payload;
+      const positions = payload.rows;
+      const records = []
+      let record = {}
+      for (let i = 0; i < positions.length; i++) {
+        record = {
+          id: positions[i].id,
+          created_at: positions[i].created_at,
+          name: positions[i].name,
+          color: positions[i].color,
+          div: `<div style="background-color:${positions[i].color};width:90px;border-radius:4px;" class="mx-auto">&nbsp;</div>`,
+          sector_id: positions[i].sector_id,
+          updated_at: positions[i].updated_at,
+          "sector.name": positions[i]["sector.name"]
+        }
+        records.push(record)
+      }
+      state.positions = {
+        rows: records,
+        count: payload.count
+      }
     },
 
     [types.SET_PROFILES]: (state, { payload }) => {
@@ -294,6 +341,10 @@ export default new Vuex.Store({
 
     [types.SET_EMPLOYEES]: (state, { payload }) => {
       state.employees = payload;
+    },
+
+    [types.SET_EMPLOYEE]: (state, { payload }) => {
+      state.employee = payload;
     },
 
     [types.SET_USERS]: (state, { payload }) => {
@@ -309,22 +360,24 @@ export default new Vuex.Store({
     },
 
     [types.SET_BUDGETS]: (state, { payload }) => {
+      const bud = payload.rows
+      const weekdays = Budgets.weekdays
+      for (let i = 0; i < bud.length; i++) {
+        bud[i].weekday = weekdays[bud[i].weekday]
+      }
+      payload.rows = bud
       state.budgets = payload;
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
-      const hours = payload.schedule.rows.reduce(function (
-        prevVal,
-        elem,
-        index,
-        array
-      ) {
-        return prevVal + elem.to - elem.from;
-      },
-      0);
+      const hours = payload.schedule.rows.reduce((prevVal, elem, index, array) => { return prevVal + elem.to - elem.from; }, 0);
       payload.schedule["scheduled"] = hours;
-      state.schedules = payload.schedule;
+      const bud = payload.budget.rows
+      const weekdays = Budgets.weekdays
+      bud.weekday = weekdays[bud.weekday]
+      payload.budget.rows = bud
       state.budget = payload.budget;
+      state.schedules = payload.schedule;
       state.results = payload;
     },
 
@@ -334,6 +387,21 @@ export default new Vuex.Store({
 
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
       state.password = payload;
+    },
+
+    [types.SET_POSITION_SECTOR]: (state, { payload }) => {
+      const positions = payload.rows
+      const formatted = []
+      let record = {}
+      for (let i = 0; i < positions.length; i++) {
+        record = {
+          text: `${positions[i]["sector.name"]} / ${positions[i].name}`,
+          value: positions[i].id
+        }
+        formatted.push(record)
+      }
+      state.positionSector = formatted;
     }
+
   }
 });

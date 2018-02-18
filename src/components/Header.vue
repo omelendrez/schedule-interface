@@ -10,18 +10,18 @@
       <b-collapse is-nav id="nav_collapse">
         <template v-if="isLogged">
 
-          <b-navbar-nav  v-if="isAdmin" class="admin">
-            <b-nav-item href="#/branches">Locales</b-nav-item>
-            <b-nav-item href="#/sectors">Sectores</b-nav-item>
-            <b-nav-item href="#/positions">Funciones</b-nav-item>
-            <b-nav-item href="#/employees">Empleados</b-nav-item>
-            <b-nav-item href="#/users">Usuarios</b-nav-item>
+          <b-navbar-nav v-if="isAdmin" class="admin">
+            <b-nav-item v-bind:active="menuOption === '/branches'" href="#/branches">Locales</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/sectors'" href="#/sectors">Sectores</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/positions'" href="#/positions">Funciones</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/employees'" href="#/employees">Empleados</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/users'" href="#/users">Usuarios</b-nav-item>
           </b-navbar-nav>
 
           <b-navbar-nav v-if="isLogged">
-            <b-nav-item href="#/availability">Disponibilidad</b-nav-item>
-            <b-nav-item href="#/budgets">Presupuestos</b-nav-item>
-            <b-nav-item href="#/grid">Grilla</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/budgets'" href="#/budgets">Presupuestos</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/program'" href="#/program">Programa</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/grid'" href="#/grid">Grilla</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
@@ -53,9 +53,14 @@ import Store from "../store/store";
 export default {
   name: "Header",
   data() {
-    return {};
+    return {
+      tab: 0
+    };
   },
   computed: {
+    menuOption() {
+      return Store.state.option;
+    },
     isLogged() {
       return Store.state.user.id;
     },

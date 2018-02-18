@@ -14,7 +14,7 @@
       </b-input-group>
     </b-form-group>
 
-    <b-table hover outlined :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+    <b-table hover outlined small :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item, 1)">Eliminar</b-btn>
@@ -36,13 +36,12 @@
 <script>
 import Store from "../store/store";
 import Header from "./Header";
-import { setTimeout } from "timers";
 
 export default {
   name: "Positions",
   data() {
     return {
-      perPage: 10,
+      perPage: 15,
       currentPage: 1,
       filter: null,
       show: false,
@@ -59,6 +58,11 @@ export default {
           key: "name",
           label: "Función",
           sortable: true
+        },
+        {
+          key: "div",
+          label: "Color",
+          class: "text-center"
         },
         {
           key: "created_at",
@@ -87,9 +91,7 @@ export default {
     },
     editItem(item) {
       Store.dispatch("ADD_ITEM", item);
-      setTimeout(() => {
-        this.$router.push({ name: "Position" });
-      }, 500);
+      this.$router.push({ name: "Position" });
     },
     deleteItem(item, type) {
       this.selectedItem = item;
@@ -128,6 +130,7 @@ export default {
       this.$router.push({ name: "Login" });
       return;
     }
+    Store.dispatch("SET_MENU_OPTION", this.$route.path);
     Store.dispatch("LOAD_POSITIONS");
     Store.dispatch("LOAD_SECTORS");
   }

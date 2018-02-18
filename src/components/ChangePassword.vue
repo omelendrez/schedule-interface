@@ -3,7 +3,17 @@
     <h1>Cambiar password</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-form-group
-        id="password_current"
+        label="Usuario"
+        label-for="user_name">
+        <b-form-input
+          id="user_name"
+          type="text"
+          autocomplete="username"
+          readonly="readonly"
+          v-model.trim="form.user_name">
+        </b-form-input>
+      </b-form-group>
+      <b-form-group
         label="Password actual"
         label-for="password_current"
         :valid-feedback="pwdValidFeedback"
@@ -12,16 +22,15 @@
         <b-form-input
           id="password_current"
           type="password"
-          autocomplete="off"
+          autofocus="true"
+          autocomplete="current-password"
           description="Escriba la password que usted usa actualmente para ingresar esta aplicación"
           v-model.trim="form.password_current"
           placeholder="Escriba aquí su password actual"
           required>
         </b-form-input>
       </b-form-group>
-
       <b-form-group
-        id="password_new"
         label="Nueva password"
         label-for="password_new"
         :valid-feedback="newValidFeedback"
@@ -30,7 +39,7 @@
         <b-form-input
           id="password_new"
           type="password"
-          autocomplete="off"
+          autocomplete="new-password"
           description="Entre su nueva password"
           v-model.trim="form.password_new"
           placeholder="Escriba aquí la nueva password"
@@ -39,7 +48,6 @@
       </b-form-group>
 
       <b-form-group
-        id="password_retype"
         label="Confirme password"
         label-for="password_retype"
         :valid-feedback="retValidFeedback"
@@ -48,7 +56,7 @@
         <b-form-input
           id="password_retype"
           type="password"
-          autocomplete="off"
+          autocomplete="new-password"
           v-model.trim="form.password_retype"
           placeholder="Repita aquí la nueva password"
           required>
@@ -77,6 +85,7 @@ export default {
   data() {
     return {
       form: {
+        user_name: Store.state.user.user_name,
         password_current: "",
         password_new: "",
         password_retype: "",

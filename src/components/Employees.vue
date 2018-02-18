@@ -14,16 +14,19 @@
         </b-input-group>
       </b-form-group>
 
-      <b-table hover outlined :items="employees.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+      <b-table hover outlined small :items="employees.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+        <template slot="fullName" slot-scope="cell">
+          {{cell.item["badge"]}} - {{cell.item["last_name"]}}, {{cell.item["first_name"]}}
+        </template>
         <template slot="acciones" slot-scope="cell">
           <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
           <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
           <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
         </template>
-      <template slot="table-caption">
-        {{employees.count}} registros
-      </template>
-    </b-table>
+        <template slot="table-caption">
+          {{employees.count}} registros
+        </template>
+      </b-table>
 
     <b-pagination :total-rows="employees.count" :per-page="perPage" v-model="currentPage" />
 
@@ -42,7 +45,7 @@ export default {
   name: "Employees",
   data() {
     return {
-      perPage: 10,
+      perPage: 15,
       currentPage: 1,
       filter: null,
       show: false,
@@ -53,37 +56,17 @@ export default {
       },
       fields: [
         {
-          key: "badge",
-          label: "Legajo",
-          sortable: true
-        },
-        {
-          key: "first_name",
-          label: "Nombre",
-          sortable: true
-        },
-        {
-          key: "last_name",
-          label: "Apellido",
-          sortable: true
-        },
-        {
-          key: "sector.name",
-          label: "Sector",
-          sortable: true
-        },
-        {
-          key: "position.name",
-          label: "Función",
-          sortable: true
-        },
-        {
-          key: "_joining_date",
-          label: "Ingreso"
+          key: "fullName",
+          label: "Empleado"
         },
         {
           key: "branch.name",
           label: "Local",
+          sortable: true
+        },
+        {
+          key: "_joining_date",
+          label: "Ingreso",
           sortable: true
         },
         {
@@ -120,6 +103,7 @@ export default {
     },
     editItem(item) {
       Store.dispatch("ADD_ITEM", item);
+      Store.dispatch("LOAD_EMPLOYEE", item);
       this.$router.push({ name: "Employee" });
     },
     deleteItem(item, type) {
@@ -159,10 +143,10 @@ export default {
       this.$router.push({ name: "Login" });
       return;
     }
+    Store.dispatch("SET_MENU_OPTION", this.$route.path);
     Store.dispatch("LOAD_EMPLOYEES");
     Store.dispatch("LOAD_BRANCHES");
-    Store.dispatch("LOAD_SECTORS");
-    Store.dispatch("LOAD_POSITIONS");
+    Store.dispatch("LOAD_POSITION_SECTOR");
   }
 };
 </script>
