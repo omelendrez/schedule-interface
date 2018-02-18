@@ -3,12 +3,9 @@
     <Header />
 
     <div v-show="!showForm" class="pull-right no-print">
+      <b-btn variant="primary" @click.stop="printGrid">Imprimir</b-btn>
       <b-btn variant="success" @click.stop="closeGrid">Cambiar fecha</b-btn>
-      <b-btn variant="info" @click.stop="editGrid">Modificar grilla</b-btn>
-      <b-btn variant="primary" @click.stop="printGrid">Imprimir grilla</b-btn>
     </div>
-
-    <h4 v-show="!showForm">Grilla de programación {{ budget["branch.name"] }} para el {{ formatedDate }}</h4>
 
     <div class="input-container no-print" v-show="showForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
@@ -27,6 +24,7 @@
     </div>
 
     <div v-show="!showForm">
+      <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
       <h5>
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
@@ -45,10 +43,6 @@
 
     </div>
 
-    <b-modal id="modal-center" title="Borrar Presupuesto" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea borrar este registro?</p>
-    </b-modal>
-
   </b-container>
 </template>
 
@@ -60,7 +54,6 @@ export default {
   name: "Grid",
   data() {
     return {
-      show: false,
       showForm: false,
       message: "",
       errorMessage: "",
@@ -314,15 +307,6 @@ export default {
     schedules() {
       return Store.state.schedules;
     },
-    formatedDate() {
-      const budget = Store.state.budget.rows;
-      if (budget.date) {
-        return `${budget.date.substr(-2)}/${budget.date.substr(
-          5,
-          2
-        )}/${budget.date.substr(0, 4)}`;
-      }
-    },
     dataOk() {
       return this.form.date !== "" && this.form.branch_id !== 0;
     },
@@ -342,19 +326,12 @@ export default {
     if (!this.isLogged) {
       this.$router.push({ name: "Login" });
     }
-    this.showForm = false;
+    this.showForm = true;
     Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    if (this.budget && this.budget.id) {
-      this.form.branch_id = this.budget.branch_id;
-      this.form.date = this.budget.date;
+    if (Store.state.budget.rows) {
+      this.form.branch_id = Store.state.budget.rows.branch_id;
+      this.form.date = Store.state.budget.rows._date;
       this.loadData();
-    } else {
-      if (localStorage.getItem("form")) {
-        this.form = JSON.parse(localStorage.getItem("form"));
-        this.loadData();
-      } else {
-        this.showForm = true;
-      }
     }
   }
 };

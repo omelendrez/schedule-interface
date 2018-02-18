@@ -360,22 +360,24 @@ export default new Vuex.Store({
     },
 
     [types.SET_BUDGETS]: (state, { payload }) => {
+      const bud = payload.rows
+      const weekdays = Budgets.weekdays
+      for (let i = 0; i < bud.length; i++) {
+        bud[i].weekday = weekdays[bud[i].weekday]
+      }
+      payload.rows = bud
       state.budgets = payload;
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
-      const hours = payload.schedule.rows.reduce(function (
-        prevVal,
-        elem,
-        index,
-        array
-      ) {
-        return prevVal + elem.to - elem.from;
-      },
-      0);
+      const hours = payload.schedule.rows.reduce((prevVal, elem, index, array) => { return prevVal + elem.to - elem.from; }, 0);
       payload.schedule["scheduled"] = hours;
-      state.schedules = payload.schedule;
+      const bud = payload.budget.rows
+      const weekdays = Budgets.weekdays
+      bud.weekday = weekdays[bud.weekday]
+      payload.budget.rows = bud
       state.budget = payload.budget;
+      state.schedules = payload.schedule;
       state.results = payload;
     },
 

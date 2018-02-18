@@ -13,5 +13,6 @@ export default {
   },
   deleteBudget(payload) {
     return HTTP.delete(`budget/${payload}`)
-  }
+  },
+  weekdays: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 }

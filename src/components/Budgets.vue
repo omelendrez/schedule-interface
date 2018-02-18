@@ -52,8 +52,14 @@ export default {
       },
       fields: [
         {
-          key: "date",
+          key: "weekday",
           label: "Día",
+          sortable: true,
+          class: "text-center"
+        },
+        {
+          key: "date",
+          label: "Fecha",
           sortable: true,
           variant: "success",
           class: "text-center"
@@ -68,6 +74,7 @@ export default {
         {
           key: "branch.name",
           label: "Local",
+          sortable: true,
           variant: "info",
           class: "text-center"
         },

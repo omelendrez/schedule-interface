@@ -4,14 +4,12 @@ import Home from "@/components/Home";
 import Login from "@/components/Login";
 import ChangePassword from "@/components/ChangePassword";
 import Header from "@/components/Header";
-import Availability from "@/components/Availability";
-import AvailabilityEdit from "@/components/AvailabilityEdit";
 import Branches from "@/components/Branches";
 import Branch from "@/components/Branch";
 import Budgets from "@/components/Budgets";
 import Budget from "@/components/Budget";
 import Grid from "@/components/Grid";
-import GridList from "@/components/GridList";
+import Program from "@/components/Program";
 import GridEdit from "@/components/GridEdit";
 import Sectors from "@/components/Sectors";
 import Sector from "@/components/Sector";
@@ -47,16 +45,6 @@ export default new Router({
       component: Header
     },
     {
-      path: "/availability",
-      name: "Availability",
-      component: Availability
-    },
-    {
-      path: "/availability_edit",
-      name: "AvailabilityEdit",
-      component: AvailabilityEdit
-    },
-    {
       path: "/branches",
       name: "Branches",
       component: Branches
@@ -82,9 +70,9 @@ export default new Router({
       component: Grid
     },
     {
-      path: "/grid_list",
-      name: "GridList",
-      component: GridList
+      path: "/program",
+      name: "Program",
+      component: Program
     },
     {
       path: "/grid_edit",

@@ -39,6 +39,7 @@ export default {
       form: {
         id: 0,
         date: "",
+        weekday: null,
         hours: 0,
         branch_id: 0,
         footer: ""
@@ -105,6 +106,7 @@ export default {
     if (this.item) {
       this.form.id = this.item.id;
       this.form.date = this.item._date;
+      this.form.weekday = this.item.weekday;
       this.form.hours = this.item.hours;
       this.form.footer = this.item.footer;
       this.form.branch_id = this.item.branch_id;
