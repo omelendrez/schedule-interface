@@ -42,7 +42,10 @@
 
       <b-table hover outlined :items="rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
         <template slot="fullName" slot-scope="data">
-          {{data.item["employee.last_name"]}}, {{data.item["employee.first_name"]}}
+          <div v-if="!editing">
+          {{data.item["employee.badge"]}} {{data.item["employee.last_name"]}}, {{data.item["employee.first_name"]}}
+          </div>
+          <b-form-select v-model="form.employee_id" :options="employees" id="edit_field" v-else/>
         </template>
         <template slot="hours" slot-scope="data">
           {{data.item["to"]-data.item["from"]}}
@@ -74,6 +77,7 @@ export default {
   name: "GridList",
   data() {
     return {
+      editing: false,
       perPage: 10,
       currentPage: 1,
       filter: null,
@@ -163,23 +167,14 @@ export default {
     },
     addItem() {
       const item = {
-        id: 0,
-        employee_id: 0,
-        employee: {
-          first_name: "0",
-          last_name: "0"
-        },
-        sector_id: 1,
-        sector: {
-          name: "Entrenamiento"
-        },
-        position_id: 1,
-        position: {
-          name: "Entrenamiento"
-        },
-        from: 7,
-        to: 9,
-        hours: 2,
+        "employee.badge": "",
+        "employee.first_name": "",
+        "employee.last_name": "",
+        "sector.name": "",
+        "position.name": "",
+        from: "",
+        to: "",
+        hours: "",
         created_at: "",
         updated_at: ""
       };
@@ -188,8 +183,8 @@ export default {
       // this.$router.push({ name: "GridEdit" });
     },
     editItem(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "GridEdit" });
+      this.form.employee_id = item.id;
+      this.editing = !this.editing;
     },
     deleteItem(item) {
       this.selectedItem = item;
@@ -216,15 +211,32 @@ export default {
       this.branchOptions = branchOptions;
     },
     schedules() {
-      const records = Store.state.budget.count;
-      this.errorMessage = "Falta cargar el presupuesto para ese día";
-      this.showError = !records;
-      this.showForm = !records;
+      const records = Store.state.budget;
+      this.errorMessage = "No hay presupuesto cargado para ese día";
+      this.showError = !records.count;
+      this.showForm = !records.count;
+      this.rows = Store.state.schedules.rows;
     }
   },
   computed: {
     results() {
       return Store.state.results;
+    },
+    employees() {
+      if (!Store.state.employees.rows) {
+        return [];
+      }
+      const employees = Store.state.employees.rows;
+      const options = [];
+      for (let i = 0; i < employees.length; i++) {
+        options.push({
+          value: employees[i].id,
+          text: `${employees[i].badge} ${employees[i].last_name}, ${
+            employees[i].first_name
+          }`
+        });
+      }
+      return options;
     },
     isLogged() {
       return Store.state.user.id;
@@ -255,8 +267,11 @@ export default {
     }
     Store.dispatch("SET_MENU_OPTION", this.$route.path);
     Store.dispatch("LOAD_BRANCHES");
+    Store.dispatch("LOAD_BRANCH_EMPLOYEES", {
+      branch_id: Store.state.budget.rows.branch_id
+    });
     this.showForm = true;
-    if (Store.state.budget.rows) {
+    if (Store.state.budget.rows.id) {
       this.form.branch_id = Store.state.budget.rows.branch_id;
       this.form.date = Store.state.budget.rows._date;
       this.loadData();

@@ -198,7 +198,7 @@ export default {
     loadData() {
       this.showError = false;
       this.showMessage = false;
-      localStorage.setItem("form", JSON.stringify(this.form));
+      // localStorage.setItem("form", JSON.stringify(this.form));
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
@@ -282,7 +282,7 @@ export default {
   watch: {
     schedules() {
       const records = Store.state.budget.count;
-      this.errorMessage = "Falta cargar el presupuesto para ese día";
+      this.errorMessage = "No hay presupuesto cargado para ese día";
       this.showError = !records;
       this.showForm = !records;
       this.showGrid();
@@ -328,7 +328,7 @@ export default {
     }
     this.showForm = true;
     Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    if (Store.state.budget.rows) {
+    if (Store.state.budget.rows.id) {
       this.form.branch_id = Store.state.budget.rows.branch_id;
       this.form.date = Store.state.budget.rows._date;
       this.loadData();
