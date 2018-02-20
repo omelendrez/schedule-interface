@@ -1,9 +1,6 @@
 import HTTP from '../components/http-common'
 
 export default {
-  fetchSchedules() {
-    return HTTP.get('schedule')
-  },
   fetchBudgetSchedules(payload) {
     return HTTP.get(`schedule/${payload.date}/budget/${payload.branch_id}`, payload)
   },

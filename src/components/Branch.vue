@@ -50,7 +50,6 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      console.log(this.form)
       Store.dispatch("SAVE_BRANCH", this.form);
     },
     onReset(evt) {

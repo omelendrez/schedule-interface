@@ -8,19 +8,19 @@
 
     <div class="input-container" v-show="showForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-        <b-form-select v-model="form.branch_id" :options="branchOptions"/>
+        <b-form-select v-model="form.branch_id" :options="branchOptions" />
       </b-form-group>
 
       <b-form-group horizontal id="date" label="Día" label-for="date">
-        <b-form-input type="date" v-model="form.date"/>
+        <b-form-input type="date" v-model="form.date" />
       </b-form-group>
 
       <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar</b-btn>
 
+      <b-alert variant="danger" dismissible :show="showErr">{{ errMsg }}</b-alert>
     </div>
 
-    <b-alert variant="danger" :show="showError">{{ errorMessage }}</b-alert>
-    <b-alert variant="success" :show="showMessage">{{ message }}</b-alert>
+    <b-alert variant="success" dismissible :show="showMessage">{{ message }}</b-alert>
 
     <div v-show="!showForm">
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
@@ -35,12 +35,12 @@
 
       <b-form-group class="filter-form">
         <b-input-group>
-          <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
+          <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
           <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
         </b-input-group>
       </b-form-group>
 
-      <b-table hover outlined :items="scheduleRows" :fields="scheduleFields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+      <b-table hover outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" head-variant="light">
 
         <template slot="fullName" slot-scope="row">
           <div v-if="!row.item.editing">
@@ -78,28 +78,28 @@
             {{form.to-form.from}}
           </div>
         </template>
-
         <template slot="acciones" slot-scope="row">
-          <b-btn size="sm" variant="info" @click.stop="editItem(row.item, row.index, $event.target)"  v-if="!row.item.editing"  :disabled="isEditing">Editar</b-btn>
+          <b-btn size="sm" variant="info" @click.stop="editItem(row.item, row.index, $event.target)" v-if="!row.item.editing" :disabled="isEditing">Editar</b-btn>
           <b-btn size="sm" variant="success" @click.stop="saveItem(row.item, row.index, $event.target)" v-else>Grabar</b-btn>
-          <b-btn size="sm" variant="danger" @click.stop="deleteItem(row.item)" v-if="!row.item.editing"  :disabled="isEditing">Eliminar</b-btn>
+          <b-btn size="sm" variant="danger" @click.stop="deleteItem(row.item)" v-if="!row.item.editing" :disabled="isEditing">Eliminar</b-btn>
           <b-btn size="sm" variant="primary" @click.stop="cancelSave(row.item, row.index, $event.target)" v-else>Cancelar</b-btn>
         </template>
 
         <template slot="table-caption">
+          <b-alert variant="danger" dismissible :show="showError">{{ errorMessage }}</b-alert>
           {{schedules.count}} registros
         </template>
 
       </b-table>
 
-      <b-pagination :total-rows="schedules.count" :per-page="perPage" v-model="currentPage" class="my-0" />
-
       <b-modal id="modal-center" title="Borrar Registro" v-model="show" @ok="handleOkDelete" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-        <p class="my-4">Está seguro que desea borrar el registro de <strong>{{selectedItem["employee.last_name"]}}, {{selectedItem["employee.first_name"]}} {{ selectedItem.first_name }} de {{ selectedItem.from }} a {{ selectedItem.to }} horas</strong>?</p>
+        <p class="my-4">Está seguro que desea borrar el registro de
+          <strong>{{selectedItem["employee.last_name"]}}, {{selectedItem["employee.first_name"]}} {{ selectedItem.first_name }} de {{ selectedItem.from }} a {{ selectedItem.to }} horas</strong>?</p>
       </b-modal>
 
-      <b-modal id="modal-center" title="Guardar registro" v-model="warningShow" @ok="handleOkSave" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
-        <p class="my-4"><strong>{{ warningMsg }}</strong>, desea grabar de todos modos?</p>
+      <b-modal id="modal-center" title="Guardar registro" v-model="showWarning" @ok="handleOkSave" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
+        <p class="my-4">
+          <strong>{{ warningMessage }}</strong>, desea grabar de todos modos?</p>
       </b-modal>
 
     </div>
@@ -115,34 +115,22 @@ export default {
   data() {
     return {
       isEditing: false,
-      perPage: 20,
-      currentPage: 1,
       filter: null,
       show: false,
       showForm: false,
-      branchOptions: [],
-      message: "",
-      errorMessage: "",
-      showMessage: false,
+      showErr: false,
       showError: false,
-      warningShow: false,
-      warningMsg: "",
-      form: {
-        id: 0,
-        employe_id: 0,
-        position_id: 0,
-        from: "",
-        to: ""
-      },
+      showMessage: false,
+      showWarning: false,
+      message: "",
+      errMsg: "",
+      errorMessage: "",
+      warningMessage: "",
+      form: {},
+      selectedItem: {},
+      branchOptions: [],
       employeesOptions: [],
       positionsOptions: [],
-      selectedItem: {
-        id: "",
-        employee_id: 0,
-        position_id: 0,
-        from: 0,
-        to: 0
-      },
       scheduleRows: [],
       scheduleFields: [
         {
@@ -196,7 +184,6 @@ export default {
     loadData() {
       this.showError = false;
       this.showMessage = false;
-      // localStorage.setItem("form", JSON.stringify(this.form));
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
@@ -212,13 +199,10 @@ export default {
         "employee.badge": "",
         "employee.first_name": "",
         "employee.last_name": "",
-        "sector.name": "",
+        "position.sector.name": "",
         "position.name": "",
         from: "",
         to: "",
-        hours: "",
-        created_at: "",
-        updated_at: "",
         editing: true,
         isNew: true
       };
@@ -288,12 +272,12 @@ export default {
               }
               break;
             case 1:
-              this.errorMsg = results.error.message;
-              this.errorShow = true;
+              this.errorMessage = results.error.message;
+              this.showError = true;
               break;
             case 2:
-              this.warningMsg = results.error.message;
-              this.warningShow = true;
+              this.warningMessage = results.error.message;
+              this.showWarning = true;
               break;
           }
         }
@@ -350,8 +334,8 @@ export default {
         return;
       }
       const records = Store.state.budget;
-      this.errorMessage = "No hay presupuesto cargado para ese día";
-      this.showError = !records.count;
+      this.errMsg = "No hay presupuesto cargado para ese día";
+      this.showErr = !records.count;
       this.showForm = !records.count;
       const sch = Store.state.schedules.rows;
       const arr = [];
@@ -368,7 +352,7 @@ export default {
           "position.color": sch[i]["position.color"],
           "position.name": sch[i]["position.name"],
           position_id: sch[i].position_id,
-          "sector.name": sch[i]["sector.name"],
+          "sector.name": sch[i]["position.sector.name"],
           sector_id: sch[i].sector_id,
           to: sch[i].to,
           updated_at: sch[i].updated_at
@@ -436,7 +420,7 @@ export default {
   padding-bottom: 60px;
 }
 .load-button {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .input-container {
   max-width: 30%;
