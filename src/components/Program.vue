@@ -17,10 +17,10 @@
 
       <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar</b-btn>
 
-      <b-alert variant="danger" :show="showError">{{ errorMessage }}</b-alert>
-      <b-alert variant="success" :show="showMessage">{{ message }}</b-alert>
-
     </div>
+
+    <b-alert variant="danger" :show="showError">{{ errorMessage }}</b-alert>
+    <b-alert variant="success" :show="showMessage">{{ message }}</b-alert>
 
     <div v-show="!showForm">
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
@@ -30,7 +30,7 @@
       </h5>
 
       <div class="add-button">
-        <b-button @click="addItem" variant="info">Agregar</b-button>
+        <b-button @click="addItem" variant="info" :disabled="isEditing">Agregar</b-button>
       </div>
 
       <b-form-group class="filter-form">
@@ -40,29 +40,66 @@
         </b-input-group>
       </b-form-group>
 
-      <b-table hover outlined :items="rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
-        <template slot="fullName" slot-scope="data">
-          <div v-if="!editing">
-          {{data.item["employee.badge"]}} {{data.item["employee.last_name"]}}, {{data.item["employee.first_name"]}}
+      <b-table hover outlined :items="scheduleRows" :fields="scheduleFields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+
+        <template slot="fullName" slot-scope="row">
+          <div v-if="!row.item.editing">
+            {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
           </div>
-          <b-form-select v-model="form.employee_id" :options="employees" id="edit_field" v-else/>
+          <b-form-select v-model="form.employee_id" :options="employeesOptions" @change="refreshUser($event)" id="edit_field" v-else/>
         </template>
-        <template slot="hours" slot-scope="data">
-          {{data.item["to"]-data.item["from"]}}
+
+        <template slot="sectorPosition" slot-scope="row">
+          <div v-if="!row.item.editing">
+            {{row.item["sector.name"]}} / {{row.item["position.name"]}}
+          </div>
+          <b-form-select v-model="form.position_id" :options="positionsOptions" id="edit_field" v-else/>
         </template>
-        <template slot="acciones" slot-scope="cell">
-          <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-          <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
+
+        <template slot="from" slot-scope="row">
+          <div v-if="!row.item.editing">
+            {{row.item["from"]}}
+          </div>
+          <b-form-input type="text" v-model="form.from" v-else></b-form-input>
         </template>
+
+        <template slot="to" slot-scope="row">
+          <div v-if="!row.item.editing">
+            {{row.item["to"]}}
+          </div>
+          <b-form-input type="text" v-model="form.to" v-else></b-form-input>
+        </template>
+
+        <template slot="hours" slot-scope="row">
+          <div v-if="!row.item.editing">
+            {{row.item["to"]-row.item["from"]}}
+          </div>
+          <div v-else>
+            {{form.to-form.from}}
+          </div>
+        </template>
+
+        <template slot="acciones" slot-scope="row">
+          <b-btn size="sm" variant="info" @click.stop="editItem(row.item, row.index, $event.target)"  v-if="!row.item.editing"  :disabled="isEditing">Editar</b-btn>
+          <b-btn size="sm" variant="success" @click.stop="saveItem(row.item, row.index, $event.target)" v-else>Grabar</b-btn>
+          <b-btn size="sm" variant="danger" @click.stop="deleteItem(row.item)" v-if="!row.item.editing"  :disabled="isEditing">Eliminar</b-btn>
+          <b-btn size="sm" variant="primary" @click.stop="cancelSave(row.item, row.index, $event.target)" v-else>Cancelar</b-btn>
+        </template>
+
         <template slot="table-caption">
           {{schedules.count}} registros
         </template>
+
       </b-table>
 
       <b-pagination :total-rows="schedules.count" :per-page="perPage" v-model="currentPage" class="my-0" />
 
-      <b-modal id="modal-center" title="Borrar Registro" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
+      <b-modal id="modal-center" title="Borrar Registro" v-model="show" @ok="handleOkDelete" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
         <p class="my-4">Está seguro que desea borrar el registro de <strong>{{selectedItem["employee.last_name"]}}, {{selectedItem["employee.first_name"]}} {{ selectedItem.first_name }} de {{ selectedItem.from }} a {{ selectedItem.to }} horas</strong>?</p>
+      </b-modal>
+
+      <b-modal id="modal-center" title="Guardar registro" v-model="warningShow" @ok="handleOkSave" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
+        <p class="my-4"><strong>{{ warningMsg }}</strong>, desea grabar de todos modos?</p>
       </b-modal>
 
     </div>
@@ -77,8 +114,8 @@ export default {
   name: "GridList",
   data() {
     return {
-      editing: false,
-      perPage: 10,
+      isEditing: false,
+      perPage: 20,
       currentPage: 1,
       filter: null,
       show: false,
@@ -88,33 +125,34 @@ export default {
       errorMessage: "",
       showMessage: false,
       showError: false,
+      warningShow: false,
+      warningMsg: "",
       form: {
-        branch_id: 0,
-        date: ""
+        id: 0,
+        employe_id: 0,
+        position_id: 0,
+        from: "",
+        to: ""
       },
+      employeesOptions: [],
+      positionsOptions: [],
       selectedItem: {
         id: "",
-        employee_id: "",
+        employee_id: 0,
+        position_id: 0,
         from: 0,
         to: 0
       },
-      rows: [],
-      fields: [
+      scheduleRows: [],
+      scheduleFields: [
         {
           key: "fullName",
           label: "Empleado"
         },
         {
-          key: "sector.name",
-          label: "Sector",
-          variant: "info",
-          class: "text-center"
-        },
-        {
-          key: "position.name",
+          key: "sectorPosition",
           label: "Función",
-          variant: "info",
-          class: "text-center"
+          variant: "info"
         },
         {
           key: "from",
@@ -164,9 +202,13 @@ export default {
         branch_id: this.form.branch_id
       };
       Store.dispatch("LOAD_SCHEDULES", data);
+      Store.dispatch("LOAD_BRANCH_EMPLOYEES", data);
     },
     addItem() {
       const item = {
+        id: 0,
+        employe_id: 0,
+        position_id: 0,
         "employee.badge": "",
         "employee.first_name": "",
         "employee.last_name": "",
@@ -176,30 +218,91 @@ export default {
         to: "",
         hours: "",
         created_at: "",
-        updated_at: ""
+        updated_at: "",
+        editing: true,
+        isNew: true
       };
-      this.rows.push(item);
-      // Store.dispatch("ADD_ITEM", { id: 0 });
-      // this.$router.push({ name: "GridEdit" });
+      this.scheduleRows.push(item);
+      this.isEditing = true;
+      this.form = item;
     },
-    editItem(item) {
-      this.form.employee_id = item.id;
-      this.editing = !this.editing;
+    refreshUser(id) {
+      Store.dispatch("LOAD_EMPLOYEE", { id: id });
+    },
+    editItem(item, index, target) {
+      item.editing = true;
+      this.isEditing = true;
+      this.form.employee_id = item.employee_id;
+      this.form.position_id = item.position_id;
+      this.form.from = item.from;
+      this.form.to = item.to;
+      item.budget_id = Store.state.budget.rows.id;
+      Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
+    },
+    saveItem(item, index, target) {
+      this.form.budget_id = Store.state.budget.rows.id;
+      this.form.id = this.form.isNew ? 0 : item.id;
+      Store.dispatch("SCHEDULE_VERIFY_INPUT", this.form);
+    },
+    cancelSave(item, index, target) {
+      item.editing = false;
+      this.isEditing = false;
+      if (item.isNew) {
+        this.scheduleRows.splice(index, 1);
+      }
     },
     deleteItem(item) {
       this.selectedItem = item;
       this.show = true;
     },
-    handleOk() {
+    handleOkDelete() {
       Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
     },
+    handleOkSave() {
+      this.form.budget_id = Store.state.budget.rows.id;
+      Store.dispatch("SAVE_SCHEDULE", this.form);
+    },
     closeGrid() {
-      this.rows = [];
+      this.scheduleRows = [];
       this.showForm = true;
     }
   },
   watch: {
+    results() {
+      const results = Store.state.results;
+      if (results.id || results.status) {
+        this.isEditing = false;
+        const data = {
+          date: this.budget._date,
+          branch_id: this.budget.branch_id
+        };
+        Store.dispatch("LOAD_SCHEDULES", data);
+      } else {
+        if (results.error) {
+          switch (results.error.type) {
+            case 0:
+              if (this.isEditing) {
+                Store.dispatch("SAVE_SCHEDULE", this.form);
+              } else {
+                Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
+              }
+              break;
+            case 1:
+              this.errorMsg = results.error.message;
+              this.errorShow = true;
+              break;
+            case 2:
+              this.warningMsg = results.error.message;
+              this.warningShow = true;
+              break;
+          }
+        }
+      }
+    },
     branches() {
+      if (!Store.state.branches.rows) {
+        return;
+      }
       const branches = Store.state.branches.rows;
       const branchOptions = [];
       for (let i = 0; i < branches.length; i++) {
@@ -210,12 +313,69 @@ export default {
       }
       this.branchOptions = branchOptions;
     },
+    employees() {
+      if (!Store.state.employees.rows) {
+        return;
+      }
+      const employees = Store.state.employees.rows;
+      const employeesOptions = [];
+      for (let i = 0; i < employees.length; i++) {
+        employeesOptions.push({
+          value: employees[i].id,
+          text: `${employees[i].badge} ${employees[i].last_name}, ${
+            employees[i].first_name
+          }`
+        });
+      }
+      this.employeesOptions = employeesOptions;
+    },
+    employee() {
+      if (!Store.state.employee.employee_positions) {
+        return;
+      }
+      const pos = Store.state.positionSector;
+      const positionsOptions = [];
+      const filter = Store.state.employee.employee_positions;
+      for (let i = 0; i < filter.length; i++) {
+        for (let el in pos) {
+          if (pos[el].value === filter[i].position_id) {
+            positionsOptions.push(pos[el]);
+          }
+        }
+      }
+      this.positionsOptions = positionsOptions;
+    },
     schedules() {
+      if (!Store.state.budget.rows) {
+        return;
+      }
       const records = Store.state.budget;
       this.errorMessage = "No hay presupuesto cargado para ese día";
       this.showError = !records.count;
       this.showForm = !records.count;
-      this.rows = Store.state.schedules.rows;
+      const sch = Store.state.schedules.rows;
+      const arr = [];
+      for (let i = 0; i < sch.length; i++) {
+        let row = {
+          editing: false,
+          created_at: sch[i].created_at,
+          "employee.badge": sch[i]["employee.badge"],
+          "employee.first_name": sch[i]["employee.first_name"],
+          "employee.last_name": sch[i]["employee.last_name"],
+          employee_id: sch[i].employee_id,
+          from: sch[i].from,
+          id: sch[i].id,
+          "position.color": sch[i]["position.color"],
+          "position.name": sch[i]["position.name"],
+          position_id: sch[i].position_id,
+          "sector.name": sch[i]["sector.name"],
+          sector_id: sch[i].sector_id,
+          to: sch[i].to,
+          updated_at: sch[i].updated_at
+        };
+        arr.push(row);
+      }
+      this.scheduleRows = arr;
     }
   },
   computed: {
@@ -223,20 +383,10 @@ export default {
       return Store.state.results;
     },
     employees() {
-      if (!Store.state.employees.rows) {
-        return [];
-      }
-      const employees = Store.state.employees.rows;
-      const options = [];
-      for (let i = 0; i < employees.length; i++) {
-        options.push({
-          value: employees[i].id,
-          text: `${employees[i].badge} ${employees[i].last_name}, ${
-            employees[i].first_name
-          }`
-        });
-      }
-      return options;
+      return Store.state.employees;
+    },
+    employee() {
+      return Store.state.employee;
     },
     isLogged() {
       return Store.state.user.id;
@@ -267,9 +417,8 @@ export default {
     }
     Store.dispatch("SET_MENU_OPTION", this.$route.path);
     Store.dispatch("LOAD_BRANCHES");
-    Store.dispatch("LOAD_BRANCH_EMPLOYEES", {
-      branch_id: Store.state.budget.rows.branch_id
-    });
+    Store.dispatch("LOAD_POSITIONS");
+    Store.dispatch("LOAD_POSITION_SECTOR");
     this.showForm = true;
     if (Store.state.budget.rows.id) {
       this.form.branch_id = Store.state.budget.rows.branch_id;
@@ -308,5 +457,10 @@ export default {
 .pull-right {
   margin-top: 18px;
   float: right;
+}
+table input[type="text"] {
+  max-width: 60px;
+  margin: 0 auto;
+  text-align: center;
 }
 </style>
