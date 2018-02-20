@@ -46,28 +46,28 @@
           <div v-if="!row.item.editing">
             {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
           </div>
-          <b-form-select v-model="form.employee_id" :options="employeesOptions" @change="refreshUser($event)" id="edit_field" v-else/>
+          <b-form-select v-model="form.employee_id" :options="employeesOptions" @change="refreshUser($event)" id="edit_field" v-else required/>
         </template>
 
         <template slot="sectorPosition" slot-scope="row">
           <div v-if="!row.item.editing">
             {{row.item["sector.name"]}} / {{row.item["position.name"]}}
           </div>
-          <b-form-select v-model="form.position_id" :options="positionsOptions" id="edit_field" v-else/>
+          <b-form-select v-model="form.position_id" :options="positionsOptions" id="edit_field" v-else required/>
         </template>
 
         <template slot="from" slot-scope="row">
           <div v-if="!row.item.editing">
             {{row.item["from"]}}
           </div>
-          <b-form-input type="text" v-model="form.from" v-else></b-form-input>
+          <b-form-input type="text" v-model="form.from" v-else required></b-form-input>
         </template>
 
         <template slot="to" slot-scope="row">
           <div v-if="!row.item.editing">
             {{row.item["to"]}}
           </div>
-          <b-form-input type="text" v-model="form.to" v-else></b-form-input>
+          <b-form-input type="text" v-model="form.to" v-else required></b-form-input>
         </template>
 
         <template slot="hours" slot-scope="row">
@@ -86,11 +86,23 @@
         </template>
 
         <template slot="table-caption">
-          <b-alert variant="danger" dismissible :show="showError">{{ errorMessage }}</b-alert>
           {{schedules.count}} registros
         </template>
 
       </b-table>
+
+      <b-alert variant="danger" dismissible :show="showError" class="error-message" @dismissed="dismissed">
+        <h4 class="alert-heading">Error en los datos</h4>
+        <p>
+          {{ errorMessage }}
+        </p>
+        <hr>
+        <p class="m-0 pull-right">
+          Corrija e intente de nuevo
+        </p>
+      </b-alert>
+
+      <div class="bgDiv" v-show="showError" />
 
       <b-modal id="modal-center" title="Borrar Registro" v-model="show" @ok="handleOkDelete" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
         <p class="my-4">Está seguro que desea borrar el registro de
@@ -224,6 +236,24 @@ export default {
       Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
     },
     saveItem(item, index, target) {
+      console.log(this.form);
+      if (
+        !this.form.employee_id ||
+        !this.form.position_id ||
+        !this.form.from ||
+        !this.form.to
+      ) {
+        this.errorMessage = `Empleado, Función, Desde y Hasta son campos obligatorios y deben completarse para poder grabar. No deje ningún campo vacío`;
+        this.showError = true;
+        return;
+      }
+
+      if (!(parseInt(this.form.to) > parseInt(this.form.from))) {
+        this.errorMessage = `Revise la hora de entrada y salida. La hora de salida debe ser posterior a la de entrada (la columna Horas debe mostrar un número positivo distinto de 0)`;
+        this.showError = true;
+        return;
+      }
+
       this.form.budget_id = Store.state.budget.rows.id;
       this.form.id = this.form.isNew ? 0 : item.id;
       Store.dispatch("SCHEDULE_VERIFY_INPUT", this.form);
@@ -249,6 +279,9 @@ export default {
     closeGrid() {
       this.scheduleRows = [];
       this.showForm = true;
+    },
+    dismissed() {
+      this.showError = false;
     }
   },
   watch: {
@@ -334,7 +367,7 @@ export default {
         return;
       }
       const records = Store.state.budget;
-      this.errMsg = "No hay presupuesto cargado para ese día";
+      this.errMsg = "No existe presupuesto para ese día";
       this.showErr = !records.count;
       this.showForm = !records.count;
       const sch = Store.state.schedules.rows;
@@ -446,5 +479,29 @@ table input[type="text"] {
   max-width: 60px;
   margin: 0 auto;
   text-align: center;
+}
+
+.bgDiv {
+  background: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.7;
+  z-index: 99997;
+}
+
+.error-message {
+  position: absolute;
+  left: 35%;
+  top: 20%;
+  width: 30%;
+  z-index: 99999;
+  font-size: 12pt;
 }
 </style>
