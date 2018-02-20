@@ -263,7 +263,6 @@ export default {
         colorRows.sort(this.compare);
         this.colors = colorRows;
       }
-      console.log(rows);
     },
     compare(a, b) {
       if (a.sector_position < b.sector_position) {

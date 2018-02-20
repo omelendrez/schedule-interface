@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import Avaliability from "./../services/availability";
 import Branches from "./../services/branches";
 import Budgets from "./../services/budgets";
 import Sectors from "./../services/sectors";
@@ -18,7 +17,6 @@ Vue.use(Vuex);
 
 const state = {
   option: false,
-  availability: [],
   branches: [],
   budgets: [],
   budget: {
@@ -149,13 +147,6 @@ export default new Vuex.Store({
       });
     },
 
-    async [types.LOAD_AVAILABILITY]({ commit }) {
-      const availability = await Avaliability.fetchAvailability();
-      commit(types.SET_AVAILABILITY, {
-        payload: availability.data
-      });
-    },
-
     async [types.LOAD_BUDGETS]({ commit }) {
       const budgets = await Budgets.fetchBudgets();
       commit(types.SET_BUDGETS, {
@@ -237,13 +228,6 @@ export default new Vuex.Store({
       const employee = await Employees.deleteEmployee(item.id);
       commit(types.SET_RESULTS, {
         payload: employee.data
-      })
-    },
-
-    async [types.SAVE_AVAILABILITY]({ commit }, item) {
-      const availability = await Avaliability.saveAvailability(item);
-      commit(types.SET_RESULTS, {
-        payload: availability.data
       })
     },
 
@@ -355,10 +339,6 @@ export default new Vuex.Store({
       state.record = payload;
     },
 
-    [types.SET_AVAILABILITY]: (state, { payload }) => {
-      state.availability = payload;
-    },
-
     [types.SET_BUDGETS]: (state, { payload }) => {
       const bud = payload.rows
       const weekdays = Budgets.weekdays
@@ -382,7 +362,6 @@ export default new Vuex.Store({
     },
 
     [types.SET_RESULTS]: (state, { payload }) => {
-      console.log(payload)
       state.results = payload;
     },
 
