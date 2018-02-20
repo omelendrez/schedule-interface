@@ -30,7 +30,7 @@
       </h5>
       <b-table small :items="rows" :fields="fields" head-variant="light">
         <template slot="fullName" slot-scope="data">
-          {{data.item.last_name}}, {{data.item.first_name}}
+          {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
       </b-table>
 
@@ -268,6 +268,7 @@ export default {
         colorRows.sort(this.compare);
         this.colors = colorRows;
       }
+      console.log(rows);
     },
     compare(a, b) {
       if (a.sector_position < b.sector_position) {

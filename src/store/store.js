@@ -382,6 +382,7 @@ export default new Vuex.Store({
     },
 
     [types.SET_RESULTS]: (state, { payload }) => {
+      console.log(payload)
       state.results = payload;
     },
 
