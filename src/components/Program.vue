@@ -40,7 +40,7 @@
         </b-input-group>
       </b-form-group>
 
-      <b-table hover outlined :items="scheduleRows" :fields="scheduleFields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+      <b-table hover outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
 
         <template slot="fullName" slot-scope="row">
           <div v-if="!row.item.editing">
@@ -212,7 +212,7 @@ export default {
         "employee.badge": "",
         "employee.first_name": "",
         "employee.last_name": "",
-        "sector.name": "",
+        "position.sector.name": "",
         "position.name": "",
         from: "",
         to: "",
@@ -368,7 +368,7 @@ export default {
           "position.color": sch[i]["position.color"],
           "position.name": sch[i]["position.name"],
           position_id: sch[i].position_id,
-          "sector.name": sch[i]["sector.name"],
+          "sector.name": sch[i]["position.sector.name"],
           sector_id: sch[i].sector_id,
           to: sch[i].to,
           updated_at: sch[i].updated_at

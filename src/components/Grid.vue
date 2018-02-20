@@ -70,11 +70,6 @@ export default {
           class: "p-1"
         },
         {
-          key: "sector",
-          label: "Sector",
-          class: "p-1"
-        },
-        {
           key: "h07",
           label: "07",
           class: "text-center p-0 pt-1 pb-1"
@@ -221,7 +216,7 @@ export default {
       const colorRows = [];
       while (i < data.length) {
         const item = data[i];
-        colors.sector_position = `${item["sector.name"]} / ${
+        colors.sector_position = `${item["position.sector.name"]} / ${
           item["position.name"]
         }`;
         colors.color = `<div style="background-color:${
@@ -231,7 +226,7 @@ export default {
           !colorRows.find(child => {
             return (
               child.sector_position ===
-              `${item["sector.name"]} / ${item["position.name"]}`
+              `${item["position.sector.name"]} / ${item["position.name"]}`
             );
           })
         ) {
@@ -248,7 +243,7 @@ export default {
           record.badge = item["employee.badge"];
           record.first_name = item["employee.first_name"];
           record.last_name = item["employee.last_name"];
-          record.sector = item["sector.name"];
+          record.sector = item["position.sector.name"];
           record.position = item["position.name"];
         }
         for (let i = 7; i < 25; i++) {
