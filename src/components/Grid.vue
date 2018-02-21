@@ -355,10 +355,6 @@ export default {
   @page {
     size: landscape;
   }
-  .grid {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: small;
-  }
 }
 .pull-right {
   margin-top: 18px;

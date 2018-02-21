@@ -9,7 +9,7 @@
 
     <b-form-group class="filter-form">
       <b-input-group>
-        <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
+        <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
@@ -27,7 +27,8 @@
     <b-pagination :total-rows="positions.count" :per-page="perPage" v-model="currentPage" />
 
     <b-modal id="modal-center" title="Eliminar función" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea eliminar la función <strong>{{ selectedItem.name }} </strong>?</p>
+      <p class="my-4">Está seguro que desea eliminar la función
+        <strong>{{ selectedItem.name }} </strong>?</p>
     </b-modal>
 
   </b-container>
