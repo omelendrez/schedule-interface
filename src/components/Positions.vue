@@ -42,7 +42,7 @@ export default {
   name: "Positions",
   data() {
     return {
-      perPage: 15,
+      perPage: 10,
       currentPage: 1,
       filter: null,
       show: false,
