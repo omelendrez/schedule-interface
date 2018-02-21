@@ -91,27 +91,23 @@
 
       </b-table>
 
-      <b-alert variant="danger" dismissible :show="showError" class="error-message" @dismissed="dismissed">
-        <h4 class="alert-heading">Error en los datos</h4>
-        <p>
-          {{ errorMessage }}
-        </p>
-        <hr>
-        <p class="m-0 pull-right">
-          Corrija e intente de nuevo
-        </p>
-      </b-alert>
-
-      <div class="bgDiv" v-show="showError" />
-
-      <b-modal id="modal-center" title="Borrar Registro" v-model="show" @ok="handleOkDelete" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
+      <b-modal id="modal-center" header-bg-variant="info" title="Confirmación requerida" centered v-model="show" @ok="handleOkDelete" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
         <p class="my-4">Está seguro que desea borrar el registro de
           <strong>{{selectedItem["employee.last_name"]}}, {{selectedItem["employee.first_name"]}} {{ selectedItem.first_name }} de {{ selectedItem.from }} a {{ selectedItem.to }} horas</strong>?</p>
       </b-modal>
 
-      <b-modal id="modal-center" title="Guardar registro" v-model="showWarning" @ok="handleOkSave" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
+      <b-modal id="modal-center" header-bg-variant="info" centered title="Confirmación requerida" v-model="showWarning" @ok="handleOkSave" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
         <p class="my-4">
           <strong>{{ warningMessage }}</strong>, desea grabar de todos modos?</p>
+      </b-modal>
+
+      <b-modal v-model="showError" header-bg-variant="info" size="lg" centered ok-only title="Error al intentar grabar" class="modalError">
+        <div class="d-block text-center">
+          <strong>{{ errorMessage }}</strong>
+        </div>
+        <p class="m-0  text-center">
+          Corrija e intente de nuevo
+        </p>
       </b-modal>
 
     </div>
@@ -147,12 +143,14 @@ export default {
       scheduleFields: [
         {
           key: "fullName",
-          label: "Empleado"
+          label: "Empleado",
+          class: "px-2"
         },
         {
           key: "sectorPosition",
           label: "Función",
-          variant: "info"
+          variant: "info",
+          class: "px-3"
         },
         {
           key: "from",
@@ -236,7 +234,6 @@ export default {
       Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
     },
     saveItem(item, index, target) {
-      console.log(this.form);
       if (
         !this.form.employee_id ||
         !this.form.position_id ||
@@ -280,7 +277,7 @@ export default {
       this.scheduleRows = [];
       this.showForm = true;
     },
-    dismissed() {
+    hideModal() {
       this.showError = false;
     }
   },
@@ -479,29 +476,5 @@ table input[type="text"] {
   max-width: 60px;
   margin: 0 auto;
   text-align: center;
-}
-
-.bgDiv {
-  background: #fff;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100%;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  opacity: 0.7;
-  z-index: 99997;
-}
-
-.error-message {
-  position: absolute;
-  left: 35%;
-  top: 20%;
-  width: 30%;
-  z-index: 99999;
-  font-size: 12pt;
 }
 </style>
