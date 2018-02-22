@@ -140,6 +140,7 @@ export default {
       employeesOptions: [],
       positionsOptions: [],
       scheduleRows: [],
+      timeoffRows: [],
       scheduleFields: [
         {
           key: "fullName",
@@ -358,6 +359,14 @@ export default {
         }
       }
       this.positionsOptions = positionsOptions;
+      const timeoff = this.timeoffRows.find(item => {
+        return item.id === this.employee.id;
+      });
+      const isTimeoff = timeoff ? true : false;
+      this.warningMessage = isTimeoff
+        ? "El empleado debería estar de franco en este día"
+        : "";
+      this.showWarning = isTimeoff;
     },
     schedules() {
       if (!Store.state.budget.rows) {
@@ -390,9 +399,27 @@ export default {
         arr.push(row);
       }
       this.scheduleRows = arr;
+      Store.dispatch("LOAD_TIMEOFF", {
+        budget_id: Store.state.budget.rows.id
+      });
+    },
+    timeoff() {
+      const to = Store.state.timeoff;
+      if (!Store.state.timeoff) {
+        return;
+      }
+      for (let i = 0; i < to.length; i++) {
+        const item = to[i];
+        if (item.presence > 5) {
+          this.timeoffRows.push(item);
+        }
+      }
     }
   },
   computed: {
+    timeoff() {
+      return Store.state.timeoff;
+    },
     results() {
       return Store.state.results;
     },
