@@ -9,11 +9,11 @@
 
     <div class="input-container no-print" v-show="showForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-        <b-form-select v-model="form.branch_id" :options="branches"/>
+        <b-form-select v-model="form.branch_id" :options="branches" />
       </b-form-group>
 
       <b-form-group horizontal id="date" label="Día" label-for="date">
-        <b-form-input type="date" v-model="form.date"/>
+        <b-form-input type="date" v-model="form.date" />
       </b-form-group>
 
       <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar</b-btn>
@@ -28,18 +28,22 @@
       <h5>
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
-      <b-table small :items="rows" :fields="fields" head-variant="light">
+      <b-table small bordered :items="rows" :fields="fields" head-variant="light">
         <template slot="fullName" slot-scope="data">
           {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
       </b-table>
 
-      <b-card title="Mensaje" class="mb-2">
+      <b-card title="Mensaje" class="mb-2" v-show="footer">
         <p class="card-text"> {{ footer }} </p>
       </b-card>
 
-      <b-table small :items="colors" :fields="colorFields" head-variant="light" class="compact">
+      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left">
+        <template slot="fullName" slot-scope="data">
+          {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
+        </template>
       </b-table>
+      <b-table small :items="colors" :fields="colorFields" head-variant="light" class="compact pull-right" />
 
     </div>
 
@@ -72,104 +76,113 @@ export default {
         {
           key: "h07",
           label: "07",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h08",
           label: "08",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h09",
           label: "09",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h10",
           label: "10",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h11",
           label: "11",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h12",
           label: "12",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h13",
           label: "13",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h14",
           label: "14",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h15",
           label: "15",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h16",
           label: "16",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h17",
           label: "17",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h18",
           label: "18",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h19",
           label: "19",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h20",
           label: "20",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h21",
           label: "21",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h22",
           label: "22",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h23",
           label: "23",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         },
         {
           key: "h24",
           label: "24",
-          class: "text-center p-0 pt-1 pb-1"
+          class: "text-center p-0 pt-1"
         }
       ],
       rows: [],
       colors: [],
+      timeoffRows: [],
       colorFields: [
         {
           key: "color",
-          label: "&nbsp;"
+          label: "&nbsp;",
+          class: "p-1 m-0"
         },
         {
           key: "sector_position",
-          label: "Sector / Función"
+          label: "Sector / Función",
+          class: "p-1 m-0"
+        }
+      ],
+      timeoffFields: [
+        {
+          key: "fullName",
+          label: "PERSONAL DE FRANCO"
         }
       ]
     };
@@ -193,7 +206,7 @@ export default {
     loadData() {
       this.showError = false;
       this.showMessage = false;
-      // localStorage.setItem("form", JSON.stringify(this.form));
+      // localStorage.setItem(`form_${this.isLogged}`, JSON.stringify(this.form));
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
@@ -221,7 +234,7 @@ export default {
         }`;
         colors.color = `<div style="background-color:${
           item["position.color"]
-        }">&nbsp;</div>`;
+        }">&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
         if (
           !colorRows.find(child => {
             return (
@@ -280,10 +293,26 @@ export default {
       this.errorMessage = "No hay presupuesto cargado para ese día";
       this.showError = !records;
       this.showForm = !records;
+      Store.dispatch("LOAD_TIMEOFF", { budget_id: Store.state.budget.rows.id });
       this.showGrid();
+    },
+    timeoff() {
+      const to = Store.state.timeoff;
+      if (!Store.state.timeoff) {
+        return;
+      }
+      for (let i = 0; i < to.length; i++) {
+        const item = to[i];
+        if (item.presence > 5) {
+          this.timeoffRows.push(item);
+        }
+      }
     }
   },
   computed: {
+    timeoff() {
+      return Store.state.timeoff;
+    },
     budget() {
       return Store.state.budget.rows;
     },
@@ -336,7 +365,12 @@ export default {
 <style scoped>
 .grid {
   background-color: white;
-  padding-bottom: 60px;
+  position: fixed !important;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 .load-button {
   margin-bottom: 20px;
@@ -360,11 +394,12 @@ export default {
   margin-top: 18px;
   float: right;
 }
-.compact {
-  width: 300px;
+.pull-left {
+  margin-top: 18px;
+  float: left;
 }
-.table-sm td {
-  color: red;
-  width: 20px !important;
+.compact {
+  width: auto;
+  background-color: white;
 }
 </style>

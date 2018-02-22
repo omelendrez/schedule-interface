@@ -4,6 +4,9 @@ export default {
   fetchBudgetSchedules(payload) {
     return HTTP.get(`schedule/${payload.date}/budget/${payload.branch_id}`, payload)
   },
+  fetchTimeoff(payload) {
+    return HTTP.get(`schedule/${payload.budget_id}/timeoff`)
+  },
   verifySchedule(payload) {
     return HTTP.post('schedule/verify', payload)
   },
