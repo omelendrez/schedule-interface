@@ -82,7 +82,7 @@
           <b-btn size="sm" variant="info" @click.stop="editItem(row.item, row.index, $event.target)" v-if="!row.item.editing" :disabled="isEditing">Editar</b-btn>
           <b-btn size="sm" variant="success" @click.stop="saveItem(row.item, row.index, $event.target)" v-else>Grabar</b-btn>
           <b-btn size="sm" variant="danger" @click.stop="deleteItem(row.item)" v-if="!row.item.editing" :disabled="isEditing">Eliminar</b-btn>
-          <b-btn size="sm" variant="primary" @click.stop="cancelSave(row.item, row.index, $event.target)" v-else>Cancelar</b-btn>
+          <b-btn size="sm" variant="primary" ref="cancelSave" @click.stop="cancelSave(row.item, row.index, $event.target)" v-else>Cancelar</b-btn>
         </template>
 
         <template slot="table-caption">
@@ -96,7 +96,7 @@
           <strong>{{selectedItem["employee.last_name"]}}, {{selectedItem["employee.first_name"]}} {{ selectedItem.first_name }} de {{ selectedItem.from }} a {{ selectedItem.to }} horas</strong>?</p>
       </b-modal>
 
-      <b-modal id="modal-center" header-bg-variant="info" centered title="Confirmación requerida" v-model="showWarning" @ok="handleOkSave" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
+      <b-modal id="modal-center" header-bg-variant="info" centered title="Confirmación requerida" v-model="showWarning" @ok="handleOkSave" @cancel="handleCancelSave" ok-title="Si. Grabar" cancel-title="No. Cambiar" ok-variant="danger" cancel-variant="success">
         <p class="my-4">
           <strong>{{ warningMessage }}</strong>, desea grabar de todos modos?</p>
       </b-modal>
@@ -130,6 +130,7 @@ export default {
       showError: false,
       showMessage: false,
       showWarning: false,
+      timeoffAlert: false,
       message: "",
       errMsg: "",
       errorMessage: "",
@@ -271,8 +272,16 @@ export default {
       Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
     },
     handleOkSave() {
+      if (this.timeoffAlert) {
+        return;
+      }
       this.form.budget_id = Store.state.budget.rows.id;
       Store.dispatch("SAVE_SCHEDULE", this.form);
+    },
+    handleCancelSave() {
+      if (this.timeoffAlert) {
+        this.$refs.cancelSave.click();
+      }
     },
     closeGrid() {
       this.scheduleRows = [];
@@ -362,7 +371,11 @@ export default {
       const timeoff = this.timeoffRows.find(item => {
         return item.id === this.employee.id;
       });
-      const isTimeoff = timeoff ? true : false;
+      let isTimeoff = false;
+      if (timeoff) {
+        isTimeoff = true;
+        this.timeoffAlert = true;
+      }
       this.warningMessage = isTimeoff
         ? "El empleado debería estar de franco en este día"
         : "";
