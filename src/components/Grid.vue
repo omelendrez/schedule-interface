@@ -219,7 +219,7 @@ export default {
         Store.dispatch("LOAD_SCHEDULES");
       }, 500);
     },
-    showGrid() {
+    loadGrid() {
       const data = Store.state.schedules.rows;
       let i = 0;
       let employeeId = 0;
@@ -294,7 +294,7 @@ export default {
       this.showError = !records;
       this.showForm = !records;
       Store.dispatch("LOAD_TIMEOFF", { budget_id: Store.state.budget.rows.id });
-      this.showGrid();
+      this.loadGrid();
     },
     timeoff() {
       const to = Store.state.timeoff;
@@ -350,12 +350,14 @@ export default {
     if (!this.isLogged) {
       this.$router.push({ name: "Login" });
     }
-    this.showForm = true;
     Store.dispatch("SET_MENU_OPTION", this.$route.path);
     if (Store.state.budget.rows.id) {
+      this.showForm = false;
       this.form.branch_id = Store.state.budget.rows.branch_id;
       this.form.date = Store.state.budget.rows._date;
       this.loadData();
+    } else {
+      this.showForm = true;
     }
   }
 };
