@@ -473,11 +473,13 @@ export default {
     Store.dispatch("LOAD_BRANCHES");
     Store.dispatch("LOAD_POSITIONS");
     Store.dispatch("LOAD_POSITION_SECTOR");
-    this.showForm = true;
     if (Store.state.budget.rows.id) {
+      this.showForm = false;
       this.form.branch_id = Store.state.budget.rows.branch_id;
       this.form.date = Store.state.budget.rows._date;
       this.loadData();
+    } else {
+      this.showForm = true;
     }
   }
 };
