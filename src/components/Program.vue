@@ -63,9 +63,9 @@
           <b-form-input type="text" v-model="form.from" v-else required></b-form-input>
         </template>
 
-        <template slot="to" slot-scope="row">
+        <template slot="_to" slot-scope="row">
           <div v-if="!row.item.editing">
-            {{row.item["to"]}}
+            {{row.item["_to"]}}
           </div>
           <b-form-input type="text" v-model="form.to" v-else required></b-form-input>
         </template>
@@ -75,7 +75,7 @@
             {{row.item["to"]-row.item["from"]}}
           </div>
           <div v-else>
-            {{form.to-form.from}}
+            {{hoursWorked}}
           </div>
         </template>
         <template slot="acciones" slot-scope="row">
@@ -161,7 +161,7 @@ export default {
           class: "text-center"
         },
         {
-          key: "to",
+          key: "_to",
           label: "Hasta",
           variant: "warning",
           class: "text-center"
@@ -231,7 +231,7 @@ export default {
       this.form.employee_id = item.employee_id;
       this.form.position_id = item.position_id;
       this.form.from = item.from;
-      this.form.to = item.to;
+      this.form.to = item._to;
       item.budget_id = Store.state.budget.rows.id;
       Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
     },
@@ -247,10 +247,32 @@ export default {
         return;
       }
 
-      if (!(parseInt(this.form.to) > parseInt(this.form.from))) {
-        this.errorMessage = `Revise la hora de entrada y salida. La hora de salida debe ser posterior a la de entrada (la columna Horas debe mostrar un número positivo distinto de 0)`;
+      const from = parseInt(this.form.from);
+      const to = parseInt(this.form.to);
+
+      if (from === to) {
+        this.errorMessage = `La hora de entrada no puede ser igual a la hora de salida`;
         this.showError = true;
         return;
+      }
+
+      if (from < to) {
+        if (from < 6) {
+          this.errorMessage = `La hora de entrada no puede ser anterior a las 6am`;
+          this.showError = true;
+          return;
+        }
+        if (from < 6) {
+          this.errorMessage = `La hora de entrada no puede ser anterior a las 6am`;
+          this.showError = true;
+          return;
+        }
+      } else {
+        if (to > 2) {
+          this.errorMessage = `La hora de salida no puede ser posterior a las 2am`;
+          this.showError = true;
+          return;
+        }
       }
 
       this.form.budget_id = Store.state.budget.rows.id;
@@ -407,6 +429,7 @@ export default {
           "sector.name": sch[i]["position.sector.name"],
           sector_id: sch[i].sector_id,
           to: sch[i].to,
+          _to: sch[i]._to,
           updated_at: sch[i].updated_at
         };
         arr.push(row);
@@ -430,6 +453,11 @@ export default {
     }
   },
   computed: {
+    hoursWorked() {
+      const from = parseInt(this.form.from);
+      const to = parseInt(this.form.to);
+      return from < to ? to - from : to + 24 - from;
+    },
     timeoff() {
       return Store.state.timeoff;
     },

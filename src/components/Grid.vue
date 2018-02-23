@@ -74,6 +74,16 @@ export default {
           class: "p-1"
         },
         {
+          key: "h05",
+          label: "05",
+          class: "text-center p-0 pt-1"
+        },
+        {
+          key: "h06",
+          label: "06",
+          class: "text-center p-0 pt-1"
+        },
+        {
           key: "h07",
           label: "07",
           class: "text-center p-0 pt-1"
@@ -161,6 +171,16 @@ export default {
         {
           key: "h24",
           label: "24",
+          class: "text-center p-0 pt-1"
+        },
+        {
+          key: "h25",
+          label: "01",
+          class: "text-center p-0 pt-1"
+        },
+        {
+          key: "h26",
+          label: "02",
           class: "text-center p-0 pt-1"
         }
       ],
@@ -259,7 +279,7 @@ export default {
           record.sector = item["position.sector.name"];
           record.position = item["position.name"];
         }
-        for (let i = 7; i < 25; i++) {
+        for (let i = 1; i < 27; i++) {
           let hour = `0${i.toString()}`;
           hour = hour.substr(hour.length - 2);
           if (item["from"] <= i && item["to"] > i) {
