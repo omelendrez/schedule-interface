@@ -1,12 +1,13 @@
 <template>
-  <b-container class="grid-list" fluid>
+  <b-container class="program" fluid>
     <Header />
 
-    <div v-show="!showForm" class="pull-right">
+    <div v-show="!showForm" class="pull-right no-print">
+      <b-btn variant="primary" @click.stop="printGrid">Imprimir</b-btn>
       <b-btn variant="success" @click.stop="closeGrid">Cambiar fecha</b-btn>
     </div>
 
-    <div class="input-container" v-show="showForm">
+    <div class="input-container no-print" v-show="showForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
         <b-form-select v-model="form.branch_id" :options="branchOptions" />
       </b-form-group>
@@ -29,11 +30,11 @@
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
 
-      <div class="add-button">
+      <div class="add-button no-print">
         <b-button @click="addItem" variant="info" :disabled="isEditing">Agregar</b-button>
       </div>
 
-      <b-form-group class="filter-form">
+      <b-form-group class="filter-form no-print">
         <b-input-group>
           <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
           <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
@@ -78,6 +79,7 @@
             {{hoursWorked}}
           </div>
         </template>
+        
         <template slot="acciones" slot-scope="row">
           <b-btn size="sm" variant="info" @click.stop="editItem(row.item, row.index, $event.target)" v-if="!row.item.editing" :disabled="isEditing">Editar</b-btn>
           <b-btn size="sm" variant="success" @click.stop="saveItem(row.item, row.index, $event.target)" v-else>Grabar</b-btn>
@@ -180,11 +182,12 @@ export default {
         {
           key: "updated_at",
           label: "Modificado",
-          class: "text-center"
+          class: "text-center no-print"
         },
         {
           key: "acciones",
-          class: "text-center"
+          label: " ",
+          class: "text-center no-print"
         }
       ]
     };
@@ -193,6 +196,11 @@ export default {
     Header
   },
   methods: {
+    printGrid() {
+      this.$nextTick(() => {
+        window.print();
+      });
+    },
     loadData() {
       this.showError = false;
       this.showMessage = false;
@@ -515,9 +523,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.grid-list {
+.program {
   background-color: white;
-  padding-bottom: 60px;
+  position: fixed !important;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 .load-button {
   margin-bottom: 18px;
@@ -546,5 +559,14 @@ table input[type="text"] {
   max-width: 60px;
   margin: 0 auto;
   text-align: center;
+}
+@media print {
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+  @page {
+    size: landscape;
+  }
 }
 </style>
