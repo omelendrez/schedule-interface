@@ -38,7 +38,7 @@
         <p class="card-text"> {{ footer }} </p>
       </b-card>
 
-      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left">
+      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left" v-show="timeoffRows.length">
         <template slot="fullName" slot-scope="data">
           {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
@@ -187,6 +187,11 @@ export default {
           key: "sector_position",
           label: "Sector / Función",
           class: "p-1 m-0"
+        },
+        {
+          key: "hours",
+          label: "Horas",
+          class: "text-right p-1 m-0"
         }
       ],
       timeoffFields: [
@@ -237,8 +242,15 @@ export default {
       let colors = {};
       const rows = [];
       const colorRows = [];
+      const hours = [];
       while (i < data.length) {
         const item = data[i];
+        if (!hours[item.position_id]) {
+          hours[item.position_id] = 0;
+        }
+        hours[item.position_id] =
+          hours[item.position_id] + (item.to - item.from);
+        colors.position_id = item.position_id;
         colors.sector_position = `${item["position.sector.name"]} / ${
           item["position.name"]
         }`;
@@ -283,9 +295,16 @@ export default {
       rows.push(record);
       if (rows[0].id) {
         this.rows = rows;
-        colorRows.sort(this.compare);
-        this.colors = colorRows;
+        const colorsRows = colorRows.map(item => {
+          item.hours = hours[item.position_id];
+          return item;
+        });
+        colorsRows.sort(this.compare);
+        this.colors = colorsRows;
       }
+      Store.dispatch("LOAD_TIMEOFF", {
+        budget_id: Store.state.budget.rows.id
+      });
     },
     compare(a, b) {
       if (a.sector_position < b.sector_position) {
@@ -303,12 +322,12 @@ export default {
       this.errorMessage = "No hay presupuesto cargado para ese día";
       this.showError = !records;
       this.showForm = !records;
-      Store.dispatch("LOAD_TIMEOFF", { budget_id: Store.state.budget.rows.id });
       this.loadGrid();
     },
     timeoff() {
+      this.timeoffRows = [];
       const to = Store.state.timeoff;
-      if (!Store.state.timeoff) {
+      if (!Store.state.timeoff.length) {
         return;
       }
       for (let i = 0; i < to.length; i++) {
