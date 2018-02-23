@@ -38,7 +38,7 @@
         <p class="card-text"> {{ footer }} </p>
       </b-card>
 
-      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left">
+      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left" v-show="timeoffRows.length">
         <template slot="fullName" slot-scope="data">
           {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
@@ -286,6 +286,9 @@ export default {
         colorRows.sort(this.compare);
         this.colors = colorRows;
       }
+      Store.dispatch("LOAD_TIMEOFF", {
+        budget_id: Store.state.budget.rows.id
+      });
     },
     compare(a, b) {
       if (a.sector_position < b.sector_position) {
@@ -303,12 +306,12 @@ export default {
       this.errorMessage = "No hay presupuesto cargado para ese día";
       this.showError = !records;
       this.showForm = !records;
-      Store.dispatch("LOAD_TIMEOFF", { budget_id: Store.state.budget.rows.id });
       this.loadGrid();
     },
     timeoff() {
+      this.timeoffRows = [];
       const to = Store.state.timeoff;
-      if (!Store.state.timeoff) {
+      if (!Store.state.timeoff.length) {
         return;
       }
       for (let i = 0; i < to.length; i++) {
