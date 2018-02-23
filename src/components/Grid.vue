@@ -74,11 +74,6 @@ export default {
           class: "p-1"
         },
         {
-          key: "h05",
-          label: "05",
-          class: "text-center p-0 pt-1"
-        },
-        {
           key: "h06",
           label: "06",
           class: "text-center p-0 pt-1"
@@ -176,11 +171,6 @@ export default {
         {
           key: "h25",
           label: "01",
-          class: "text-center p-0 pt-1"
-        },
-        {
-          key: "h26",
-          label: "02",
           class: "text-center p-0 pt-1"
         }
       ],
