@@ -365,6 +365,11 @@ export default new Vuex.Store({
       bud.weekday = weekdays[bud.weekday]
       payload.budget.rows = bud
       state.budget = payload.budget;
+      payload.schedule.rows = payload.schedule.rows.map(item => {
+        const to = parseInt(item.to)
+        item["_to"] = to > 24 ? to - 24 : to
+        return item
+      })
       state.schedules = payload.schedule;
       state.results = payload;
     },
