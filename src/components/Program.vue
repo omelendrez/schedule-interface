@@ -79,7 +79,7 @@
             {{hoursWorked}}
           </div>
         </template>
-        
+
         <template slot="acciones" slot-scope="row">
           <b-btn size="sm" variant="info" @click.stop="editItem(row.item, row.index, $event.target)" v-if="!row.item.editing" :disabled="isEditing">Editar</b-btn>
           <b-btn size="sm" variant="success" @click.stop="saveItem(row.item, row.index, $event.target)" v-else>Grabar</b-btn>
