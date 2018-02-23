@@ -187,6 +187,11 @@ export default {
           key: "sector_position",
           label: "Sector / Función",
           class: "p-1 m-0"
+        },
+        {
+          key: "hours",
+          label: "Horas",
+          class: "text-right p-1 m-0"
         }
       ],
       timeoffFields: [
@@ -237,8 +242,15 @@ export default {
       let colors = {};
       const rows = [];
       const colorRows = [];
+      const hours = [];
       while (i < data.length) {
         const item = data[i];
+        if (!hours[item.position_id]) {
+          hours[item.position_id] = 0;
+        }
+        hours[item.position_id] =
+          hours[item.position_id] + (item.to - item.from);
+        colors.position_id = item.position_id;
         colors.sector_position = `${item["position.sector.name"]} / ${
           item["position.name"]
         }`;
@@ -283,8 +295,12 @@ export default {
       rows.push(record);
       if (rows[0].id) {
         this.rows = rows;
-        colorRows.sort(this.compare);
-        this.colors = colorRows;
+        const colorsRows = colorRows.map(item => {
+          item.hours = hours[item.position_id];
+          return item;
+        });
+        colorsRows.sort(this.compare);
+        this.colors = colorsRows;
       }
       Store.dispatch("LOAD_TIMEOFF", {
         budget_id: Store.state.budget.rows.id
