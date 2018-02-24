@@ -216,6 +216,8 @@ export default {
         id: 0,
         employe_id: 0,
         position_id: 0,
+        date: this.form.date,
+        branch_id: this.form.branch_id,
         "employee.badge": "",
         "employee.first_name": "",
         "employee.last_name": "",
