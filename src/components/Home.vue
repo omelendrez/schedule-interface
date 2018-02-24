@@ -1,7 +1,10 @@
 <template>
   <b-container class="home" fluid>
     <Header />
-    <b-jumbotron header="Turnos" lead="Administrador de programación de turnos"  bg-variant="info" text-variant="white" border-variant="dark">
+    <b-jumbotron header="Turnos" lead="Administrador de programación de turnos" border-variant="dark">
+      <div>
+        <b-img thumbnail fluid alt="Turnos" src="../static/img/work-schedule.jpg" />
+      </div>
     </b-jumbotron>
   </b-container>
 </template>
