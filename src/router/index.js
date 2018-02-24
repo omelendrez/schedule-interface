@@ -10,7 +10,6 @@ import Budgets from "@/components/Budgets";
 import Budget from "@/components/Budget";
 import Grid from "@/components/Grid";
 import Program from "@/components/Program";
-import GridEdit from "@/components/GridEdit";
 import Sectors from "@/components/Sectors";
 import Sector from "@/components/Sector";
 import Positions from "@/components/Positions";
@@ -73,11 +72,6 @@ export default new Router({
       path: "/program",
       name: "Program",
       component: Program
-    },
-    {
-      path: "/grid_edit",
-      name: "GridEdit",
-      component: GridEdit
     },
     {
       path: "/sectors",
