@@ -1,7 +1,7 @@
 <template>
   <b-container class="sector">
     <h1>Sector</h1>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="form.show" id="addForm">
+    <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-form-group horizontal id="name" label="Nombre" label-for="name">
         <b-form-input id="name" v-model.trim="form.name" required></b-form-input>
       </b-form-group>
@@ -20,10 +20,10 @@ export default {
   name: "Sector",
   data() {
     return {
+      show: true,
       form: {
         name: "",
-        id: 0,
-        show: true
+        id: 0
       }
     };
   },
@@ -71,7 +71,7 @@ export default {
       /* Reset our form values */
       this.form.name = "";
       /* Trick to reset/clear native browser form validation state */
-      this.form.show = false;
+      this.show = false;
       this.$nextTick(() => {
         this.$router.push({ name: "Sectors" });
       });
