@@ -8,3 +8,4 @@ package.json
 package-lock.json
 
 .gitignore
+src/components/http-common.js
