@@ -14,6 +14,8 @@ import Sectors from "@/components/Sectors";
 import Sector from "@/components/Sector";
 import Positions from "@/components/Positions";
 import Position from "@/components/Position";
+import Timeoffs from "@/components/Timeoffs";
+import Timeoff from "@/components/Timeoff";
 import Employees from "@/components/Employees";
 import Employee from "@/components/Employee";
 import Users from "@/components/Users";
@@ -92,6 +94,16 @@ export default new Router({
       path: "/position",
       name: "Position",
       component: Position
+    },
+    {
+      path: "/timeoffs",
+      name: "Timeoffs",
+      component: Timeoffs
+    },
+    {
+      path: "/timeoff",
+      name: "Timeoff",
+      component: Timeoff
     },
     {
       path: "/employees",

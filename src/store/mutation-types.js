@@ -50,6 +50,11 @@ export const SET_USERS = 'SET_USERS'
 export const SAVE_USER = 'SAVE_USER'
 export const DELETE_USER = 'DELETE_USER'
 
+export const LOAD_TIMEOFFS = 'LOAD_TIMEOFFS'
+export const SET_TIMEOFFS = 'SET_TIMEOFFS'
+export const SAVE_TIMEOFF = 'SAVE_TIMEOFF'
+export const DELETE_TIMEOFF = 'DELETE_TIMEOFF'
+
 export const LOAD_BUDGETS = 'LOAD_BUDGETS'
 export const SET_BUDGETS = 'SET_BUDGETS'
 export const SAVE_BUDGET = 'SAVE_BUDGET'
