@@ -16,7 +16,7 @@
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
 
-      <b-alert variant="danger" :show="errorShow">{{ errorMsg }}</b-alert>
+      <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
 
     </b-form>
   </b-container>
@@ -36,13 +36,15 @@ export default {
       },
       show: true,
       errorShow: false,
-      errorMsg: ""
+      errorMessage: ""
     };
   },
   watch: {
     results() {
       const results = Store.state.results;
       if (results.error) {
+        this.errorMessage = results.message;
+        this.errorShow = results.error;
         return;
       }
       this.$router.push({ name: "Timeoffs" });
