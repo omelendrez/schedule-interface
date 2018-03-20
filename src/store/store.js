@@ -431,6 +431,10 @@ export default new Vuex.Store({
       state.timeoffs = payload;
     },
 
+    [types.SET_TIMEOFFS]: (state, { payload }) => {
+      state.timeoffs = payload;
+    },
+
     [types.SET_AUTOCOMPLETE_VALUE]: (state, payload) => {
       state.autocompleteValue = payload;
     },

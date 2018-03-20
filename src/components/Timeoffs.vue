@@ -51,6 +51,11 @@ export default {
       },
       fields: [
         {
+          key: "employee.badge",
+          label: "Legajo",
+          sortable: true
+        },
+        {
           key: "employee.first_name",
           label: "Nombre",
           sortable: true
