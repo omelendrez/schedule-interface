@@ -42,7 +42,8 @@ const state = {
   user: [],
   password: [],
   record: [],
-  results: []
+  results: [],
+  autocompleteValue: []
 };
 
 export default new Vuex.Store({
@@ -57,6 +58,12 @@ export default new Vuex.Store({
     [types.ADD_ITEM]({ commit }, item) {
       commit(types.SET_RECORD, {
         payload: item
+      });
+    },
+
+    [types.SET_VALUE]({ commit }, value) {
+      commit(types.SET_AUTOCOMPLETE_VALUE, {
+        selected: value
       });
     },
 
@@ -331,9 +338,7 @@ export default new Vuex.Store({
           created_at: positions[i].created_at,
           name: positions[i].name,
           color: positions[i].color,
-          div: `<div style="background-color:${
-            positions[i].color
-          };width:90px;border-radius:4px;" class="mx-auto">&nbsp;</div>`,
+          div: `<div style="background-color:${positions[i].color};width:90px;border-radius:4px;" class="mx-auto">&nbsp;</div>`,
           sector_id: positions[i].sector_id,
           updated_at: positions[i].updated_at,
           "sector.name": positions[i]["sector.name"]
@@ -410,8 +415,12 @@ export default new Vuex.Store({
       state.password = payload;
     },
 
-    [types.SET_TIMEOFFS]: (state, { payload }) => {
+    [types.SET_TIMEOFF]: (state, { payload }) => {
       state.timeoffs = payload;
+    },
+
+    [types.SET_AUTOCOMPLETE_VALUE]: (state, payload) => {
+      state.autocompleteValue = payload;
     },
 
     [types.SET_POSITION_SECTOR]: (state, { payload }) => {
