@@ -1,8 +1,8 @@
 import axios from 'axios'
 // http://localhost:3010/
-// https://pure-ridge-51583.herokuapp.com/
+// https://escng-schedule.herokuapp.com/
 const HTTP = axios.create({
-  baseURL: 'http://localhost:3010/',
+  baseURL: 'https://escng-schedule.herokuapp.com/',
   headers: {
     // Authorization: 'Bearer {token}'
   }
