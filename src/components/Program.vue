@@ -47,7 +47,7 @@
           <div v-if="!row.item.editing">
             {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
           </div>
-          <b-form-select v-model="form.employee_id" :options="employeesOptions" @change="refreshUser($event)" id="edit_field" v-else required/>
+          <Autocomplete :suggestions="employeesOptions" :selection.sync="value" v-else></Autocomplete>
         </template>
 
         <template slot="sectorPosition" slot-scope="row">
@@ -119,11 +119,14 @@
 <script>
 import Store from "../store/store";
 import Header from "./Header";
+import Autocomplete from "./lib/Autocomplete";
 
 export default {
   name: "GridList",
   data() {
     return {
+      value: "",
+      autocompleteValueSelected: "",
       isEditing: false,
       filter: null,
       show: false,
@@ -193,7 +196,8 @@ export default {
     };
   },
   components: {
-    Header
+    Header,
+    Autocomplete
   },
   methods: {
     printGrid() {
@@ -246,6 +250,7 @@ export default {
       Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
     },
     saveItem(item, index, target) {
+      this.form.employee_id = this.autocompleteValueSelected.value;
       if (
         !this.form.employee_id ||
         !this.form.position_id ||
@@ -324,6 +329,12 @@ export default {
     }
   },
   watch: {
+    autocompleteValue() {
+      if (!Store.state.autocompleteValue) {
+        return;
+      }
+      this.autocompleteValueSelected = Store.state.autocompleteValue.selected;
+    },
     results() {
       const results = Store.state.results;
       if (results.id || results.status) {
@@ -463,6 +474,9 @@ export default {
     }
   },
   computed: {
+    autocompleteValue() {
+      return Store.state.autocompleteValue;
+    },
     hoursWorked() {
       const from = parseInt(this.form.from);
       const to = parseInt(this.form.to);

@@ -10,6 +10,7 @@ import Profiles from "./../services/profiles";
 import Status from "./../services/status";
 import Employees from "./../services/employees";
 import Users from "./../services/users";
+import Timeoffs from "./../services/timeoffs";
 
 import * as types from "../store/mutation-types";
 
@@ -33,7 +34,8 @@ const state = {
   positionSector: [],
   profiles: [],
   schedules: [],
-  timeoff: [],
+  timeoffs: [],
+  budgetTimeoffs: [],
   status: [],
   employees: [],
   employee: [],
@@ -41,7 +43,8 @@ const state = {
   user: [],
   password: [],
   record: [],
-  results: []
+  results: [],
+  autocompleteValue: []
 };
 
 export default new Vuex.Store({
@@ -56,6 +59,12 @@ export default new Vuex.Store({
     [types.ADD_ITEM]({ commit }, item) {
       commit(types.SET_RECORD, {
         payload: item
+      });
+    },
+
+    [types.SET_VALUE]({ commit }, value) {
+      commit(types.SET_AUTOCOMPLETE_VALUE, {
+        selected: value
       });
     },
 
@@ -169,32 +178,39 @@ export default new Vuex.Store({
       });
     },
 
+    async [types.LOAD_BUDGET_TIMEOFF]({ commit }, payload) {
+      const timeoffs = await Timeoffs.findByDate(payload);
+      commit(types.SET_BUDGET_TIMEOFF, {
+        payload: timeoffs.data
+      });
+    },
+
     async [types.SAVE_BRANCH]({ commit }, item) {
       const branch = await Branches.saveBranch(item);
       commit(types.SET_RESULTS, {
         payload: branch.data
-      })
+      });
     },
 
     async [types.DELETE_BRANCH]({ commit }, item) {
       const branch = await Branches.deleteBranch(item.id);
       commit(types.SET_RESULTS, {
         payload: branch.data
-      })
+      });
     },
 
     async [types.SAVE_SECTOR]({ commit }, item) {
       const sector = await Sectors.saveSector(item);
       commit(types.SET_RESULTS, {
         payload: sector.data
-      })
+      });
     },
 
     async [types.DELETE_SECTOR]({ commit }, item) {
       const sector = await Sectors.deleteSector(item.id);
       commit(types.SET_RESULTS, {
         payload: sector.data
-      })
+      });
     },
 
     async [types.SAVE_POSITION]({ commit }, item) {
@@ -208,7 +224,7 @@ export default new Vuex.Store({
       const position = await Positions.deletePosition(item.id);
       commit(types.SET_RESULTS, {
         payload: position.data
-      })
+      });
     },
 
     async [types.SAVE_USER]({ commit }, item) {
@@ -236,21 +252,21 @@ export default new Vuex.Store({
       const employee = await Employees.deleteEmployee(item.id);
       commit(types.SET_RESULTS, {
         payload: employee.data
-      })
+      });
     },
 
     async [types.SAVE_BUDGET]({ commit }, item) {
       const budget = await Budgets.saveBudget(item);
       commit(types.SET_RESULTS, {
         payload: budget.data
-      })
+      });
     },
 
     async [types.DELETE_BUDGET]({ commit }, item) {
       const budget = await Budgets.deleteBudget(item.id);
       commit(types.SET_RESULTS, {
         payload: budget.data
-      })
+      });
     },
 
     async [types.SAVE_SCHEDULE]({ commit }, payload) {
@@ -279,8 +295,28 @@ export default new Vuex.Store({
       commit(types.SET_POSITION_SECTOR, {
         payload: position.data
       });
-    }
+    },
 
+    async [types.LOAD_TIMEOFFS]({ commit }, payload) {
+      const timeoffs = await Timeoffs.fetchTimeoffs();
+      commit(types.SET_TIMEOFFS, {
+        payload: timeoffs.data
+      });
+    },
+
+    async [types.SAVE_TIMEOFF]({ commit }, item) {
+      const timeoff = await Timeoffs.saveTimeoff(item);
+      commit(types.SET_RESULTS, {
+        payload: timeoff.data
+      });
+    },
+
+    async [types.DELETE_TIMEOFF]({ commit }, item) {
+      const timeoff = await Timeoffs.deleteTimeoff(item.id);
+      commit(types.SET_RESULTS, {
+        payload: timeoff.data
+      });
+    }
   },
 
   mutations: {
@@ -302,8 +338,8 @@ export default new Vuex.Store({
 
     [types.SET_POSITIONS]: (state, { payload }) => {
       const positions = payload.rows;
-      const records = []
-      let record = {}
+      const records = [];
+      let record = {};
       for (let i = 0; i < positions.length; i++) {
         record = {
           id: positions[i].id,
@@ -314,13 +350,13 @@ export default new Vuex.Store({
           sector_id: positions[i].sector_id,
           updated_at: positions[i].updated_at,
           "sector.name": positions[i]["sector.name"]
-        }
-        records.push(record)
+        };
+        records.push(record);
       }
       state.positions = {
         rows: records,
         count: payload.count
-      }
+      };
     },
 
     [types.SET_PROFILES]: (state, { payload }) => {
@@ -348,28 +384,33 @@ export default new Vuex.Store({
     },
 
     [types.SET_BUDGETS]: (state, { payload }) => {
-      const bud = payload.rows
-      const weekdays = Budgets.weekdays
+      const bud = payload.rows;
+      const weekdays = Budgets.weekdays;
       for (let i = 0; i < bud.length; i++) {
-        bud[i].weekday = weekdays[bud[i].weekday]
+        bud[i].weekday = weekdays[bud[i].weekday];
       }
-      payload.rows = bud
+      payload.rows = bud;
       state.budgets = payload;
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
-      const hours = payload.schedule.rows.reduce((prevVal, elem, index, array) => { return prevVal + elem.to - elem.from; }, 0);
+      const hours = payload.schedule.rows.reduce(
+        (prevVal, elem, index, array) => {
+          return prevVal + elem.to - elem.from;
+        },
+        0
+      );
       payload.schedule["scheduled"] = hours;
-      const bud = payload.budget.rows
-      const weekdays = Budgets.weekdays
-      bud.weekday = weekdays[bud.weekday]
-      payload.budget.rows = bud
+      const bud = payload.budget.rows;
+      const weekdays = Budgets.weekdays;
+      bud.weekday = weekdays[bud.weekday];
+      payload.budget.rows = bud;
       state.budget = payload.budget;
       payload.schedule.rows = payload.schedule.rows.map(item => {
-        const to = parseInt(item.to)
-        item["_to"] = to > 24 ? to - 24 : to
-        return item
-      })
+        const to = parseInt(item.to);
+        item["_to"] = to > 24 ? to - 24 : to;
+        return item;
+      });
       state.schedules = payload.schedule;
       state.results = payload;
     },
@@ -378,27 +419,34 @@ export default new Vuex.Store({
       state.results = payload;
     },
 
+    [types.SET_BUDGET_TIMEOFF]: (state, { payload }) => {
+      state.budgetTimeoffs = payload;
+    },
+
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
       state.password = payload;
     },
 
     [types.SET_TIMEOFF]: (state, { payload }) => {
-      state.timeoff = payload;
+      state.timeoffs = payload;
+    },
+
+    [types.SET_AUTOCOMPLETE_VALUE]: (state, payload) => {
+      state.autocompleteValue = payload;
     },
 
     [types.SET_POSITION_SECTOR]: (state, { payload }) => {
-      const positions = payload.rows
-      const formatted = []
-      let record = {}
+      const positions = payload.rows;
+      const formatted = [];
+      let record = {};
       for (let i = 0; i < positions.length; i++) {
         record = {
           text: `${positions[i]["sector.name"]} / ${positions[i].name}`,
           value: positions[i].id
-        }
-        formatted.push(record)
+        };
+        formatted.push(record);
       }
       state.positionSector = formatted;
     }
-
   }
 });

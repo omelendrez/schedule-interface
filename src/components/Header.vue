@@ -22,6 +22,7 @@
             <b-nav-item v-bind:active="menuOption === '/budgets'" href="#/budgets">Presupuestos</b-nav-item>
             <b-nav-item v-if="isAdmin" v-bind:active="menuOption === '/program'" href="#/program">Programa</b-nav-item>
             <b-nav-item v-bind:active="menuOption === '/grid'" href="#/grid">Grilla</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/timeoffs'" href="#/timeoffs">Francos</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
