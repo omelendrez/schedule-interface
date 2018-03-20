@@ -334,6 +334,7 @@ export default {
         return;
       }
       this.autocompleteValueSelected = Store.state.autocompleteValue.selected;
+      this.refreshUser(this.autocompleteValueSelected.value)
     },
     results() {
       const results = Store.state.results;
