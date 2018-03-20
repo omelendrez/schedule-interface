@@ -14,6 +14,9 @@ export default {
   findByEmployee(payload) {
     return HTTP.get(`timeoff/${payload}/employee`);
   },
+  findByDate(payload) {
+    return HTTP.get(`timeoff/${payload}/date`);
+  },
   deleteTimeoff(payload) {
     return HTTP.delete(`timeoff/${payload}`);
   }

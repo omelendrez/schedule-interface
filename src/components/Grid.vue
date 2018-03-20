@@ -38,7 +38,7 @@
         <p class="card-text"> {{ footer }} </p>
       </b-card>
 
-      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left" v-show="timeoffRows.length">
+      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left">
         <template slot="fullName" slot-scope="data">
           {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
@@ -302,9 +302,6 @@ export default {
         colorsRows.sort(this.compare);
         this.colors = colorsRows;
       }
-      Store.dispatch("LOAD_TIMEOFF", {
-        budget_id: Store.state.budget.rows.id
-      });
     },
     compare(a, b) {
       if (a.sector_position < b.sector_position) {
@@ -317,30 +314,33 @@ export default {
     }
   },
   watch: {
+    budgetTimeoffs() {
+      const items = Store.state.budgetTimeoffs.rows;
+      const list = [];
+      for (let i = 0; i < items.length; i++) {
+        let item = {
+          badge: items[i]["employee"]["badge"],
+          first_name: items[i]["employee"]["first_name"],
+          last_name: items[i]["employee"]["last_name"]
+        };
+        list.push(item);
+      }
+      this.timeoffRows = list;
+    },
+    budget() {
+      Store.dispatch("LOAD_BUDGET_TIMEOFF", Store.state.budget.rows._date);
+    },
     schedules() {
       const records = Store.state.budget.count;
       this.errorMessage = "No hay presupuesto cargado para ese día";
       this.showError = !records;
       this.showForm = !records;
       this.loadGrid();
-    },
-    timeoff() {
-      this.timeoffRows = [];
-      const to = Store.state.timeoff;
-      if (!Store.state.timeoff.length) {
-        return;
-      }
-      for (let i = 0; i < to.length; i++) {
-        const item = to[i];
-        if (item.presence > 5) {
-          this.timeoffRows.push(item);
-        }
-      }
     }
   },
   computed: {
-    timeoff() {
-      return Store.state.timeoff;
+    budgetTimeoffs() {
+      return Store.state.budgetTimeoffs;
     },
     budget() {
       return Store.state.budget.rows;
@@ -380,10 +380,11 @@ export default {
       this.$router.push({ name: "Login" });
     }
     Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    if (Store.state.budget.rows.id) {
+    const budget = Store.state.budget;
+    if (budget.rows.id) {
       this.showForm = false;
-      this.form.branch_id = Store.state.budget.rows.branch_id;
-      this.form.date = Store.state.budget.rows._date;
+      this.form.branch_id = budget.rows.branch_id;
+      this.form.date = budget.rows._date;
       this.loadData();
     } else {
       this.showForm = true;

@@ -35,6 +35,7 @@ const state = {
   profiles: [],
   schedules: [],
   timeoffs: [],
+  budgetTimeoffs: [],
   status: [],
   employees: [],
   employee: [],
@@ -174,6 +175,13 @@ export default new Vuex.Store({
       const timeoff = await Schedule.fetchTimeoff(payload);
       commit(types.SET_TIMEOFF, {
         payload: timeoff.data
+      });
+    },
+
+    async [types.LOAD_BUDGET_TIMEOFF]({ commit }, payload) {
+      const timeoffs = await Timeoffs.findByDate(payload);
+      commit(types.SET_BUDGET_TIMEOFF, {
+        payload: timeoffs.data
       });
     },
 
@@ -409,6 +417,10 @@ export default new Vuex.Store({
 
     [types.SET_RESULTS]: (state, { payload }) => {
       state.results = payload;
+    },
+
+    [types.SET_BUDGET_TIMEOFF]: (state, { payload }) => {
+      state.budgetTimeoffs = payload;
     },
 
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {
