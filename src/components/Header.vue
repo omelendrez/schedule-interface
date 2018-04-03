@@ -5,7 +5,10 @@
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand href="#/">Turnos Big Six</b-navbar-brand>
+      <b-navbar-brand href="#/">
+        <i class="fas fa-home text-primary"></i>
+        Turnos Big Six
+      </b-navbar-brand>
 
       <b-collapse is-nav id="nav_collapse">
         <template v-if="isLogged">
@@ -30,6 +33,7 @@
             <b-nav-item-dropdown right>
               <!-- Using button-content slot -->
               <template slot="button-content">
+                <i class="fas fa-user text-success"></i>
                 <strong>{{userFullName}}</strong>
               </template>
               <b-dropdown-item href="#/login">Cerrar sesión</b-dropdown-item>

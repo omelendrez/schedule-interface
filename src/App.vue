@@ -12,10 +12,11 @@ export default {
 
 <style>
 html {
-  font-family: Roboto, "Open Sans", sans-serif;
-  font-size: 90%;
+  font-size: small;
 }
 body {
-  background-color: rgb(240, 240, 240);
-}
-</style>
+  background-color: rgb(240, 240, 240) !important;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol' !important;
+}</style>
