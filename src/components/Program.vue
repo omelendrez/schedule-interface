@@ -167,17 +167,26 @@ export default {
         {
           key: "created_at",
           label: "Creado",
-          class: "text-center"
+          class: "text-center",
+          thStyle: {
+            width: "100px"
+          }
         },
         {
           key: "updated_at",
           label: "Modificado",
-          class: "text-center no-print"
+          class: "text-center no-print",
+          thStyle: {
+            width: "100px"
+          }
         },
         {
           key: "acciones",
           label: " ",
-          class: "text-center no-print"
+          class: "text-center no-print",
+          thStyle: {
+            width: "180px"
+          }
         }
       ]
     };
@@ -229,7 +238,7 @@ export default {
       this.isEditing = true;
       this.form = item;
     },
-    refreshUser(id) {
+    refreshPositions(id) {
       Store.dispatch("LOAD_EMPLOYEE", { id: id });
     },
     editItem(item, index, target) {
@@ -323,10 +332,8 @@ export default {
   },
   watch: {
     autocompleteValue() {
-      if (!Store.state.autocompleteValue) {
-        return;
-      }
       this.autocompleteValueSelected = Store.state.autocompleteValue.selected;
+      this.refreshPositions(this.autocompleteValueSelected.value);
     },
     results() {
       const results = Store.state.results;
@@ -569,6 +576,9 @@ table input[type="text"] {
   text-align: center;
 }
 @media print {
+  table {
+    font-size: smaller;
+  }
   .no-print,
   .no-print * {
     display: none !important;

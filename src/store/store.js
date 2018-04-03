@@ -422,6 +422,9 @@ export default new Vuex.Store({
       payload.budget.rows = bud;
       state.budget = payload.budget;
       payload.schedule.rows = payload.schedule.rows.map(item => {
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
         const to = parseInt(item.to);
         item["_to"] = to > 24 ? to - 24 : to;
         return item;

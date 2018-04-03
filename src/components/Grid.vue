@@ -362,21 +362,16 @@ export default {
   background-color: white;
   position: fixed !important;
   position: absolute;
+  font-size: smaller;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
 }
-.load-button {
-  margin-bottom: 20px;
-}
-.input-container {
-  max-width: 30%;
-  margin: 0 auto;
-  margin-top: 20px;
-  text-align: center;
-}
 @media print {
+  table {
+    font-size: smaller;
+  }
   .no-print,
   .no-print * {
     display: none !important;
