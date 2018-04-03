@@ -333,7 +333,7 @@ export default {
   watch: {
     autocompleteValue() {
       this.autocompleteValueSelected = Store.state.autocompleteValue.selected;
-      this.refreshPositions(this.autocompleteValueSelected.value);
+      this.refreshUser(this.autocompleteValueSelected.value)
     },
     results() {
       const results = Store.state.results;
