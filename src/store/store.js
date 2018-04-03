@@ -13,6 +13,7 @@ import Users from "./../services/users";
 import Timeoffs from "./../services/timeoffs";
 
 import * as types from "../store/mutation-types";
+import * as constants from './constants'
 
 Vue.use(Vuex);
 
@@ -368,6 +369,16 @@ export default new Vuex.Store({
     },
 
     [types.SET_EMPLOYEES]: (state, { payload }) => {
+      payload.rows.map(item => {
+        item._rowVariant =
+          item.status_id !== constants.activeStatus
+            ? constants.inactiveColor
+            : ''
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
+
       state.employees = payload;
     },
 
@@ -387,7 +398,11 @@ export default new Vuex.Store({
       const bud = payload.rows;
       const weekdays = Budgets.weekdays;
       for (let i = 0; i < bud.length; i++) {
-        bud[i].weekday = weekdays[bud[i].weekday];
+        const item = bud[i];
+        item.weekday = weekdays[item.weekday];
+        if (item.id === state.record.id) {
+          item._rowVariant = 'selected'
+        }
       }
       payload.rows = bud;
       state.budgets = payload;

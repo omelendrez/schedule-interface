@@ -3,24 +3,9 @@
     <Header />
 
     <div v-show="!showForm" class="pull-right no-print">
+      <b-btn variant="info" @click.stop="goProgram">Programa</b-btn>
       <b-btn variant="primary" @click.stop="printGrid">Imprimir</b-btn>
-      <b-btn variant="success" @click.stop="closeGrid">Cambiar fecha</b-btn>
-    </div>
-
-    <div class="input-container no-print" v-show="showForm">
-      <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-        <b-form-select v-model="form.branch_id" :options="branches" />
-      </b-form-group>
-
-      <b-form-group horizontal id="date" label="Día" label-for="date">
-        <b-form-input type="date" v-model="form.date" />
-      </b-form-group>
-
-      <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar</b-btn>
-
-      <b-alert variant="danger" :show="showError">{{ errorMessage }}</b-alert>
-      <b-alert variant="success" :show="showMessage">{{ message }}</b-alert>
-
+      <b-btn variant="success" @click.stop="goBack">Volver</b-btn>
     </div>
 
     <div v-show="!showForm">
@@ -59,10 +44,6 @@ export default {
   data() {
     return {
       showForm: false,
-      message: "",
-      errorMessage: "",
-      showMessage: false,
-      showError: false,
       form: {
         branch_id: 0,
         date: ""
@@ -206,12 +187,11 @@ export default {
     Header
   },
   methods: {
-    editGrid() {
-      this.$router.push({ name: "GridList" });
+    goProgram() {
+      this.$router.push({ name: "Program" });
     },
-    closeGrid() {
-      this.rows = [];
-      this.showForm = true;
+    goBack() {
+      this.$router.push({ name: "Budgets" });
     },
     printGrid() {
       this.$nextTick(() => {
@@ -219,20 +199,11 @@ export default {
       });
     },
     loadData() {
-      this.showError = false;
-      this.showMessage = false;
-      // localStorage.setItem(`form_${this.isLogged}`, JSON.stringify(this.form));
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
       };
       Store.dispatch("LOAD_SCHEDULES", data);
-    },
-    handleOk() {
-      Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
-      setTimeout(() => {
-        Store.dispatch("LOAD_SCHEDULES");
-      }, 500);
     },
     loadGrid() {
       const data = Store.state.schedules.rows;
@@ -327,23 +298,19 @@ export default {
       }
       this.timeoffRows = list;
     },
-    budget() {
-      Store.dispatch("LOAD_BUDGET_TIMEOFF", Store.state.budget.rows._date);
-    },
     schedules() {
-      const records = Store.state.budget.count;
-      this.errorMessage = "No hay presupuesto cargado para ese día";
-      this.showError = !records;
-      this.showForm = !records;
       this.loadGrid();
     }
   },
   computed: {
-    budgetTimeoffs() {
-      return Store.state.budgetTimeoffs;
+    item() {
+      return Store.state.record;
     },
     budget() {
       return Store.state.budget.rows;
+    },
+    budgetTimeoffs() {
+      return Store.state.budgetTimeoffs;
     },
     totalHoursBudget() {
       return Store.state.budget.rows.hours;
@@ -380,15 +347,11 @@ export default {
       this.$router.push({ name: "Login" });
     }
     Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    const budget = Store.state.budget;
-    if (budget.rows.id) {
-      this.showForm = false;
-      this.form.branch_id = budget.rows.branch_id;
-      this.form.date = budget.rows._date;
-      this.loadData();
-    } else {
-      this.showForm = true;
-    }
+    this.showForm = false;
+    this.form.branch_id = this.item.branch_id;
+    this.form.date = this.item._date;
+    this.loadData();
+    Store.dispatch("LOAD_BUDGET_TIMEOFF", this.item._date);
   }
 };
 </script>

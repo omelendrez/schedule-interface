@@ -3,22 +3,9 @@
     <Header />
 
     <div v-show="!showForm" class="pull-right no-print">
+      <b-btn variant="info" @click.stop="goGrid">Grilla</b-btn>
       <b-btn variant="primary" @click.stop="printGrid">Imprimir</b-btn>
-      <b-btn variant="success" @click.stop="closeGrid">Cambiar fecha</b-btn>
-    </div>
-
-    <div class="input-container no-print" v-show="showForm">
-      <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-        <b-form-select v-model="form.branch_id" :options="branchOptions" />
-      </b-form-group>
-
-      <b-form-group horizontal id="date" label="Día" label-for="date">
-        <b-form-input type="date" v-model="form.date" />
-      </b-form-group>
-
-      <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar</b-btn>
-
-      <b-alert variant="danger" dismissible :show="showErr">{{ errMsg }}</b-alert>
+      <b-btn variant="success" @click.stop="goBack">Volver</b-btn>
     </div>
 
     <b-alert variant="success" dismissible :show="showMessage">{{ message }}</b-alert>
@@ -200,6 +187,12 @@ export default {
     Autocomplete
   },
   methods: {
+    goGrid() {
+      this.$router.push({ name: "Grid" });
+    },
+    goBack() {
+      this.$router.push({ name: "Budgets" });
+    },
     printGrid() {
       this.$nextTick(() => {
         window.print();
@@ -474,6 +467,9 @@ export default {
     }
   },
   computed: {
+    item() {
+      return Store.state.record;
+    },
     autocompleteValue() {
       return Store.state.autocompleteValue;
     },
@@ -525,14 +521,10 @@ export default {
     Store.dispatch("LOAD_BRANCHES");
     Store.dispatch("LOAD_POSITIONS");
     Store.dispatch("LOAD_POSITION_SECTOR");
-    if (Store.state.budget.rows.id) {
-      this.showForm = false;
-      this.form.branch_id = Store.state.budget.rows.branch_id;
-      this.form.date = Store.state.budget.rows._date;
-      this.loadData();
-    } else {
-      this.showForm = true;
-    }
+    this.showForm = false;
+    this.form.branch_id = this.item.branch_id;
+    this.form.date = this.item._date;
+    this.loadData();
   }
 };
 </script>

@@ -9,25 +9,28 @@
 
     <b-form-group class="filter-form">
       <b-input-group>
-        <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
+        <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
 
-    <b-table hover outlined small :items="budgets.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+    <b-table hover outlined :items="budgets.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+        <b-btn size="sm" variant="primary" @click.stop="openProgram(cell.item)">Programa</b-btn>
+        <b-btn size="sm" variant="success" @click.stop="openGrid(cell.item)">Grilla</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
       </template>
       <template slot="table-caption">
-      {{budgets.count}} registros
+        {{budgets.count}} registros
       </template>
     </b-table>
 
     <b-pagination :total-rows="budgets.count" :per-page="perPage" v-model="currentPage" class="my-0" />
 
     <b-modal id="modal-center" title="Borrar Presupuesto" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea borrar el presupuesto del día <strong>{{ selectedItem.date }} por {{ selectedItem.hours }} horas</strong>?</p>
+      <p class="my-4">Está seguro que desea borrar el presupuesto del día
+        <strong>{{ selectedItem.date }} por {{ selectedItem.hours }} horas</strong>?</p>
     </b-modal>
 
   </b-container>
@@ -90,7 +93,8 @@ export default {
         },
         {
           key: "acciones",
-          class: "text-center"
+          label: " ",
+          class: "text-right"
         }
       ]
     };
@@ -106,6 +110,14 @@ export default {
     editItem(item) {
       Store.dispatch("ADD_ITEM", item);
       this.$router.push({ name: "Budget" });
+    },
+    openProgram(item) {
+      Store.dispatch("ADD_ITEM", item);
+      this.$router.push({ name: "Program" });
+    },
+    openGrid(item) {
+      Store.dispatch("ADD_ITEM", item);
+      this.$router.push({ name: "Grid" });
     },
     deleteItem(item) {
       this.selectedItem = item;
