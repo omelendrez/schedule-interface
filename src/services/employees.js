@@ -10,6 +10,9 @@ export default {
   fetchBranchEmployees(payload) {
     return HTTP.get(`employee/${payload.branch_id}/branch`, payload)
   },
+  fetchEmployeesByPosition(payload) {
+    return HTTP.get(`employee_position/${payload.value}/position`, payload)
+  },
   saveEmployee(payload) {
     if (payload.id === 0) {
       return HTTP.post("employee", payload);

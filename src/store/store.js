@@ -40,12 +40,14 @@ const state = {
   status: [],
   employees: [],
   employee: [],
+  employeesByPosition: [],
   users: [],
   user: [],
   password: [],
   record: [],
   results: [],
-  autocompleteValue: []
+  selectedEmployee: [],
+  selectedPosition: []
 };
 
 export default new Vuex.Store({
@@ -63,9 +65,9 @@ export default new Vuex.Store({
       });
     },
 
-    [types.SET_VALUE]({ commit }, value) {
+    [types.SET_VALUE]({ commit }, payload) {
       commit(types.SET_AUTOCOMPLETE_VALUE, {
-        selected: value
+        payload: payload
       });
     },
 
@@ -147,6 +149,14 @@ export default new Vuex.Store({
     async [types.LOAD_BRANCH_EMPLOYEES]({ commit }, item) {
       const employees = await Employees.fetchBranchEmployees(item);
       commit(types.SET_EMPLOYEES, {
+        payload: employees.data
+      });
+    },
+
+    async [types.LOAD_EMPLOYEES_BY_POSITION]({ commit }, item) {
+      const employees = await Employees.fetchEmployeesByPosition(item);
+      console.log(item)
+      commit(types.SET_EMPLOYEES_BY_POSITION, {
         payload: employees.data
       });
     },
@@ -386,6 +396,11 @@ export default new Vuex.Store({
       state.employee = payload;
     },
 
+    [types.SET_EMPLOYEES_BY_POSITION]: (state, { payload }) => {
+      console.log(payload)
+      state.employeesByPosition = payload;
+    },
+
     [types.SET_USERS]: (state, { payload }) => {
       state.users = payload;
     },
@@ -453,8 +468,15 @@ export default new Vuex.Store({
       state.timeoffs = payload;
     },
 
-    [types.SET_AUTOCOMPLETE_VALUE]: (state, payload) => {
-      state.autocompleteValue = payload;
+    [types.SET_AUTOCOMPLETE_VALUE]: (state, { payload }) => {
+      switch (payload.type) {
+        case 'employee':
+          state.selectedEmployee = payload.selected
+          break;
+        case 'position':
+          state.selectedPosition = payload.selected
+          break;
+      }
     },
 
     [types.SET_POSITION_SECTOR]: (state, { payload }) => {

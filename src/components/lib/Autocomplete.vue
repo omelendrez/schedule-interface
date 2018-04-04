@@ -33,6 +33,10 @@ export default {
       type: String,
       required: true,
       twoWay: true
+    },
+    fieldType: {
+      type: String,
+      required: true
     }
   },
   computed: {
@@ -51,7 +55,10 @@ export default {
   },
   methods: {
     enter() {
-      Store.dispatch("SET_VALUE", this.matches[this.current]);
+      Store.dispatch("SET_VALUE", {
+        type: this.fieldType,
+        selected: this.matches[this.current]
+      });
       this.mutableSelection = this.matches[this.current].text;
       this.open = false;
     },
@@ -75,7 +82,10 @@ export default {
       }
     },
     suggestionClick(index) {
-      Store.dispatch("SET_VALUE", this.matches[index]);
+      Store.dispatch("SET_VALUE", {
+        type: this.fieldType,
+        selected: this.matches[this.current]
+      });
       this.mutableSelection = this.matches[index].text;
       this.open = false;
     }

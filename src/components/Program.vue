@@ -30,18 +30,18 @@
 
       <b-table hover outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" head-variant="light">
 
-        <template slot="fullName" slot-scope="row">
-          <div v-if="!row.item.editing">
-            {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
-          </div>
-          <Autocomplete :suggestions="employeesOptions" :selection.sync="value" v-else></Autocomplete>
-        </template>
-
         <template slot="sectorPosition" slot-scope="row">
           <div v-if="!row.item.editing">
             {{row.item["sector.name"]}} / {{row.item["position.name"]}}
           </div>
-          <b-form-select v-model="form.position_id" :options="positionsOptions" id="edit_field" v-else required/>
+          <Autocomplete :suggestions="positionsOptions" :selection.sync="positionName" field-type="position" v-else></Autocomplete>
+        </template>
+
+        <template slot="fullName" slot-scope="row">
+          <div v-if="!row.item.editing">
+            {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
+          </div>
+          <Autocomplete :suggestions="employeesOptions" :selection.sync="employeeName" field-type="employee" v-else></Autocomplete>
         </template>
 
         <template slot="from" slot-scope="row">
@@ -112,8 +112,10 @@ export default {
   name: "GridList",
   data() {
     return {
-      value: "",
-      autocompleteValueSelected: "",
+      employeeName: "",
+      positionName: "",
+      autocompleteEmployeeSelected: "",
+      autocompletePositionSelected: "",
       isEditing: false,
       filter: null,
       show: false,
@@ -136,18 +138,18 @@ export default {
       timeoffRows: [],
       scheduleFields: [
         {
-          key: "fullName",
-          label: "Empleado",
-          class: "px-2",
+          key: "sectorPosition",
+          label: "Función",
+          variant: "info",
+          class: "px-3",
           thStyle: {
             width: "20%"
           }
         },
         {
-          key: "sectorPosition",
-          label: "Función",
-          variant: "info",
-          class: "px-3",
+          key: "fullName",
+          label: "Empleado",
+          class: "px-2",
           thStyle: {
             width: "20%"
           }
@@ -224,9 +226,11 @@ export default {
       Store.dispatch("LOAD_BRANCH_EMPLOYEES", data);
     },
     addItem() {
+      this.employeeName = "";
+      this.positionName = "";
       const item = {
         id: 0,
-        employe_id: 0,
+        employee_id: 0,
         position_id: 0,
         date: this.form.date,
         branch_id: this.form.branch_id,
@@ -250,15 +254,27 @@ export default {
     editItem(item, index, target) {
       item.editing = true;
       this.isEditing = true;
+      this.id = item.id;
       this.form.employee_id = item.employee_id;
       this.form.position_id = item.position_id;
       this.form.from = item.from;
       this.form.to = item._to;
       item.budget_id = Store.state.budget.rows.id;
+      this.autocompleteEmployeeSelected = this.employeesOptions.find(
+        emp => item.employee_id === emp.value
+      );
+      this.employeeName = this.autocompleteEmployeeSelected.text;
+
+      this.autocompletePositionSelected = this.positionsOptions.find(
+        emp => item.position_id === emp.value
+      );
+      this.positionName = this.autocompletePositionSelected.text;
+
       Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
     },
     saveItem(item, index, target) {
-      this.form.employee_id = this.autocompleteValueSelected.value;
+      this.form.employee_id = this.selectedEmployee.value;
+      this.form.position_id = this.selectedPosition.value;
       if (
         !this.form.employee_id ||
         !this.form.position_id ||
@@ -337,9 +353,25 @@ export default {
     }
   },
   watch: {
-    autocompleteValue() {
-      this.autocompleteValueSelected = Store.state.autocompleteValue.selected;
-      this.refreshPositions(this.autocompleteValueSelected.value);
+    employeesByPosition() {
+      const employees = this.employeesByPosition.rows;
+      const employeesOptions = [];
+      for (let i = 0; i < employees.length; i++) {
+        employeesOptions.push({
+          value: employees[i].id,
+          text: `${employees[i].badge} ${employees[i].last_name}, ${
+            employees[i].first_name
+          }`
+        });
+      }
+      this.employeesOptions = employeesOptions;
+    },
+    selectedEmployee() {
+      this.autocompleteEmployeeSelected = this.selectedEmployee;
+    },
+    selectedPosition() {
+      this.autocompletePositionSelected = this.selectedPosition;
+      Store.dispatch("LOAD_EMPLOYEES_BY_POSITION", this.selectedPosition);
     },
     results() {
       const results = Store.state.results;
@@ -387,10 +419,10 @@ export default {
       this.branchOptions = branchOptions;
     },
     employees() {
-      if (!Store.state.employees.rows) {
+      if (!this.employees.rows) {
         return;
       }
-      const employees = Store.state.employees.rows;
+      const employees = this.employees.rows;
       const employeesOptions = [];
       for (let i = 0; i < employees.length; i++) {
         employeesOptions.push({
@@ -402,21 +434,18 @@ export default {
       }
       this.employeesOptions = employeesOptions;
     },
+    positionSector() {
+      const pos = Store.state.positionSector;
+      const positionsOptions = [];
+      for (let el in pos) {
+        positionsOptions.push(pos[el]);
+      }
+      this.positionsOptions = positionsOptions;
+    },
     employee() {
       if (!Store.state.employee.employee_positions) {
         return;
       }
-      const pos = Store.state.positionSector;
-      const positionsOptions = [];
-      const filter = Store.state.employee.employee_positions;
-      for (let i = 0; i < filter.length; i++) {
-        for (let el in pos) {
-          if (pos[el].value === filter[i].position_id) {
-            positionsOptions.push(pos[el]);
-          }
-        }
-      }
-      this.positionsOptions = positionsOptions;
       const timeoff = this.timeoffRows.find(item => {
         return item.id === this.employee.id;
       });
@@ -480,11 +509,20 @@ export default {
     }
   },
   computed: {
+    employeesByPosition() {
+      return Store.state.employeesByPosition;
+    },
     item() {
       return Store.state.record;
     },
-    autocompleteValue() {
-      return Store.state.autocompleteValue;
+    positionSector() {
+      return Store.state.positionSector;
+    },
+    selectedEmployee() {
+      return Store.state.selectedEmployee;
+    },
+    selectedPosition() {
+      return Store.state.selectedPosition;
     },
     hoursWorked() {
       const from = parseInt(this.form.from);
