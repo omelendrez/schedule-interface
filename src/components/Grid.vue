@@ -52,7 +52,10 @@ export default {
         {
           key: "fullName",
           label: "Empleado",
-          class: "p-1"
+          class: "p-1",
+          thStyle: {
+            width: "320px"
+          }
         },
         {
           key: "h06",

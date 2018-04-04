@@ -138,23 +138,29 @@ export default {
         {
           key: "fullName",
           label: "Empleado",
-          class: "px-2"
+          class: "px-2",
+          thStyle: {
+            width: "20%"
+          }
         },
         {
           key: "sectorPosition",
           label: "Función",
           variant: "info",
-          class: "px-3"
+          class: "px-3",
+          thStyle: {
+            width: "20%"
+          }
         },
         {
           key: "from",
-          label: "Desde",
+          label: "De",
           variant: "warning",
           class: "text-center"
         },
         {
           key: "_to",
-          label: "Hasta",
+          label: "A",
           variant: "warning",
           class: "text-center"
         },
@@ -333,7 +339,7 @@ export default {
   watch: {
     autocompleteValue() {
       this.autocompleteValueSelected = Store.state.autocompleteValue.selected;
-      this.refreshPositions(this.autocompleteValueSelected.value)
+      this.refreshPositions(this.autocompleteValueSelected.value);
     },
     results() {
       const results = Store.state.results;
