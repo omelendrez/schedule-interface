@@ -3,22 +3,9 @@
     <Header />
 
     <div v-show="!showForm" class="pull-right no-print">
+      <b-btn variant="info" @click.stop="goGrid">Grilla</b-btn>
       <b-btn variant="primary" @click.stop="printGrid">Imprimir</b-btn>
-      <b-btn variant="success" @click.stop="closeGrid">Cambiar fecha</b-btn>
-    </div>
-
-    <div class="input-container no-print" v-show="showForm">
-      <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-        <b-form-select v-model="form.branch_id" :options="branchOptions" />
-      </b-form-group>
-
-      <b-form-group horizontal id="date" label="Día" label-for="date">
-        <b-form-input type="date" v-model="form.date" />
-      </b-form-group>
-
-      <b-btn variant="info" v-show="dataOk" class="load-button" @click.stop="loadData">Cargar</b-btn>
-
-      <b-alert variant="danger" dismissible :show="showErr">{{ errMsg }}</b-alert>
+      <b-btn variant="success" @click.stop="goBack">Volver</b-btn>
     </div>
 
     <b-alert variant="success" dismissible :show="showMessage">{{ message }}</b-alert>
@@ -43,18 +30,18 @@
 
       <b-table hover outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" head-variant="light">
 
-        <template slot="fullName" slot-scope="row">
-          <div v-if="!row.item.editing">
-            {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
-          </div>
-          <Autocomplete :suggestions="employeesOptions" :selection.sync="value" v-else></Autocomplete>
-        </template>
-
         <template slot="sectorPosition" slot-scope="row">
           <div v-if="!row.item.editing">
             {{row.item["sector.name"]}} / {{row.item["position.name"]}}
           </div>
-          <b-form-select v-model="form.position_id" :options="positionsOptions" id="edit_field" v-else required/>
+          <Autocomplete :suggestions="positionsOptions" :selection.sync="positionName" field-type="position" v-else></Autocomplete>
+        </template>
+
+        <template slot="fullName" slot-scope="row">
+          <div v-if="!row.item.editing">
+            {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
+          </div>
+          <Autocomplete :suggestions="employeesOptions" :selection.sync="employeeName" field-type="employee" v-else></Autocomplete>
         </template>
 
         <template slot="from" slot-scope="row">
@@ -125,8 +112,10 @@ export default {
   name: "GridList",
   data() {
     return {
-      value: "",
-      autocompleteValueSelected: "",
+      employeeName: "",
+      positionName: "",
+      autocompleteEmployeeSelected: "",
+      autocompletePositionSelected: "",
       isEditing: false,
       filter: null,
       show: false,
@@ -149,25 +138,31 @@ export default {
       timeoffRows: [],
       scheduleFields: [
         {
-          key: "fullName",
-          label: "Empleado",
-          class: "px-2"
-        },
-        {
           key: "sectorPosition",
           label: "Función",
           variant: "info",
-          class: "px-3"
+          class: "px-3",
+          thStyle: {
+            width: "20%"
+          }
+        },
+        {
+          key: "fullName",
+          label: "Empleado",
+          class: "px-2",
+          thStyle: {
+            width: "20%"
+          }
         },
         {
           key: "from",
-          label: "Desde",
+          label: "De",
           variant: "warning",
           class: "text-center"
         },
         {
           key: "_to",
-          label: "Hasta",
+          label: "A",
           variant: "warning",
           class: "text-center"
         },
@@ -180,17 +175,26 @@ export default {
         {
           key: "created_at",
           label: "Creado",
-          class: "text-center"
+          class: "text-center",
+          thStyle: {
+            width: "100px"
+          }
         },
         {
           key: "updated_at",
           label: "Modificado",
-          class: "text-center no-print"
+          class: "text-center no-print",
+          thStyle: {
+            width: "100px"
+          }
         },
         {
           key: "acciones",
           label: " ",
-          class: "text-center no-print"
+          class: "text-center no-print",
+          thStyle: {
+            width: "180px"
+          }
         }
       ]
     };
@@ -200,6 +204,12 @@ export default {
     Autocomplete
   },
   methods: {
+    goGrid() {
+      this.$router.push({ name: "Grid" });
+    },
+    goBack() {
+      this.$router.push({ name: "Budgets" });
+    },
     printGrid() {
       this.$nextTick(() => {
         window.print();
@@ -216,9 +226,11 @@ export default {
       Store.dispatch("LOAD_BRANCH_EMPLOYEES", data);
     },
     addItem() {
+      this.employeeName = "";
+      this.positionName = "";
       const item = {
         id: 0,
-        employe_id: 0,
+        employee_id: 0,
         position_id: 0,
         date: this.form.date,
         branch_id: this.form.branch_id,
@@ -236,21 +248,33 @@ export default {
       this.isEditing = true;
       this.form = item;
     },
-    refreshUser(id) {
+    refreshPositions(id) {
       Store.dispatch("LOAD_EMPLOYEE", { id: id });
     },
     editItem(item, index, target) {
       item.editing = true;
       this.isEditing = true;
+      this.id = item.id;
       this.form.employee_id = item.employee_id;
       this.form.position_id = item.position_id;
       this.form.from = item.from;
       this.form.to = item._to;
       item.budget_id = Store.state.budget.rows.id;
+      this.autocompleteEmployeeSelected = this.employeesOptions.find(
+        emp => item.employee_id === emp.value
+      );
+      this.employeeName = this.autocompleteEmployeeSelected.text;
+
+      this.autocompletePositionSelected = this.positionsOptions.find(
+        emp => item.position_id === emp.value
+      );
+      this.positionName = this.autocompletePositionSelected.text;
+
       Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
     },
     saveItem(item, index, target) {
-      this.form.employee_id = this.autocompleteValueSelected.value;
+      this.form.employee_id = this.selectedEmployee.value;
+      this.form.position_id = this.selectedPosition.value;
       if (
         !this.form.employee_id ||
         !this.form.position_id ||
@@ -329,12 +353,25 @@ export default {
     }
   },
   watch: {
-    autocompleteValue() {
-      if (!Store.state.autocompleteValue) {
-        return;
+    employeesByPosition() {
+      const employees = this.employeesByPosition.rows;
+      const employeesOptions = [];
+      for (let i = 0; i < employees.length; i++) {
+        employeesOptions.push({
+          value: employees[i].id,
+          text: `${employees[i].badge} ${employees[i].last_name}, ${
+            employees[i].first_name
+          }`
+        });
       }
-      this.autocompleteValueSelected = Store.state.autocompleteValue.selected;
-      this.refreshUser(this.autocompleteValueSelected.value)
+      this.employeesOptions = employeesOptions;
+    },
+    selectedEmployee() {
+      this.autocompleteEmployeeSelected = this.selectedEmployee;
+    },
+    selectedPosition() {
+      this.autocompletePositionSelected = this.selectedPosition;
+      Store.dispatch("LOAD_EMPLOYEES_BY_POSITION", this.selectedPosition);
     },
     results() {
       const results = Store.state.results;
@@ -382,10 +419,10 @@ export default {
       this.branchOptions = branchOptions;
     },
     employees() {
-      if (!Store.state.employees.rows) {
+      if (!this.employees.rows) {
         return;
       }
-      const employees = Store.state.employees.rows;
+      const employees = this.employees.rows;
       const employeesOptions = [];
       for (let i = 0; i < employees.length; i++) {
         employeesOptions.push({
@@ -397,21 +434,18 @@ export default {
       }
       this.employeesOptions = employeesOptions;
     },
+    positionSector() {
+      const pos = Store.state.positionSector;
+      const positionsOptions = [];
+      for (let el in pos) {
+        positionsOptions.push(pos[el]);
+      }
+      this.positionsOptions = positionsOptions;
+    },
     employee() {
       if (!Store.state.employee.employee_positions) {
         return;
       }
-      const pos = Store.state.positionSector;
-      const positionsOptions = [];
-      const filter = Store.state.employee.employee_positions;
-      for (let i = 0; i < filter.length; i++) {
-        for (let el in pos) {
-          if (pos[el].value === filter[i].position_id) {
-            positionsOptions.push(pos[el]);
-          }
-        }
-      }
-      this.positionsOptions = positionsOptions;
       const timeoff = this.timeoffRows.find(item => {
         return item.id === this.employee.id;
       });
@@ -475,8 +509,20 @@ export default {
     }
   },
   computed: {
-    autocompleteValue() {
-      return Store.state.autocompleteValue;
+    employeesByPosition() {
+      return Store.state.employeesByPosition;
+    },
+    item() {
+      return Store.state.record;
+    },
+    positionSector() {
+      return Store.state.positionSector;
+    },
+    selectedEmployee() {
+      return Store.state.selectedEmployee;
+    },
+    selectedPosition() {
+      return Store.state.selectedPosition;
     },
     hoursWorked() {
       const from = parseInt(this.form.from);
@@ -526,14 +572,10 @@ export default {
     Store.dispatch("LOAD_BRANCHES");
     Store.dispatch("LOAD_POSITIONS");
     Store.dispatch("LOAD_POSITION_SECTOR");
-    if (Store.state.budget.rows.id) {
-      this.showForm = false;
-      this.form.branch_id = Store.state.budget.rows.branch_id;
-      this.form.date = Store.state.budget.rows._date;
-      this.loadData();
-    } else {
-      this.showForm = true;
-    }
+    this.showForm = false;
+    this.form.branch_id = this.item.branch_id;
+    this.form.date = this.item._date;
+    this.loadData();
   }
 };
 </script>
@@ -578,6 +620,9 @@ table input[type="text"] {
   text-align: center;
 }
 @media print {
+  table {
+    font-size: smaller;
+  }
   .no-print,
   .no-print * {
     display: none !important;

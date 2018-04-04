@@ -13,6 +13,7 @@ import Users from "./../services/users";
 import Timeoffs from "./../services/timeoffs";
 
 import * as types from "../store/mutation-types";
+import * as constants from './constants'
 
 Vue.use(Vuex);
 
@@ -39,12 +40,14 @@ const state = {
   status: [],
   employees: [],
   employee: [],
+  employeesByPosition: [],
   users: [],
   user: [],
   password: [],
   record: [],
   results: [],
-  autocompleteValue: []
+  selectedEmployee: [],
+  selectedPosition: []
 };
 
 export default new Vuex.Store({
@@ -62,9 +65,9 @@ export default new Vuex.Store({
       });
     },
 
-    [types.SET_VALUE]({ commit }, value) {
+    [types.SET_VALUE]({ commit }, payload) {
       commit(types.SET_AUTOCOMPLETE_VALUE, {
-        selected: value
+        payload: payload
       });
     },
 
@@ -146,6 +149,14 @@ export default new Vuex.Store({
     async [types.LOAD_BRANCH_EMPLOYEES]({ commit }, item) {
       const employees = await Employees.fetchBranchEmployees(item);
       commit(types.SET_EMPLOYEES, {
+        payload: employees.data
+      });
+    },
+
+    async [types.LOAD_EMPLOYEES_BY_POSITION]({ commit }, item) {
+      const employees = await Employees.fetchEmployeesByPosition(item);
+      console.log(item)
+      commit(types.SET_EMPLOYEES_BY_POSITION, {
         payload: employees.data
       });
     },
@@ -368,11 +379,26 @@ export default new Vuex.Store({
     },
 
     [types.SET_EMPLOYEES]: (state, { payload }) => {
+      payload.rows.map(item => {
+        item._rowVariant =
+          item.status_id !== constants.activeStatus
+            ? constants.inactiveColor
+            : ''
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
+
       state.employees = payload;
     },
 
     [types.SET_EMPLOYEE]: (state, { payload }) => {
       state.employee = payload;
+    },
+
+    [types.SET_EMPLOYEES_BY_POSITION]: (state, { payload }) => {
+      console.log(payload)
+      state.employeesByPosition = payload;
     },
 
     [types.SET_USERS]: (state, { payload }) => {
@@ -387,7 +413,11 @@ export default new Vuex.Store({
       const bud = payload.rows;
       const weekdays = Budgets.weekdays;
       for (let i = 0; i < bud.length; i++) {
-        bud[i].weekday = weekdays[bud[i].weekday];
+        const item = bud[i];
+        item.weekday = weekdays[item.weekday];
+        if (item.id === state.record.id) {
+          item._rowVariant = 'selected'
+        }
       }
       payload.rows = bud;
       state.budgets = payload;
@@ -407,6 +437,9 @@ export default new Vuex.Store({
       payload.budget.rows = bud;
       state.budget = payload.budget;
       payload.schedule.rows = payload.schedule.rows.map(item => {
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
         const to = parseInt(item.to);
         item["_to"] = to > 24 ? to - 24 : to;
         return item;
@@ -435,8 +468,15 @@ export default new Vuex.Store({
       state.timeoffs = payload;
     },
 
-    [types.SET_AUTOCOMPLETE_VALUE]: (state, payload) => {
-      state.autocompleteValue = payload;
+    [types.SET_AUTOCOMPLETE_VALUE]: (state, { payload }) => {
+      switch (payload.type) {
+        case 'employee':
+          state.selectedEmployee = payload.selected
+          break;
+        case 'position':
+          state.selectedPosition = payload.selected
+          break;
+      }
     },
 
     [types.SET_POSITION_SECTOR]: (state, { payload }) => {

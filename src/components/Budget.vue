@@ -1,6 +1,10 @@
 <template>
   <b-container class="budget">
     <h1>Presupuesto</h1>
+    <div class="text-right">
+      <b-btn variant="primary" @click.stop="goProgram">Programa</b-btn>
+      <b-btn variant="success" @click.stop="goGrid">Grilla</b-btn>
+    </div>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
         <b-form-select v-model="form.branch_id" :options="branches" required/>
@@ -12,16 +16,11 @@
         <b-form-input id="hours" v-model.trim="form.hours" required></b-form-input>
       </b-form-group>
       <b-form-group horizontal id="footer" label="Mensaje" label-for="footer">
-      <b-form-textarea
-        id="footer"
-        v-model="form.footer"
-        placeholder="Escriba el mensaje que quiere mostrar al pie de la Grilla de programación"
-        :rows="3"
-        :max-rows="6">
-      </b-form-textarea>
+        <b-form-textarea id="footer" v-model="form.footer" placeholder="Escriba el mensaje que quiere mostrar al pie de la Grilla de programación" :rows="3" :max-rows="6">
+        </b-form-textarea>
       </b-form-group>
       <div class="buttons">
-        <b-button type="submit" variant="info">Guardar</b-button>
+        <b-button type="submit" variant="primary">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
       <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
@@ -83,6 +82,12 @@ export default {
     }
   },
   methods: {
+    goProgram() {
+      this.$router.push({ name: "Program" });
+    },
+    goGrid() {
+      this.$router.push({ name: "Grid" });
+    },
     onSubmit(evt) {
       evt.preventDefault();
       this.form.footer = this.form.footer ? this.form.footer : "";

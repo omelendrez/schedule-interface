@@ -14,7 +14,7 @@
       </b-input-group>
     </b-form-group>
 
-    <b-table hover outlined small :items="users.rows" :fields="fields" head-variant="light">
+    <b-table hover outlined :items="users.rows" :fields="fields" head-variant="light">
       <template slot="acciones" slot-scope="cell" v-if="cell.item.id !== user.id">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
