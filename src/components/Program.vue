@@ -324,7 +324,6 @@ export default {
       item.editing = false
       this.isEditing = false
       if (item.isNew) {
-        // Store.dispatch("RESET_AUTOCOMPLETE");
         this.scheduleRows.splice(index, 1)
       }
     },
@@ -357,12 +356,16 @@ export default {
   },
   watch: {
     employeesByPosition () {
+      if (!Store.state.employeesByPosition) {
+        return
+      }
       const employees = this.employeesByPosition.rows
       const employeesOptions = []
       for (let i = 0; i < employees.length; i++) {
+        const employee = employees[i]
         employeesOptions.push({
-          value: employees[i].id,
-          text: `${employees[i].badge} ${employees[i].last_name}, ${employees[i].first_name}`
+          value: employee['employee.id'],
+          text: `${employee['employee.badge']} ${employee['employee.last_name']}, ${employee['employee.first_name']}`
         })
       }
       this.employeesOptions = employeesOptions

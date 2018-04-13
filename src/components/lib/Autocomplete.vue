@@ -27,11 +27,13 @@ export default {
   props: {
     suggestions: {
       type: Array,
-      required: true
+      required: true,
+      twoWay: true
     },
     selection: {
       type: String,
-      required: true
+      required: true,
+      twoWay: true
     },
     fieldType: {
       type: String,
