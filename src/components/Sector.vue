@@ -14,80 +14,80 @@
 </template>
 
 <script>
-import Store from "../store/store";
+import Store from '../store/store'
 
 export default {
-  name: "Sector",
+  name: 'Sector',
   data() {
     return {
       show: true,
       form: {
-        name: "",
+        name: '',
         id: 0
       }
-    };
+    }
   },
   watch: {
     results() {
-      const results = Store.state.results;
+      const results = Store.state.results
       if (results.error) {
-        return;
+        return
       }
-      this.$router.push({ name: "Sectors" });
+      this.$router.push({ name: 'Sectors' })
     }
   },
   computed: {
     results() {
-      return Store.state.results;
+      return Store.state.results
     },
     isLogged() {
-      return Store.state.user.id;
+      return Store.state.user.id
     },
     item() {
-      return Store.state.record;
+      return Store.state.record
     },
     state() {
-      return this.form.name.length >= 4;
+      return this.form.name.length >= 4
     },
     invalidFeedback() {
       if (this.form.name.length > 4) {
-        return "";
+        return ''
       }
       if (this.form.name.length > 0) {
-        return "Ingrese al menos 4 caracteres";
+        return 'Ingrese al menos 4 caracteres'
       }
     },
     validFeedback() {
-      return this.state ? "Válido" : "";
+      return this.state ? 'Válido' : ''
     }
   },
   methods: {
     onSubmit(evt) {
-      evt.preventDefault();
-      Store.dispatch("SAVE_SECTOR", this.form);
+      evt.preventDefault()
+      Store.dispatch('SAVE_SECTOR', this.form)
     },
     onReset(evt) {
-      evt.preventDefault();
+      evt.preventDefault()
       /* Reset our form values */
-      this.form.name = "";
+      this.form.name = ''
       /* Trick to reset/clear native browser form validation state */
-      this.show = false;
+      this.show = false
       this.$nextTick(() => {
-        this.$router.push({ name: "Sectors" });
-      });
+        this.$router.push({ name: 'Sectors' })
+      })
     }
   },
   created() {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
     if (this.item) {
-      this.form.name = this.item.name;
-      this.form.id = this.item.id;
+      this.form.name = this.item.name
+      this.form.id = this.item.id
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

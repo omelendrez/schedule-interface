@@ -9,7 +9,7 @@
 
     <b-form-group class="filter-form">
       <b-input-group>
-        <b-form-input v-model="filter" placeholder="Entre el dato a buscar"/>
+        <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
@@ -28,18 +28,19 @@
     <b-pagination :total-rows="users.count" :per-page="perPage" v-model="currentPage" />
 
     <b-modal id="modal-center" title="Inactivar Usuario" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea inactivar al usuario <strong>{{ selectedItem.user_name }} ({{ selectedItem.full_name }})</strong>?</p>
+      <p class="my-4">Está seguro que desea inactivar al usuario
+        <strong>{{ selectedItem.user_name }} ({{ selectedItem.full_name }})</strong>?</p>
     </b-modal>
 
   </b-container>
 </template>
 
 <script>
-import Store from "../store/store";
-import Header from "./Header";
+import Store from '../store/store'
+import Header from './Header'
 
 export default {
-  name: "Users",
+  name: 'Users',
   data() {
     return {
       perPage: 10,
@@ -47,106 +48,106 @@ export default {
       filter: null,
       show: false,
       selectedItem: {
-        user_name: "",
-        full_name: ""
+        user_name: '',
+        full_name: ''
       },
       fields: [
         {
-          key: "user_name",
-          label: "Usuario",
+          key: 'user_name',
+          label: 'Usuario',
           sortable: true
         },
         {
-          key: "full_name",
-          label: "Nombre",
+          key: 'full_name',
+          label: 'Nombre',
           sortable: true
         },
         {
-          key: "profile.name",
-          label: "Perfil",
+          key: 'profile.name',
+          label: 'Perfil',
           sortable: true
         },
         {
-          key: "status.name",
-          label: "Status",
-          class: "text-center"
+          key: 'status.name',
+          label: 'Status',
+          class: 'text-center'
         },
         {
-          key: "created_at",
-          label: "Creado",
-          class: "text-center"
+          key: 'created_at',
+          label: 'Creado',
+          class: 'text-center'
         },
         {
-          key: "updated_at",
-          label: "Modificado",
-          class: "text-center"
+          key: 'updated_at',
+          label: 'Modificado',
+          class: 'text-center'
         },
         {
-          key: "acciones",
-          class: "text-center"
+          key: 'acciones',
+          class: 'text-center'
         }
       ]
-    };
+    }
   },
   components: {
     Header
   },
   methods: {
     addItem() {
-      Store.dispatch("ADD_ITEM", {
+      Store.dispatch('ADD_ITEM', {
         id: 0,
-        user_name: "",
-        full_name: "",
+        user_name: '',
+        full_name: '',
         profile_id: 0
-      });
-      this.$router.push({ name: "User" });
+      })
+      this.$router.push({ name: 'User' })
     },
     editItem(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "User" });
+      Store.dispatch('ADD_ITEM', item)
+      this.$router.push({ name: 'User' })
     },
     handleOk() {
-      Store.dispatch("DELETE_USER", this.selectedItem);
+      Store.dispatch('DELETE_USER', this.selectedItem)
     },
     deleteItem(item, type) {
-      this.selectedItem = item;
+      this.selectedItem = item
       if (type === 1) {
-        this.show = true;
+        this.show = true
       } else {
-        this.handleOk();
+        this.handleOk()
       }
     }
   },
   watch: {
     results() {
-      Store.dispatch("LOAD_USERS");
+      Store.dispatch('LOAD_USERS')
     }
   },
   computed: {
     isLogged() {
-      return Store.state.user.id;
+      return Store.state.user.id
     },
     user() {
-      return Store.state.user;
+      return Store.state.user
     },
     users() {
-      return Store.state.users;
+      return Store.state.users
     },
     results() {
-      return Store.state.results;
+      return Store.state.results
     }
   },
   created() {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
-    Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    Store.dispatch("LOAD_PROFILES");
-    Store.dispatch("LOAD_STATUS");
-    Store.dispatch("LOAD_USERS");
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    Store.dispatch('LOAD_PROFILES')
+    Store.dispatch('LOAD_STATUS')
+    Store.dispatch('LOAD_USERS')
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

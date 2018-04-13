@@ -51,30 +51,30 @@
 </template>
 
 <script>
-import Store from "../store/store";
+import Store from '../store/store'
 
 export default {
-  name: "Header",
+  name: 'Header',
   data() {
     return {
       tab: 0
-    };
+    }
   },
   computed: {
     menuOption() {
-      return Store.state.option;
+      return Store.state.option
     },
     isLogged() {
-      return Store.state.user.id;
+      return Store.state.user.id
     },
     isAdmin() {
-      return Store.state.user.profile_id === 1;
+      return Store.state.user.profile_id === 1
     },
     userFullName() {
-      return Store.state.user.full_name;
+      return Store.state.user.full_name
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

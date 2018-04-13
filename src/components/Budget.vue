@@ -29,95 +29,95 @@
 </template>
 
 <script>
-import Store from "../store/store";
+import Store from '../store/store'
 
 export default {
-  name: "Budget",
+  name: 'Budget',
   data() {
     return {
       form: {
         id: 0,
-        date: "",
+        date: '',
         weekday: null,
         hours: 0,
         branch_id: 0,
-        footer: ""
+        footer: ''
       },
       show: true,
       errorShow: false,
-      errorMessage: ""
-    };
+      errorMessage: ''
+    }
   },
   watch: {
     results() {
-      const results = Store.state.results;
+      const results = Store.state.results
       if (results.error) {
-        this.errorMessage = results.message;
-        this.errorShow = results.error;
-        return;
+        this.errorMessage = results.message
+        this.errorShow = results.error
+        return
       }
-      this.$router.push({ name: "Budgets" });
+      this.$router.push({ name: 'Budgets' })
     }
   },
   computed: {
     results() {
-      return Store.state.results;
+      return Store.state.results
     },
     isLogged() {
-      return Store.state.user.id;
+      return Store.state.user.id
     },
     item() {
-      return Store.state.record;
+      return Store.state.record
     },
     branches() {
-      const branches = Store.state.branches.rows;
-      const options = [];
+      const branches = Store.state.branches.rows
+      const options = []
       for (let i = 0; i < branches.length; i++) {
         options.push({
           value: branches[i].id,
           text: branches[i].name
-        });
+        })
       }
-      return options;
+      return options
     }
   },
   methods: {
     goProgram() {
-      this.$router.push({ name: "Program" });
+      this.$router.push({ name: 'Program' })
     },
     goGrid() {
-      this.$router.push({ name: "Grid" });
+      this.$router.push({ name: 'Grid' })
     },
     onSubmit(evt) {
-      evt.preventDefault();
-      this.form.footer = this.form.footer ? this.form.footer : "";
-      Store.dispatch("SAVE_BUDGET", this.form);
+      evt.preventDefault()
+      this.form.footer = this.form.footer ? this.form.footer : ''
+      Store.dispatch('SAVE_BUDGET', this.form)
     },
     onReset(evt) {
-      evt.preventDefault();
+      evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
-      this.show = false;
+      this.show = false
       this.$nextTick(() => {
-        this.$router.push({ name: "Budgets" });
-      });
+        this.$router.push({ name: 'Budgets' })
+      })
     }
   },
   created() {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
-    Store.dispatch("LOAD_BRANCHES");
+    Store.dispatch('LOAD_BRANCHES')
     if (this.item) {
-      this.form.id = this.item.id;
-      this.form.date = this.item._date;
-      this.form.weekday = this.item.weekday;
-      this.form.hours = this.item.hours;
-      this.form.footer = this.item.footer;
-      this.form.branch_id = this.item.branch_id;
+      this.form.id = this.item.id
+      this.form.date = this.item._date
+      this.form.weekday = this.item.weekday
+      this.form.hours = this.item.hours
+      this.form.footer = this.item.footer
+      this.form.branch_id = this.item.branch_id
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

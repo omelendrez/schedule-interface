@@ -10,31 +10,31 @@
 </template>
 
 <script>
-import Header from "./Header";
-import Store from "../store/store";
+import Header from './Header'
+import Store from '../store/store'
 
 export default {
-  name: "Home",
+  name: 'Home',
   data() {
-    return {};
+    return {}
   },
   components: {
     Header
   },
   computed: {
     isLogged() {
-      return Store.state.user.id;
+      return Store.state.user.id
     }
   },
   created() {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return false;
+      this.$router.push({ name: 'Login' })
+      return false
     }
-    Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    Store.dispatch("LOAD_BRANCHES");
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    Store.dispatch('LOAD_BRANCHES')
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

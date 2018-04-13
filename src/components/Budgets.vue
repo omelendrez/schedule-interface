@@ -37,11 +37,11 @@
 </template>
 
 <script>
-import Store from "../store/store";
-import Header from "./Header";
+import Store from '../store/store'
+import Header from './Header'
 
 export default {
-  name: "Budgets",
+  name: 'Budgets',
   data() {
     return {
       perPage: 10,
@@ -49,113 +49,113 @@ export default {
       filter: null,
       show: false,
       selectedItem: {
-        date: "",
+        date: '',
         hours: 0,
         branch_id: 0
       },
       fields: [
         {
-          key: "weekday",
-          label: "Día",
+          key: 'weekday',
+          label: 'Día',
           sortable: true,
-          class: "text-center"
+          class: 'text-center'
         },
         {
-          key: "date",
-          label: "Fecha",
+          key: 'date',
+          label: 'Fecha',
           sortable: true,
-          variant: "success",
-          class: "text-center"
+          variant: 'success',
+          class: 'text-center'
         },
         {
-          key: "hours",
-          label: "Total horas",
+          key: 'hours',
+          label: 'Total horas',
           sortable: true,
-          variant: "warning",
-          class: "text-center"
+          variant: 'warning',
+          class: 'text-center'
         },
         {
-          key: "branch.name",
-          label: "Local",
+          key: 'branch.name',
+          label: 'Local',
           sortable: true,
-          variant: "info",
-          class: "text-center"
+          variant: 'info',
+          class: 'text-center'
         },
         {
-          key: "created_at",
-          label: "Creado",
-          class: "text-center"
+          key: 'created_at',
+          label: 'Creado',
+          class: 'text-center'
         },
         {
-          key: "updated_at",
-          label: "Modificado",
-          class: "text-center"
+          key: 'updated_at',
+          label: 'Modificado',
+          class: 'text-center'
         },
         {
-          key: "acciones",
-          label: " ",
-          class: "text-right"
+          key: 'acciones',
+          label: ' ',
+          class: 'text-right'
         }
       ]
-    };
+    }
   },
   components: {
     Header
   },
   methods: {
     addItem() {
-      Store.dispatch("ADD_ITEM", { id: 0 });
-      this.$router.push({ name: "Budget" });
+      Store.dispatch('ADD_ITEM', { id: 0 })
+      this.$router.push({ name: 'Budget' })
     },
     editItem(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "Budget" });
+      Store.dispatch('ADD_ITEM', item)
+      this.$router.push({ name: 'Budget' })
     },
     openProgram(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "Program" });
+      Store.dispatch('ADD_ITEM', item)
+      this.$router.push({ name: 'Program' })
     },
     openGrid(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "Grid" });
+      Store.dispatch('ADD_ITEM', item)
+      this.$router.push({ name: 'Grid' })
     },
     deleteItem(item) {
-      this.selectedItem = item;
-      this.show = true;
+      this.selectedItem = item
+      this.show = true
     },
     handleOk() {
-      Store.dispatch("DELETE_BUDGET", this.selectedItem);
+      Store.dispatch('DELETE_BUDGET', this.selectedItem)
     }
   },
   watch: {
     results() {
-      const results = Store.state.results;
+      const results = Store.state.results
       if (results.error) {
-        return;
+        return
       }
-      Store.dispatch("LOAD_BUDGETS");
+      Store.dispatch('LOAD_BUDGETS')
     }
   },
   computed: {
     results() {
-      return Store.state.results;
+      return Store.state.results
     },
     isLogged() {
-      return Store.state.user.id;
+      return Store.state.user.id
     },
     budgets() {
-      return Store.state.budgets;
+      return Store.state.budgets
     }
   },
   created() {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
-    Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    Store.dispatch("LOAD_BUDGETS");
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    Store.dispatch('LOAD_BUDGETS')
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
