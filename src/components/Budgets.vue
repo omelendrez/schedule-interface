@@ -42,7 +42,7 @@ import Header from './Header'
 
 export default {
   name: 'Budgets',
-  data() {
+  data () {
     return {
       perPage: 10,
       currentPage: 1,
@@ -103,32 +103,32 @@ export default {
     Header
   },
   methods: {
-    addItem() {
+    addItem () {
       Store.dispatch('ADD_ITEM', { id: 0 })
       this.$router.push({ name: 'Budget' })
     },
-    editItem(item) {
+    editItem (item) {
       Store.dispatch('ADD_ITEM', item)
       this.$router.push({ name: 'Budget' })
     },
-    openProgram(item) {
+    openProgram (item) {
       Store.dispatch('ADD_ITEM', item)
       this.$router.push({ name: 'Program' })
     },
-    openGrid(item) {
+    openGrid (item) {
       Store.dispatch('ADD_ITEM', item)
       this.$router.push({ name: 'Grid' })
     },
-    deleteItem(item) {
+    deleteItem (item) {
       this.selectedItem = item
       this.show = true
     },
-    handleOk() {
+    handleOk () {
       Store.dispatch('DELETE_BUDGET', this.selectedItem)
     }
   },
   watch: {
-    results() {
+    results () {
       const results = Store.state.results
       if (results.error) {
         return
@@ -137,17 +137,17 @@ export default {
     }
   },
   computed: {
-    results() {
+    results () {
       return Store.state.results
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    budgets() {
+    budgets () {
       return Store.state.budgets
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

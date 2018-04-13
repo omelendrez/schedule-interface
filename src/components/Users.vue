@@ -41,7 +41,7 @@ import Header from './Header'
 
 export default {
   name: 'Users',
-  data() {
+  data () {
     return {
       perPage: 10,
       currentPage: 1,
@@ -93,7 +93,7 @@ export default {
     Header
   },
   methods: {
-    addItem() {
+    addItem () {
       Store.dispatch('ADD_ITEM', {
         id: 0,
         user_name: '',
@@ -102,14 +102,14 @@ export default {
       })
       this.$router.push({ name: 'User' })
     },
-    editItem(item) {
+    editItem (item) {
       Store.dispatch('ADD_ITEM', item)
       this.$router.push({ name: 'User' })
     },
-    handleOk() {
+    handleOk () {
       Store.dispatch('DELETE_USER', this.selectedItem)
     },
-    deleteItem(item, type) {
+    deleteItem (item, type) {
       this.selectedItem = item
       if (type === 1) {
         this.show = true
@@ -119,25 +119,25 @@ export default {
     }
   },
   watch: {
-    results() {
+    results () {
       Store.dispatch('LOAD_USERS')
     }
   },
   computed: {
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    user() {
+    user () {
       return Store.state.user
     },
-    users() {
+    users () {
       return Store.state.users
     },
-    results() {
+    results () {
       return Store.state.results
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

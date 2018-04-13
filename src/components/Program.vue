@@ -110,7 +110,7 @@ import Autocomplete from './lib/Autocomplete'
 
 export default {
   name: 'GridList',
-  data() {
+  data () {
     return {
       employeeName: '',
       positionName: '',
@@ -204,18 +204,18 @@ export default {
     Autocomplete
   },
   methods: {
-    goGrid() {
+    goGrid () {
       this.$router.push({ name: 'Grid' })
     },
-    goBack() {
+    goBack () {
       this.$router.push({ name: 'Budgets' })
     },
-    printGrid() {
+    printGrid () {
       this.$nextTick(() => {
         window.print()
       })
     },
-    loadData() {
+    loadData () {
       this.showError = false
       this.showMessage = false
       const data = {
@@ -225,7 +225,7 @@ export default {
       Store.dispatch('LOAD_SCHEDULES', data)
       Store.dispatch('LOAD_BRANCH_EMPLOYEES', data)
     },
-    addItem() {
+    addItem () {
       this.employeeName = ''
       this.positionName = ''
       const item = {
@@ -248,7 +248,7 @@ export default {
       this.isEditing = true
       this.form = item
     },
-    editItem(item, index, target) {
+    editItem (item, index, target) {
       item.editing = true
       this.isEditing = true
       this.id = item.id
@@ -269,7 +269,7 @@ export default {
 
       Store.dispatch('LOAD_EMPLOYEE', { id: item.employee_id })
     },
-    saveItem(item, index, target) {
+    saveItem (item, index, target) {
       this.form.employee_id = this.selectedEmployee.value
       this.form.position_id = this.selectedPosition.value
       if (
@@ -320,7 +320,7 @@ export default {
       this.form.id = this.form.isNew ? 0 : item.id
       Store.dispatch('SCHEDULE_VERIFY_INPUT', this.form)
     },
-    cancelSave(item, index, target) {
+    cancelSave (item, index, target) {
       item.editing = false
       this.isEditing = false
       if (item.isNew) {
@@ -328,55 +328,53 @@ export default {
         this.scheduleRows.splice(index, 1)
       }
     },
-    deleteItem(item) {
+    deleteItem (item) {
       this.selectedItem = item
       this.show = true
     },
-    handleOkDelete() {
+    handleOkDelete () {
       Store.dispatch('DELETE_SCHEDULE', this.selectedItem)
     },
-    handleOkSave() {
+    handleOkSave () {
       if (this.timeoffAlert) {
         return
       }
       this.form.budget_id = Store.state.budget.rows.id
       Store.dispatch('SAVE_SCHEDULE', this.form)
     },
-    handleCancelSave() {
+    handleCancelSave () {
       if (this.timeoffAlert) {
         this.$refs.cancelSave.click()
       }
     },
-    closeGrid() {
+    closeGrid () {
       this.scheduleRows = []
       this.showForm = true
     },
-    hideModal() {
+    hideModal () {
       this.showError = false
     }
   },
   watch: {
-    employeesByPosition() {
+    employeesByPosition () {
       const employees = this.employeesByPosition.rows
       const employeesOptions = []
       for (let i = 0; i < employees.length; i++) {
         employeesOptions.push({
           value: employees[i].id,
-          text: `${employees[i].badge} ${employees[i].last_name}, ${
-            employees[i].first_name
-          }`
+          text: `${employees[i].badge} ${employees[i].last_name}, ${employees[i].first_name}`
         })
       }
       this.employeesOptions = employeesOptions
     },
-    selectedEmployee() {
+    selectedEmployee () {
       this.autocompleteEmployeeSelected = this.selectedEmployee
     },
-    selectedPosition() {
+    selectedPosition () {
       this.autocompletePositionSelected = this.selectedPosition
       Store.dispatch('LOAD_EMPLOYEES_BY_POSITION', this.selectedPosition)
     },
-    results() {
+    results () {
       const results = Store.state.results
       if (results.id || results.status) {
         this.isEditing = false
@@ -407,7 +405,7 @@ export default {
         }
       }
     },
-    branches() {
+    branches () {
       if (!Store.state.branches.rows) {
         return
       }
@@ -421,7 +419,7 @@ export default {
       }
       this.branchOptions = branchOptions
     },
-    employees() {
+    employees () {
       if (!this.employees.rows) {
         return
       }
@@ -430,14 +428,12 @@ export default {
       for (let i = 0; i < employees.length; i++) {
         employeesOptions.push({
           value: employees[i].id,
-          text: `${employees[i].badge} ${employees[i].last_name}, ${
-            employees[i].first_name
-          }`
+          text: `${employees[i].badge} ${employees[i].last_name}, ${employees[i].first_name}`
         })
       }
       this.employeesOptions = employeesOptions
     },
-    positionSector() {
+    positionSector () {
       const pos = Store.state.positionSector
       const positionsOptions = []
       for (let el in pos) {
@@ -445,7 +441,7 @@ export default {
       }
       this.positionsOptions = positionsOptions
     },
-    employee() {
+    employee () {
       if (!Store.state.employee.employee_positions) {
         return
       }
@@ -462,7 +458,7 @@ export default {
         : ''
       this.showWarning = isTimeoff
     },
-    schedules() {
+    schedules () {
       if (!Store.state.budget.rows) {
         return
       }
@@ -498,7 +494,7 @@ export default {
         budget_id: Store.state.budget.rows.id
       })
     },
-    timeoff() {
+    timeoff () {
       const to = Store.state.timeoff
       if (!Store.state.timeoff) {
         return
@@ -512,61 +508,61 @@ export default {
     }
   },
   computed: {
-    employeesByPosition() {
+    employeesByPosition () {
       return Store.state.employeesByPosition
     },
-    item() {
+    item () {
       return Store.state.record
     },
-    positionSector() {
+    positionSector () {
       return Store.state.positionSector
     },
-    selectedEmployee() {
+    selectedEmployee () {
       return Store.state.selectedEmployee
     },
-    selectedPosition() {
+    selectedPosition () {
       return Store.state.selectedPosition
     },
-    hoursWorked() {
+    hoursWorked () {
       const from = parseInt(this.form.from)
       const to = parseInt(this.form.to)
       return from < to ? to - from : to + 24 - from
     },
-    timeoff() {
+    timeoff () {
       return Store.state.timeoff
     },
-    results() {
+    results () {
       return Store.state.results
     },
-    employees() {
+    employees () {
       return Store.state.employees
     },
-    employee() {
+    employee () {
       return Store.state.employee
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    schedules() {
+    schedules () {
       return Store.state.schedules
     },
-    budget() {
+    budget () {
       return Store.state.budget.rows
     },
-    totalHoursBudget() {
+    totalHoursBudget () {
       return Store.state.budget.rows.hours
     },
-    totalScheduledHours() {
+    totalScheduledHours () {
       return Store.state.schedules.scheduled
     },
-    dataOk() {
+    dataOk () {
       return this.form.date !== '' && this.form.branch_id !== 0
     },
-    branches() {
+    branches () {
       return Store.state.branches
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

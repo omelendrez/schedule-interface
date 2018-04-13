@@ -16,7 +16,7 @@ import Store from './../../store/store'
 
 export default {
   name: 'Autocomplete',
-  data() {
+  data () {
     return {
       open: false,
       current: 0,
@@ -31,8 +31,7 @@ export default {
     },
     selection: {
       type: String,
-      required: true,
-      twoWay: true
+      required: true
     },
     fieldType: {
       type: String,
@@ -40,12 +39,12 @@ export default {
     }
   },
   computed: {
-    matches() {
+    matches () {
       return this.mutableSuggestions.filter(str => {
         return str.text.toLowerCase().indexOf(this.mutableSelection) >= 0
       })
     },
-    openSuggestion() {
+    openSuggestion () {
       return (
         this.mutableSelection !== '' &&
         this.matches.length !== 0 &&
@@ -54,32 +53,32 @@ export default {
     }
   },
   methods: {
-    enter() {
+    enter () {
       this.doSelect()
     },
-    suggestionClick() {
+    suggestionClick () {
       this.doSelect()
     },
-    up() {
+    up () {
       if (this.current > 0) {
         this.current--
       }
     },
-    down() {
+    down () {
       if (this.current < this.matches.length - 1) {
         this.current++
       }
     },
-    isActive(index) {
+    isActive (index) {
       return index === this.current
     },
-    change() {
+    change () {
       if (!this.open) {
         this.open = true
         this.current = 0
       }
     },
-    doSelect() {
+    doSelect () {
       const selected = {
         type: this.fieldType,
         selected: this.matches[this.current]

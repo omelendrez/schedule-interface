@@ -44,7 +44,7 @@ import Header from './Header'
 
 export default {
   name: 'Employees',
-  data() {
+  data () {
     return {
       perPage: 10,
       currentPage: 1,
@@ -96,18 +96,18 @@ export default {
     Header
   },
   methods: {
-    addItem() {
+    addItem () {
       Store.dispatch('ADD_ITEM', {
         id: 0
       })
       this.$router.push({ name: 'Employee' })
     },
-    editItem(item) {
+    editItem (item) {
       Store.dispatch('ADD_ITEM', item)
       Store.dispatch('LOAD_EMPLOYEE', item)
       this.$router.push({ name: 'Employee' })
     },
-    deleteItem(item, type) {
+    deleteItem (item, type) {
       this.selectedItem = item
       if (type === 1) {
         this.show = true
@@ -115,12 +115,12 @@ export default {
         this.handleOk()
       }
     },
-    handleOk() {
+    handleOk () {
       Store.dispatch('DELETE_EMPLOYEE', this.selectedItem)
     }
   },
   watch: {
-    results() {
+    results () {
       const results = Store.state.results
       if (results.error) {
         return
@@ -129,17 +129,17 @@ export default {
     }
   },
   computed: {
-    results() {
+    results () {
       return Store.state.results
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    employees() {
+    employees () {
       return Store.state.employees
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

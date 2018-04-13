@@ -144,7 +144,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Employee',
-  data() {
+  data () {
     return {
       form: {
         id: 0,
@@ -183,7 +183,7 @@ export default {
     }
   },
   watch: {
-    employee() {
+    employee () {
       const avail = Store.state.employee.availabilities
       for (let i = 0; i < avail.length; i++) {
         const item = avail[i]
@@ -197,18 +197,18 @@ export default {
         this.form.selectedPositions.push(pos[i].position_id)
       }
     },
-    results() {
+    results () {
       this.$router.push({ name: 'Employees' })
     }
   },
   computed: {
-    employee() {
+    employee () {
       return Store.state.employee
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    branches() {
+    branches () {
       const branches = Store.state.branches.rows
       const options = []
       for (let i = 0; i < branches.length; i++) {
@@ -219,18 +219,18 @@ export default {
       }
       return options
     },
-    item() {
+    item () {
       return Store.state.record
     },
-    positions() {
+    positions () {
       return Store.state.positionSector
     },
-    results() {
+    results () {
       return Store.state.results
     }
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit (evt) {
       evt.preventDefault()
       this.errorMessage = ''
       this.errorShow = false
@@ -252,7 +252,7 @@ export default {
       }
       Store.dispatch('SAVE_EMPLOYEE', formData)
     },
-    onReset(evt) {
+    onReset (evt) {
       evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
       this.form.show = false
@@ -261,7 +261,7 @@ export default {
       })
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

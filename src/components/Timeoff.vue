@@ -27,7 +27,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Timeoff',
-  data() {
+  data () {
     return {
       form: {
         id: 0,
@@ -40,7 +40,7 @@ export default {
     }
   },
   watch: {
-    results() {
+    results () {
       const results = Store.state.results
       if (results.error) {
         this.errorMessage = results.message
@@ -51,13 +51,13 @@ export default {
     }
   },
   computed: {
-    results() {
+    results () {
       return Store.state.results
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    employees() {
+    employees () {
       const employees = Store.state.employees.rows
       const options = []
       for (let i = 0; i < employees.length; i++) {
@@ -73,16 +73,16 @@ export default {
       }
       return options
     },
-    item() {
+    item () {
       return Store.state.record
     }
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit (evt) {
       evt.preventDefault()
       Store.dispatch('SAVE_TIMEOFF', this.form)
     },
-    onReset(evt) {
+    onReset (evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.employee_id = 0
@@ -93,12 +93,12 @@ export default {
         this.$router.push({ name: 'Timeoffs' })
       })
     },
-    cleanError() {
+    cleanError () {
       this.errorShow = false
       this.errorMsg = ''
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

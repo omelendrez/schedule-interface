@@ -22,7 +22,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     // allow async-await
-    "space-before-function-paren": "off",
+    "space-before-function-paren": "warn",
     "linebreak-style": ["error", "windows"],
     'generator-star-spacing': 'off',
     "indent": ["error", 2, { "SwitchCase": 1 }],

@@ -55,22 +55,22 @@ import Store from '../store/store'
 
 export default {
   name: 'Header',
-  data() {
+  data () {
     return {
       tab: 0
     }
   },
   computed: {
-    menuOption() {
+    menuOption () {
       return Store.state.option
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    isAdmin() {
+    isAdmin () {
       return Store.state.user.profile_id === 1
     },
-    userFullName() {
+    userFullName () {
       return Store.state.user.full_name
     }
   }

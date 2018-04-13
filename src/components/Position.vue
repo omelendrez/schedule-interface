@@ -31,7 +31,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Position',
-  data() {
+  data () {
     return {
       form: {
         id: 0,
@@ -45,7 +45,7 @@ export default {
     }
   },
   watch: {
-    results() {
+    results () {
       const results = Store.state.results
       if (results.error) {
         return
@@ -54,13 +54,13 @@ export default {
     }
   },
   computed: {
-    results() {
+    results () {
       return Store.state.results
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    sectors() {
+    sectors () {
       const sectors = Store.state.sectors.rows
       const options = []
       for (let i = 0; i < sectors.length; i++) {
@@ -71,12 +71,12 @@ export default {
       }
       return options
     },
-    item() {
+    item () {
       return Store.state.record
     }
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit (evt) {
       evt.preventDefault()
       if (!this.form.color.length) {
         this.errorShow = true
@@ -85,7 +85,7 @@ export default {
       }
       Store.dispatch('SAVE_POSITION', this.form)
     },
-    onReset(evt) {
+    onReset (evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.name = ''
@@ -96,12 +96,12 @@ export default {
         this.$router.push({ name: 'Positions' })
       })
     },
-    cleanError() {
+    cleanError () {
       this.errorShow = false
       this.errorMsg = ''
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

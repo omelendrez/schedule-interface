@@ -41,7 +41,7 @@ import Header from './Header'
 
 export default {
   name: 'Grid',
-  data() {
+  data () {
     return {
       showForm: false,
       form: {
@@ -190,25 +190,25 @@ export default {
     Header
   },
   methods: {
-    goProgram() {
+    goProgram () {
       this.$router.push({ name: 'Program' })
     },
-    goBack() {
+    goBack () {
       this.$router.push({ name: 'Budgets' })
     },
-    printGrid() {
+    printGrid () {
       this.$nextTick(() => {
         window.print()
       })
     },
-    loadData() {
+    loadData () {
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
       }
       Store.dispatch('LOAD_SCHEDULES', data)
     },
-    loadGrid() {
+    loadGrid () {
       const data = Store.state.schedules.rows
       let i = 0
       let employeeId = 0
@@ -222,20 +222,14 @@ export default {
         if (!hours[item.position_id]) {
           hours[item.position_id] = 0
         }
-        hours[item.position_id] =
-          hours[item.position_id] + (item.to - item.from)
+        hours[item.position_id] = hours[item.position_id] + (item.to - item.from)
         colors.position_id = item.position_id
-        colors.sector_position = `${item['position.sector.name']} / ${
-          item['position.name']
-        }`
-        colors.color = `<div style="background-color:${
-          item['position.color']
-        }">&nbsp;&nbsp;&nbsp;&nbsp;</div>`
+        colors.sector_position = `${item['position.sector.name']} / ${item['position.name']}`
+        colors.color = `<div style="background-color:${item['position.color']}">&nbsp;&nbsp;&nbsp;&nbsp;</div>`
         if (
           !colorRows.find(child => {
             return (
-              child.sector_position ===
-              `${item['position.sector.name']} / ${item['position.name']}`
+              child.sector_position === `${item['position.sector.name']} / ${item['position.name']}`
             )
           })
         ) {
@@ -259,9 +253,7 @@ export default {
           let hour = `0${i.toString()}`
           hour = hour.substr(hour.length - 2)
           if (item['from'] <= i && item['to'] > i) {
-            record[`h${hour}`] = `<div title="${
-              item['position.name']
-            }" style="background-color:${item['position.color']}">&nbsp;</div>`
+            record[`h${hour}`] = `<div title="${item['position.name']}" style="background-color:${item['position.color']}">&nbsp;</div>`
           }
         }
         i++
@@ -277,7 +269,7 @@ export default {
         this.colors = colorsRows
       }
     },
-    compare(a, b) {
+    compare (a, b) {
       if (a.sector_position < b.sector_position) {
         return -1
       }
@@ -288,7 +280,7 @@ export default {
     }
   },
   watch: {
-    budgetTimeoffs() {
+    budgetTimeoffs () {
       const items = Store.state.budgetTimeoffs.rows
       const list = []
       for (let i = 0; i < items.length; i++) {
@@ -301,39 +293,39 @@ export default {
       }
       this.timeoffRows = list
     },
-    schedules() {
+    schedules () {
       this.loadGrid()
     }
   },
   computed: {
-    item() {
+    item () {
       return Store.state.record
     },
-    budget() {
+    budget () {
       return Store.state.budget.rows
     },
-    budgetTimeoffs() {
+    budgetTimeoffs () {
       return Store.state.budgetTimeoffs
     },
-    totalHoursBudget() {
+    totalHoursBudget () {
       return Store.state.budget.rows.hours
     },
-    totalScheduledHours() {
+    totalScheduledHours () {
       return Store.state.schedules.scheduled
     },
-    footer() {
+    footer () {
       return Store.state.budget.rows.footer
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    schedules() {
+    schedules () {
       return Store.state.schedules
     },
-    dataOk() {
+    dataOk () {
       return this.form.date !== '' && this.form.branch_id !== 0
     },
-    branches() {
+    branches () {
       const branches = Store.state.branches.rows
       const options = []
       for (let i = 0; i < branches.length; i++) {
@@ -345,7 +337,7 @@ export default {
       return options
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
     }

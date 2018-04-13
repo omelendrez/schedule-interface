@@ -39,7 +39,7 @@ import { setTimeout } from 'timers'
 
 export default {
   name: 'ChangePassword',
-  data() {
+  data () {
     return {
       form: {
         user_name: Store.state.user.user_name,
@@ -56,50 +56,50 @@ export default {
     }
   },
   computed: {
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    pwdState() {
+    pwdState () {
       return this.form.password_current.length > 0
     },
-    pwdValidFeedback() {
+    pwdValidFeedback () {
       return this.pwdState ? 'Ok' : ''
     },
-    pwdInvalidFeedback() {
+    pwdInvalidFeedback () {
       return this.pwdState ? '' : 'Entre su password'
     },
-    newState() {
+    newState () {
       return this.form.password_new.length >= 6
     },
-    newValidFeedback() {
+    newValidFeedback () {
       return this.newState ? 'Ok' : ''
     },
-    newInvalidFeedback() {
+    newInvalidFeedback () {
       return this.newState ? '' : 'Mínimo 6 caracteres'
     },
-    retState() {
+    retState () {
       return (
         this.form.password_retype === this.form.password_new &&
         this.form.password_retype.length > 0
       )
     },
-    retValidFeedback() {
+    retValidFeedback () {
       return this.retState ? 'Ok' : ''
     },
-    retInvalidFeedback() {
+    retInvalidFeedback () {
       return this.retState
         ? ''
         : 'La confirmación password debe con la nueva password'
     },
-    allOk() {
+    allOk () {
       return this.newState && this.pwdState && this.retState
     },
-    password() {
+    password () {
       return Store.state.password
     }
   },
   watch: {
-    password() {
+    password () {
       const password = Store.state.password
       if (password.msg) {
         this.errorMessage = password.msg
@@ -114,11 +114,11 @@ export default {
     }
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit (evt) {
       evt.preventDefault()
       Store.dispatch('CHANGE_PASSWORD', this.form)
     },
-    onReset(evt) {
+    onReset (evt) {
       evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
       this.show = false
@@ -128,7 +128,7 @@ export default {
       this.show = true
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
     }

@@ -33,7 +33,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Budget',
-  data() {
+  data () {
     return {
       form: {
         id: 0,
@@ -49,7 +49,7 @@ export default {
     }
   },
   watch: {
-    results() {
+    results () {
       const results = Store.state.results
       if (results.error) {
         this.errorMessage = results.message
@@ -60,16 +60,16 @@ export default {
     }
   },
   computed: {
-    results() {
+    results () {
       return Store.state.results
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    item() {
+    item () {
       return Store.state.record
     },
-    branches() {
+    branches () {
       const branches = Store.state.branches.rows
       const options = []
       for (let i = 0; i < branches.length; i++) {
@@ -82,18 +82,18 @@ export default {
     }
   },
   methods: {
-    goProgram() {
+    goProgram () {
       this.$router.push({ name: 'Program' })
     },
-    goGrid() {
+    goGrid () {
       this.$router.push({ name: 'Grid' })
     },
-    onSubmit(evt) {
+    onSubmit (evt) {
       evt.preventDefault()
       this.form.footer = this.form.footer ? this.form.footer : ''
       Store.dispatch('SAVE_BUDGET', this.form)
     },
-    onReset(evt) {
+    onReset (evt) {
       evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
       this.show = false
@@ -102,7 +102,7 @@ export default {
       })
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

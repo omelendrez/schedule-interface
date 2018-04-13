@@ -33,7 +33,7 @@ import Store from '../store/store'
 
 export default {
   name: 'User',
-  data() {
+  data () {
     return {
       form: {
         id: 0,
@@ -47,7 +47,7 @@ export default {
     }
   },
   watch: {
-    results() {
+    results () {
       const results = Store.state.results
       if (results.error) {
         this.errorMessage = results.message
@@ -58,13 +58,13 @@ export default {
     }
   },
   computed: {
-    results() {
+    results () {
       return Store.state.results
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    profiles() {
+    profiles () {
       const profiles = Store.state.profiles.rows
       const options = []
       for (let i = 0; i < profiles.length; i++) {
@@ -75,13 +75,13 @@ export default {
       }
       return options
     },
-    item() {
+    item () {
       return Store.state.record
     },
-    state() {
+    state () {
       return this.form.user_name.length >= 6
     },
-    invalidFeedback() {
+    invalidFeedback () {
       if (this.form.user_name.length > 6) {
         return ''
       }
@@ -89,16 +89,16 @@ export default {
         return 'Ingrese al menos 6 caracteres'
       }
     },
-    validFeedback() {
+    validFeedback () {
       return this.state ? 'Válido' : ''
     }
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit (evt) {
       evt.preventDefault()
       Store.dispatch('SAVE_USER', this.form)
     },
-    onReset(evt) {
+    onReset (evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.user_name = ''
@@ -111,7 +111,7 @@ export default {
       })
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

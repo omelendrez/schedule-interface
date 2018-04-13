@@ -28,7 +28,7 @@ import Header from './Header'
 
 export default {
   name: 'Login',
-  data() {
+  data () {
     return {
       form: {
         user_name: '',
@@ -43,7 +43,7 @@ export default {
     Header
   },
   watch: {
-    user: function() {
+    user: function () {
       const user = Store.state.user
       if (user.id === null) {
         return
@@ -57,12 +57,12 @@ export default {
     }
   },
   computed: {
-    user() {
+    user () {
       return Store.state.user
     }
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit (evt) {
       this.isLoginError = false
       evt.preventDefault()
       const payload = {
@@ -71,7 +71,7 @@ export default {
       }
       Store.dispatch('LOGIN', payload)
     },
-    onReset(evt) {
+    onReset (evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.user_name = ''
@@ -83,10 +83,10 @@ export default {
       })
     }
   },
-  isLogged() {
+  isLogged () {
     return Store.state.user.id
   },
-  created() {
+  created () {
     Store.dispatch('LOGOUT_USER')
   }
 }

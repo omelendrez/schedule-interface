@@ -40,7 +40,7 @@ import Header from './Header'
 
 export default {
   name: 'Positions',
-  data() {
+  data () {
     return {
       perPage: 10,
       currentPage: 1,
@@ -86,15 +86,15 @@ export default {
     Header
   },
   methods: {
-    addItem() {
+    addItem () {
       Store.dispatch('ADD_ITEM', { id: 0, name: '', sector_id: 0, color: '' })
       this.$router.push({ name: 'Position' })
     },
-    editItem(item) {
+    editItem (item) {
       Store.dispatch('ADD_ITEM', item)
       this.$router.push({ name: 'Position' })
     },
-    deleteItem(item, type) {
+    deleteItem (item, type) {
       this.selectedItem = item
       if (type === 1) {
         this.show = true
@@ -102,12 +102,12 @@ export default {
         this.handleOk()
       }
     },
-    handleOk() {
+    handleOk () {
       Store.dispatch('DELETE_POSITION', this.selectedItem)
     }
   },
   watch: {
-    results() {
+    results () {
       const results = Store.state.results
       if (results.error) {
         return
@@ -116,17 +116,17 @@ export default {
     }
   },
   computed: {
-    results() {
+    results () {
       return Store.state.results
     },
-    isLogged() {
+    isLogged () {
       return Store.state.user.id
     },
-    positions() {
+    positions () {
       return Store.state.positions
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return
