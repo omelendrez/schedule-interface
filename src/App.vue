@@ -11,9 +11,6 @@ export default {
 </script>
 
 <style>
-html {
-  font-size: medium;
-}
 body {
   background-color: rgb(240, 240, 240) !important;
   font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI',

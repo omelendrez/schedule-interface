@@ -251,12 +251,12 @@ export default {
     editItem (item, index, target) {
       item.editing = true
       this.isEditing = true
-      this.id = item.id
+      this.form.id = item.id
       this.form.employee_id = item.employee_id
       this.form.position_id = item.position_id
       this.form.from = item.from
       this.form.to = item._to
-      item.budget_id = Store.state.budget.rows.id
+      item.budget_id = this.budget.id
       this.autocompleteEmployeeSelected = this.employeesOptions.find(
         emp => item.employee_id === emp.value
       )
@@ -316,7 +316,7 @@ export default {
         }
       }
 
-      this.form.budget_id = Store.state.budget.rows.id
+      this.form.budget_id = this.budget.id
       this.form.id = this.form.isNew ? 0 : item.id
       Store.dispatch('SCHEDULE_VERIFY_INPUT', this.form)
     },
@@ -338,7 +338,7 @@ export default {
       if (this.timeoffAlert) {
         return
       }
-      this.form.budget_id = Store.state.budget.rows.id
+      this.form.budget_id = this.budget.id
       Store.dispatch('SAVE_SCHEDULE', this.form)
     },
     handleCancelSave () {
@@ -356,7 +356,7 @@ export default {
   },
   watch: {
     employeesByPosition () {
-      if (!Store.state.employeesByPosition) {
+      if (!this.employeesByPosition) {
         return
       }
       const employees = this.employeesByPosition.rows
@@ -378,7 +378,7 @@ export default {
       Store.dispatch('LOAD_EMPLOYEES_BY_POSITION', this.selectedPosition)
     },
     results () {
-      const results = Store.state.results
+      const results = this.results
       if (results.id || results.status) {
         this.isEditing = false
         const data = {
@@ -409,10 +409,10 @@ export default {
       }
     },
     branches () {
-      if (!Store.state.branches.rows) {
+      if (!this.branches.rows) {
         return
       }
-      const branches = Store.state.branches.rows
+      const branches = this.branches.rows
       const branchOptions = []
       for (let i = 0; i < branches.length; i++) {
         branchOptions.push({
@@ -437,7 +437,7 @@ export default {
       this.employeesOptions = employeesOptions
     },
     positionSector () {
-      const pos = Store.state.positionSector
+      const pos = this.positionSector
       const positionsOptions = []
       for (let el in pos) {
         positionsOptions.push(pos[el])
@@ -445,7 +445,7 @@ export default {
       this.positionsOptions = positionsOptions
     },
     employee () {
-      if (!Store.state.employee.employee_positions) {
+      if (!this.employee.employee_positions) {
         return
       }
       const timeoff = this.timeoffRows.find(item => {
@@ -462,14 +462,10 @@ export default {
       this.showWarning = isTimeoff
     },
     schedules () {
-      if (!Store.state.budget.rows) {
+      if (!this.schedules) {
         return
       }
-      const records = Store.state.budget
-      this.errMsg = 'No existe presupuesto para ese día'
-      this.showErr = !records.count
-      this.showForm = !records.count
-      const sch = Store.state.schedules.rows
+      const sch = this.schedules.rows
       const arr = []
       for (let i = 0; i < sch.length; i++) {
         let row = {
@@ -494,14 +490,14 @@ export default {
       }
       this.scheduleRows = arr
       Store.dispatch('LOAD_TIMEOFF', {
-        budget_id: Store.state.budget.rows.id
+        budget_id: this.budget.id
       })
     },
     timeoff () {
-      const to = Store.state.timeoff
-      if (!Store.state.timeoff) {
+      if (!this.timeoff) {
         return
       }
+      const to = this.timeoff
       for (let i = 0; i < to.length; i++) {
         const item = to[i]
         if (item.presence > 5) {
