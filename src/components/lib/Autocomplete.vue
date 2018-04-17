@@ -25,7 +25,15 @@ export default {
     }
   },
   props: ['suggestions', 'selection', 'fieldType'],
+  watch: {
+    userInput () {
+      return this.matches
+    }
+  },
   computed: {
+    userInput () {
+      return this.mutableSelection
+    },
     matches () {
       return this.mutableSuggestions.filter(str => {
         return str.text.toLowerCase().indexOf(this.mutableSelection) >= 0
