@@ -16,6 +16,10 @@
         <b-form-select v-model="form.profile_id" :options="profiles" class="mb-3" required/>
       </b-form-group>
 
+      <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
+        <b-form-select v-model="form.branch_id" :options="branches" class="mb-3" required/>
+      </b-form-group>
+
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
@@ -40,6 +44,7 @@ export default {
         user_name: '',
         full_name: '',
         profile_id: 0,
+        branch_id: 0,
         show: true
       },
       errorShow: false,
@@ -75,6 +80,17 @@ export default {
       }
       return options
     },
+    branches () {
+      const branches = Store.state.branches.rows
+      const options = []
+      for (let i = 0; i < branches.length; i++) {
+        options.push({
+          value: branches[i].id,
+          text: branches[i].name
+        })
+      }
+      return options
+    },
     item () {
       return Store.state.record
     },
@@ -104,6 +120,7 @@ export default {
       this.form.user_name = ''
       this.form.full_name = ''
       this.form.profile_id = 0
+      this.form.branch_id = 0
       /* Trick to reset/clear native browser form validation state */
       this.form.show = false
       this.$nextTick(() => {
@@ -121,6 +138,7 @@ export default {
       this.form.user_name = this.item.user_name
       this.form.full_name = this.item.full_name
       this.form.profile_id = this.item.profile_id
+      this.form.branch_id = this.item.branch_id
     }
   }
 }

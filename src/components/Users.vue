@@ -3,7 +3,7 @@
     <Header />
     <h1>Usuarios</h1>
 
-    <div class="add-button">
+    <div class="add-button" v-if="isAdmin">
       <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
 
@@ -15,7 +15,7 @@
     </b-form-group>
 
     <b-table hover outlined :items="users.rows" :fields="fields" head-variant="light">
-      <template slot="acciones" slot-scope="cell" v-if="cell.item.id !== user.id">
+      <template slot="acciones" slot-scope="cell" v-if="cell.item.id !== user.id || isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
         <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
@@ -68,6 +68,11 @@ export default {
           sortable: true
         },
         {
+          key: 'branch.name',
+          label: 'Local',
+          sortable: true
+        },
+        {
           key: 'status.name',
           label: 'Status',
           class: 'text-center'
@@ -80,10 +85,6 @@ export default {
         {
           key: 'updated_at',
           label: 'Modificado',
-          class: 'text-center'
-        },
-        {
-          key: 'acciones',
           class: 'text-center'
         }
       ]
@@ -127,6 +128,9 @@ export default {
     isLogged () {
       return Store.state.user.id
     },
+    isAdmin () {
+      return Store.state.user.profile_id === 1
+    },
     user () {
       return Store.state.user
     },
@@ -144,8 +148,16 @@ export default {
     }
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
     Store.dispatch('LOAD_PROFILES')
+    Store.dispatch('LOAD_BRANCHES')
     Store.dispatch('LOAD_STATUS')
     Store.dispatch('LOAD_USERS')
+    if (this.isAdmin) {
+      this.fields.push(
+        {
+          key: 'acciones',
+          class: 'text-center'
+        })
+    }
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <Header />
     <h1>Funciones</h1>
 
-    <div class="add-button">
+    <div class="add-button" v-if="isAdmin">
       <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
 
@@ -15,7 +15,7 @@
     </b-form-group>
 
     <b-table hover outlined :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
-      <template slot="acciones" slot-scope="cell">
+      <template slot="acciones" slot-scope="cell" v-if="isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item, 1)">Eliminar</b-btn>
       </template>
@@ -74,10 +74,6 @@ export default {
           key: 'updated_at',
           label: 'Modificado',
           class: 'text-center'
-        },
-        {
-          key: 'acciones',
-          class: 'text-center'
         }
       ]
     }
@@ -119,6 +115,9 @@ export default {
     results () {
       return Store.state.results
     },
+    isAdmin () {
+      return Store.state.user.profile_id === 1
+    },
     isLogged () {
       return Store.state.user.id
     },
@@ -134,6 +133,13 @@ export default {
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
     Store.dispatch('LOAD_POSITIONS')
     Store.dispatch('LOAD_SECTORS')
+    if (this.isAdmin) {
+      this.fields.push(
+        {
+          key: 'acciones',
+          class: 'text-center'
+        })
+    }
   }
 }
 </script>
