@@ -35,112 +35,112 @@
 </template>
 
 <script>
-import Store from "../store/store";
-import Header from "./Header";
+import Store from '../store/store'
+import Header from './Header'
 
 export default {
-  name: "Timeoffs",
-  data() {
+  name: 'Timeoffs',
+  data () {
     return {
       perPage: 10,
       currentPage: 1,
       filter: null,
       show: false,
       selectedItem: {
-        date: ""
+        date: ''
       },
       fields: [
         {
-          key: "employee.badge",
-          label: "Legajo",
+          key: 'employee.badge',
+          label: 'Legajo',
           sortable: true
         },
         {
-          key: "employee.first_name",
-          label: "Nombre",
+          key: 'employee.first_name',
+          label: 'Nombre',
           sortable: true
         },
         {
-          key: "employee.last_name",
-          label: "Apellido",
+          key: 'employee.last_name',
+          label: 'Apellido',
           sortable: true
         },
         {
-          key: "date",
-          label: "Día",
-          class: "text-center"
+          key: 'date',
+          label: 'Día',
+          class: 'text-center'
         },
         {
-          key: "created_at",
-          label: "Creado",
-          class: "text-center"
+          key: 'created_at',
+          label: 'Creado',
+          class: 'text-center'
         },
         {
-          key: "updated_at",
-          label: "Modificado",
-          class: "text-center"
+          key: 'updated_at',
+          label: 'Modificado',
+          class: 'text-center'
         },
         {
-          key: "acciones",
-          class: "text-center"
+          key: 'acciones',
+          class: 'text-center'
         }
       ]
-    };
+    }
   },
   components: {
     Header
   },
   methods: {
-    addItem() {
-      Store.dispatch("ADD_ITEM", { id: 0, date: "", employee_id: 0, color: "" });
-      this.$router.push({ name: "Timeoff" });
+    addItem () {
+      Store.dispatch('ADD_ITEM', { id: 0, date: '', employee_id: 0, color: '' })
+      this.$router.push({ name: 'Timeoff' })
     },
-    editItem(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "Timeoff" });
+    editItem (item) {
+      Store.dispatch('ADD_ITEM', item)
+      this.$router.push({ name: 'Timeoff' })
     },
-    deleteItem(item, type) {
-      this.selectedItem = item;
+    deleteItem (item, type) {
+      this.selectedItem = item
       if (type === 1) {
-        this.show = true;
+        this.show = true
       } else {
-        this.handleOk();
+        this.handleOk()
       }
     },
-    handleOk() {
-      Store.dispatch("DELETE_TIMEOFF", this.selectedItem);
+    handleOk () {
+      Store.dispatch('DELETE_TIMEOFF', this.selectedItem)
     }
   },
   watch: {
-    results() {
-      const results = Store.state.results;
+    results () {
+      const results = Store.state.results
       if (results.error) {
-        return;
+        return
       }
-      Store.dispatch("LOAD_TIMEOFFS");
+      Store.dispatch('LOAD_TIMEOFFS')
     }
   },
   computed: {
-    results() {
-      return Store.state.results;
+    results () {
+      return Store.state.results
     },
-    isLogged() {
-      return Store.state.user.id;
+    isLogged () {
+      return Store.state.user.id
     },
-    timeoffs() {
-      return Store.state.timeoffs;
+    timeoffs () {
+      return Store.state.timeoffs
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
-    Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    Store.dispatch("LOAD_TIMEOFFS");
-    Store.dispatch("LOAD_EMPLOYEES");
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    Store.dispatch('LOAD_TIMEOFFS')
+    Store.dispatch('LOAD_EMPLOYEES')
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -13,7 +13,11 @@
       </b-form-group>
 
       <b-form-group horizontal id="profile_id" label="Perfil" label-for="profile_id">
-        <b-form-select v-model="form.profile_id" :options="profiles" class="mb-3"  required/>
+        <b-form-select v-model="form.profile_id" :options="profiles" class="mb-3" required/>
+      </b-form-group>
+
+      <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
+        <b-form-select v-model="form.branch_id" :options="branches" class="mb-3" required/>
       </b-form-group>
 
       <div class="buttons">
@@ -29,101 +33,115 @@
 </template>
 
 <script>
-import Store from "../store/store";
+import Store from '../store/store'
 
 export default {
-  name: "User",
-  data() {
+  name: 'User',
+  data () {
     return {
       form: {
         id: 0,
-        user_name: "",
-        full_name: "",
+        user_name: '',
+        full_name: '',
         profile_id: 0,
+        branch_id: 0,
         show: true
       },
       errorShow: false,
-      errorMessage: ""
-    };
+      errorMessage: ''
+    }
   },
   watch: {
-    results() {
-      const results = Store.state.results;
+    results () {
+      const results = Store.state.results
       if (results.error) {
-        this.errorMessage = results.message;
-        this.errorShow = results.error;
-        return;
+        this.errorMessage = results.message
+        this.errorShow = results.error
+        return
       }
-      this.$router.push({ name: "Users" });
+      this.$router.push({ name: 'Users' })
     }
   },
   computed: {
-    results() {
-      return Store.state.results;
+    results () {
+      return Store.state.results
     },
-    isLogged() {
-      return Store.state.user.id;
+    isLogged () {
+      return Store.state.user.id
     },
-    profiles() {
-      const profiles = Store.state.profiles.rows;
-      const options = [];
+    profiles () {
+      const profiles = Store.state.profiles.rows
+      const options = []
       for (let i = 0; i < profiles.length; i++) {
         options.push({
           value: profiles[i].id,
           text: profiles[i].name
-        });
+        })
       }
-      return options;
+      return options
     },
-    item() {
-      return Store.state.record;
+    branches () {
+      const branches = Store.state.branches.rows
+      const options = []
+      for (let i = 0; i < branches.length; i++) {
+        options.push({
+          value: branches[i].id,
+          text: branches[i].name
+        })
+      }
+      return options
     },
-    state() {
-      return this.form.user_name.length >= 6;
+    item () {
+      return Store.state.record
     },
-    invalidFeedback() {
+    state () {
+      return this.form.user_name.length >= 6
+    },
+    invalidFeedback () {
       if (this.form.user_name.length > 6) {
-        return "";
+        return ''
       }
       if (this.form.user_name.length > 0) {
-        return "Ingrese al menos 6 caracteres";
+        return 'Ingrese al menos 6 caracteres'
       }
     },
-    validFeedback() {
-      return this.state ? "Válido" : "";
+    validFeedback () {
+      return this.state ? 'Válido' : ''
     }
   },
   methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      Store.dispatch("SAVE_USER", this.form);
+    onSubmit (evt) {
+      evt.preventDefault()
+      Store.dispatch('SAVE_USER', this.form)
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset (evt) {
+      evt.preventDefault()
       /* Reset our form values */
-      this.form.user_name = "";
-      this.form.full_name = "";
-      this.form.profile_id = 0;
+      this.form.user_name = ''
+      this.form.full_name = ''
+      this.form.profile_id = 0
+      this.form.branch_id = 0
       /* Trick to reset/clear native browser form validation state */
-      this.form.show = false;
+      this.form.show = false
       this.$nextTick(() => {
-        this.$router.push({ name: "Users" });
-      });
+        this.$router.push({ name: 'Users' })
+      })
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
     if (this.item) {
-      this.form.id = this.item.id;
-      this.form.user_name = this.item.user_name;
-      this.form.full_name = this.item.full_name;
-      this.form.profile_id = this.item.profile_id;
+      this.form.id = this.item.id
+      this.form.user_name = this.item.user_name
+      this.form.full_name = this.item.full_name
+      this.form.profile_id = this.item.profile_id
+      this.form.branch_id = this.item.branch_id
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -4,7 +4,7 @@
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
       <b-form-group horizontal id="employee_id" label="Sector" label-for="employee_id">
-        <b-form-select v-model="form.employee_id" :options="employees" class="mb-3"  required/>
+        <b-form-select v-model="form.employee_id" :options="employees" class="mb-3" required/>
       </b-form-group>
 
       <b-form-group horizontal label="Nombre" label-for="date">
@@ -23,88 +23,93 @@
 </template>
 
 <script>
-import Store from "../store/store";
+import Store from '../store/store'
 
 export default {
-  name: "Timeoff",
-  data() {
+  name: 'Timeoff',
+  data () {
     return {
       form: {
         id: 0,
         employee_id: 0,
-        date: ""
+        date: ''
       },
       show: true,
       errorShow: false,
-      errorMessage: ""
-    };
+      errorMessage: ''
+    }
   },
   watch: {
-    results() {
-      const results = Store.state.results;
+    results () {
+      const results = Store.state.results
       if (results.error) {
-        this.errorMessage = results.message;
-        this.errorShow = results.error;
-        return;
+        this.errorMessage = results.message
+        this.errorShow = results.error
+        return
       }
-      this.$router.push({ name: "Timeoffs" });
+      this.$router.push({ name: 'Timeoffs' })
     }
   },
   computed: {
-    results() {
-      return Store.state.results;
+    results () {
+      return Store.state.results
     },
-    isLogged() {
-      return Store.state.user.id;
+    isLogged () {
+      return Store.state.user.id
     },
-    employees() {
-      const employees = Store.state.employees.rows;
-      const options = [];
+    employees () {
+      const employees = Store.state.employees.rows
+      const options = []
       for (let i = 0; i < employees.length; i++) {
         options.push({
           value: employees[i].id,
-          text: employees[i].badge + ' - ' + employees[i].first_name + ' ' + employees[i].last_name
-        });
+          text:
+            employees[i].badge +
+            ' - ' +
+            employees[i].first_name +
+            ' ' +
+            employees[i].last_name
+        })
       }
-      return options;
+      return options
     },
-    item() {
-      return Store.state.record;
+    item () {
+      return Store.state.record
     }
   },
   methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      Store.dispatch("SAVE_TIMEOFF", this.form);
+    onSubmit (evt) {
+      evt.preventDefault()
+      Store.dispatch('SAVE_TIMEOFF', this.form)
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset (evt) {
+      evt.preventDefault()
       /* Reset our form values */
-      this.form.employee_id = 0;
-      this.form.date = "";
+      this.form.employee_id = 0
+      this.form.date = ''
       /* Trick to reset/clear native browser form validation state */
-      this.show = false;
+      this.show = false
       this.$nextTick(() => {
-        this.$router.push({ name: "Timeoffs" });
-      });
+        this.$router.push({ name: 'Timeoffs' })
+      })
     },
-    cleanError() {
-      this.errorShow = false;
-      this.errorMsg = "";
+    cleanError () {
+      this.errorShow = false
+      this.errorMsg = ''
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
     if (this.item) {
-      this.form.id = this.item.id;
-      this.form.employee_id = this.item.employee_id;
-      this.form.date = this.item._date;
+      this.form.id = this.item.id
+      this.form.employee_id = this.item.employee_id
+      this.form.date = this.item._date
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

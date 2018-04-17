@@ -4,7 +4,7 @@
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
       <b-form-group horizontal id="sector_id" label="Sector" label-for="sector_id">
-        <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3"  required/>
+        <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" required/>
       </b-form-group>
 
       <b-form-group horizontal id="name" label="Nombre" label-for="name">
@@ -27,93 +27,93 @@
 </template>
 
 <script>
-import Store from "../store/store";
+import Store from '../store/store'
 
 export default {
-  name: "Position",
-  data() {
+  name: 'Position',
+  data () {
     return {
       form: {
         id: 0,
-        name: "",
-        color: "#ffffff",
+        name: '',
+        color: '#ffffff',
         sector_id: 0
       },
       show: true,
       errorShow: false,
-      errorMsg: ""
-    };
+      errorMsg: ''
+    }
   },
   watch: {
-    results() {
-      const results = Store.state.results;
+    results () {
+      const results = Store.state.results
       if (results.error) {
-        return;
+        return
       }
-      this.$router.push({ name: "Positions" });
+      this.$router.push({ name: 'Positions' })
     }
   },
   computed: {
-    results() {
-      return Store.state.results;
+    results () {
+      return Store.state.results
     },
-    isLogged() {
-      return Store.state.user.id;
+    isLogged () {
+      return Store.state.user.id
     },
-    sectors() {
-      const sectors = Store.state.sectors.rows;
-      const options = [];
+    sectors () {
+      const sectors = Store.state.sectors.rows
+      const options = []
       for (let i = 0; i < sectors.length; i++) {
         options.push({
           value: sectors[i].id,
           text: sectors[i].name
-        });
+        })
       }
-      return options;
+      return options
     },
-    item() {
-      return Store.state.record;
+    item () {
+      return Store.state.record
     }
   },
   methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
+    onSubmit (evt) {
+      evt.preventDefault()
       if (!this.form.color.length) {
-        this.errorShow = true;
-        this.errorMsg = "Debe asignar un color distinto de negro";
-        return false;
+        this.errorShow = true
+        this.errorMsg = 'Debe asignar un color distinto de negro'
+        return false
       }
-      Store.dispatch("SAVE_POSITION", this.form);
+      Store.dispatch('SAVE_POSITION', this.form)
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset (evt) {
+      evt.preventDefault()
       /* Reset our form values */
-      this.form.name = "";
-      this.form.sector_id = 0;
+      this.form.name = ''
+      this.form.sector_id = 0
       /* Trick to reset/clear native browser form validation state */
-      this.show = false;
+      this.show = false
       this.$nextTick(() => {
-        this.$router.push({ name: "Positions" });
-      });
+        this.$router.push({ name: 'Positions' })
+      })
     },
-    cleanError() {
-      this.errorShow = false;
-      this.errorMsg = "";
+    cleanError () {
+      this.errorShow = false
+      this.errorMsg = ''
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
     if (this.item) {
-      this.form.id = this.item.id;
-      this.form.name = this.item.name;
-      this.form.color = this.item.color;
-      this.form.sector_id = this.item.sector_id;
+      this.form.id = this.item.id
+      this.form.name = this.item.name
+      this.form.color = this.item.color
+      this.form.sector_id = this.item.sector_id
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

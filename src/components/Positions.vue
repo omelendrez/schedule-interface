@@ -3,7 +3,7 @@
     <Header />
     <h1>Funciones</h1>
 
-    <div class="add-button">
+    <div class="add-button" v-if="isAdmin">
       <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
 
@@ -15,7 +15,7 @@
     </b-form-group>
 
     <b-table hover outlined :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
-      <template slot="acciones" slot-scope="cell">
+      <template slot="acciones" slot-scope="cell" v-if="isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item, 1)">Eliminar</b-btn>
       </template>
@@ -35,107 +35,113 @@
 </template>
 
 <script>
-import Store from "../store/store";
-import Header from "./Header";
+import Store from '../store/store'
+import Header from './Header'
 
 export default {
-  name: "Positions",
-  data() {
+  name: 'Positions',
+  data () {
     return {
       perPage: 10,
       currentPage: 1,
       filter: null,
       show: false,
       selectedItem: {
-        name: ""
+        name: ''
       },
       fields: [
         {
-          key: "sector.name",
-          label: "Sector",
+          key: 'sector.name',
+          label: 'Sector',
           sortable: true
         },
         {
-          key: "name",
-          label: "Función",
+          key: 'name',
+          label: 'Función',
           sortable: true
         },
         {
-          key: "div",
-          label: "Color",
-          class: "text-center"
+          key: 'div',
+          label: 'Color',
+          class: 'text-center'
         },
         {
-          key: "created_at",
-          label: "Creado",
-          class: "text-center"
+          key: 'created_at',
+          label: 'Creado',
+          class: 'text-center'
         },
         {
-          key: "updated_at",
-          label: "Modificado",
-          class: "text-center"
-        },
-        {
-          key: "acciones",
-          class: "text-center"
+          key: 'updated_at',
+          label: 'Modificado',
+          class: 'text-center'
         }
       ]
-    };
+    }
   },
   components: {
     Header
   },
   methods: {
-    addItem() {
-      Store.dispatch("ADD_ITEM", { id: 0, name: "", sector_id: 0, color: "" });
-      this.$router.push({ name: "Position" });
+    addItem () {
+      Store.dispatch('ADD_ITEM', { id: 0, name: '', sector_id: 0, color: '' })
+      this.$router.push({ name: 'Position' })
     },
-    editItem(item) {
-      Store.dispatch("ADD_ITEM", item);
-      this.$router.push({ name: "Position" });
+    editItem (item) {
+      Store.dispatch('ADD_ITEM', item)
+      this.$router.push({ name: 'Position' })
     },
-    deleteItem(item, type) {
-      this.selectedItem = item;
+    deleteItem (item, type) {
+      this.selectedItem = item
       if (type === 1) {
-        this.show = true;
+        this.show = true
       } else {
-        this.handleOk();
+        this.handleOk()
       }
     },
-    handleOk() {
-      Store.dispatch("DELETE_POSITION", this.selectedItem);
+    handleOk () {
+      Store.dispatch('DELETE_POSITION', this.selectedItem)
     }
   },
   watch: {
-    results() {
-      const results = Store.state.results;
+    results () {
+      const results = Store.state.results
       if (results.error) {
-        return;
+        return
       }
-      Store.dispatch("LOAD_POSITIONS");
+      Store.dispatch('LOAD_POSITIONS')
     }
   },
   computed: {
-    results() {
-      return Store.state.results;
+    results () {
+      return Store.state.results
     },
-    isLogged() {
-      return Store.state.user.id;
+    isAdmin () {
+      return Store.state.user.profile_id === 1
     },
-    positions() {
-      return Store.state.positions;
+    isLogged () {
+      return Store.state.user.id
+    },
+    positions () {
+      return Store.state.positions
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
-    Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    Store.dispatch("LOAD_POSITIONS");
-    Store.dispatch("LOAD_SECTORS");
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    Store.dispatch('LOAD_POSITIONS')
+    Store.dispatch('LOAD_SECTORS')
+    if (this.isAdmin) {
+      this.fields.push(
+        {
+          key: 'acciones',
+          class: 'text-center'
+        })
+    }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

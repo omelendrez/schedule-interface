@@ -36,126 +36,126 @@
 </template>
 
 <script>
-import Store from "../store/store";
-import Header from "./Header";
+import Store from '../store/store'
+import Header from './Header'
 
 export default {
-  name: "Grid",
-  data() {
+  name: 'Grid',
+  data () {
     return {
       showForm: false,
       form: {
         branch_id: 0,
-        date: ""
+        date: ''
       },
       fields: [
         {
-          key: "fullName",
-          label: "Empleado",
-          class: "p-1",
+          key: 'fullName',
+          label: 'Empleado',
+          class: 'p-1',
           thStyle: {
-            width: "320px"
+            width: '320px'
           }
         },
         {
-          key: "h06",
-          label: "06",
-          class: "text-center p-0 pt-1"
+          key: 'h06',
+          label: '06',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h07",
-          label: "07",
-          class: "text-center p-0 pt-1"
+          key: 'h07',
+          label: '07',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h08",
-          label: "08",
-          class: "text-center p-0 pt-1"
+          key: 'h08',
+          label: '08',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h09",
-          label: "09",
-          class: "text-center p-0 pt-1"
+          key: 'h09',
+          label: '09',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h10",
-          label: "10",
-          class: "text-center p-0 pt-1"
+          key: 'h10',
+          label: '10',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h11",
-          label: "11",
-          class: "text-center p-0 pt-1"
+          key: 'h11',
+          label: '11',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h12",
-          label: "12",
-          class: "text-center p-0 pt-1"
+          key: 'h12',
+          label: '12',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h13",
-          label: "13",
-          class: "text-center p-0 pt-1"
+          key: 'h13',
+          label: '13',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h14",
-          label: "14",
-          class: "text-center p-0 pt-1"
+          key: 'h14',
+          label: '14',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h15",
-          label: "15",
-          class: "text-center p-0 pt-1"
+          key: 'h15',
+          label: '15',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h16",
-          label: "16",
-          class: "text-center p-0 pt-1"
+          key: 'h16',
+          label: '16',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h17",
-          label: "17",
-          class: "text-center p-0 pt-1"
+          key: 'h17',
+          label: '17',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h18",
-          label: "18",
-          class: "text-center p-0 pt-1"
+          key: 'h18',
+          label: '18',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h19",
-          label: "19",
-          class: "text-center p-0 pt-1"
+          key: 'h19',
+          label: '19',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h20",
-          label: "20",
-          class: "text-center p-0 pt-1"
+          key: 'h20',
+          label: '20',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h21",
-          label: "21",
-          class: "text-center p-0 pt-1"
+          key: 'h21',
+          label: '21',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h22",
-          label: "22",
-          class: "text-center p-0 pt-1"
+          key: 'h22',
+          label: '22',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h23",
-          label: "23",
-          class: "text-center p-0 pt-1"
+          key: 'h23',
+          label: '23',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h24",
-          label: "24",
-          class: "text-center p-0 pt-1"
+          key: 'h24',
+          label: '24',
+          class: 'text-center p-0 pt-1'
         },
         {
-          key: "h25",
-          label: "01",
-          class: "text-center p-0 pt-1"
+          key: 'h25',
+          label: '01',
+          class: 'text-center p-0 pt-1'
         }
       ],
       rows: [],
@@ -163,200 +163,192 @@ export default {
       timeoffRows: [],
       colorFields: [
         {
-          key: "color",
-          label: "&nbsp;",
-          class: "p-1 m-0"
+          key: 'color',
+          label: '&nbsp;',
+          class: 'p-1 m-0'
         },
         {
-          key: "sector_position",
-          label: "Sector / Función",
-          class: "p-1 m-0"
+          key: 'sector_position',
+          label: 'Sector / Función',
+          class: 'p-1 m-0'
         },
         {
-          key: "hours",
-          label: "Horas",
-          class: "text-right p-1 m-0"
+          key: 'hours',
+          label: 'Horas',
+          class: 'text-right p-1 m-0'
         }
       ],
       timeoffFields: [
         {
-          key: "fullName",
-          label: "PERSONAL DE FRANCO"
+          key: 'fullName',
+          label: 'PERSONAL DE FRANCO'
         }
       ]
-    };
+    }
   },
   components: {
     Header
   },
   methods: {
-    goProgram() {
-      this.$router.push({ name: "Program" });
+    goProgram () {
+      this.$router.push({ name: 'Program' })
     },
-    goBack() {
-      this.$router.push({ name: "Budgets" });
+    goBack () {
+      this.$router.push({ name: 'Budgets' })
     },
-    printGrid() {
+    printGrid () {
       this.$nextTick(() => {
-        window.print();
-      });
+        window.print()
+      })
     },
-    loadData() {
+    loadData () {
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
-      };
-      Store.dispatch("LOAD_SCHEDULES", data);
+      }
+      Store.dispatch('LOAD_SCHEDULES', data)
     },
-    loadGrid() {
-      const data = Store.state.schedules.rows;
-      let i = 0;
-      let employeeId = 0;
-      let record = {};
-      let colors = {};
-      const rows = [];
-      const colorRows = [];
-      const hours = [];
+    loadGrid () {
+      const data = Store.state.schedules.rows
+      let i = 0
+      let employeeId = 0
+      let record = {}
+      let colors = {}
+      const rows = []
+      const colorRows = []
+      const hours = []
       while (i < data.length) {
-        const item = data[i];
+        const item = data[i]
         if (!hours[item.position_id]) {
-          hours[item.position_id] = 0;
+          hours[item.position_id] = 0
         }
-        hours[item.position_id] =
-          hours[item.position_id] + (item.to - item.from);
-        colors.position_id = item.position_id;
-        colors.sector_position = `${item["position.sector.name"]} / ${
-          item["position.name"]
-        }`;
-        colors.color = `<div style="background-color:${
-          item["position.color"]
-        }">&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
+        hours[item.position_id] = hours[item.position_id] + (item.to - item.from)
+        colors.position_id = item.position_id
+        colors.sector_position = `${item['position.sector.name']} / ${item['position.name']}`
+        colors.color = `<div style="background-color:${item['position.color']}">&nbsp;&nbsp;&nbsp;&nbsp;</div>`
         if (
           !colorRows.find(child => {
             return (
-              child.sector_position ===
-              `${item["position.sector.name"]} / ${item["position.name"]}`
-            );
+              child.sector_position === `${item['position.sector.name']} / ${item['position.name']}`
+            )
           })
         ) {
-          colorRows.push(colors);
+          colorRows.push(colors)
         }
-        colors = {};
+        colors = {}
         if (item.employee_id !== employeeId) {
           if (employeeId !== 0) {
-            rows.push(record);
-            record = {};
+            rows.push(record)
+            record = {}
           }
-          employeeId = item.employee_id;
-          record.id = item["id"];
-          record.badge = item["employee.badge"];
-          record.first_name = item["employee.first_name"];
-          record.last_name = item["employee.last_name"];
-          record.sector = item["position.sector.name"];
-          record.position = item["position.name"];
+          employeeId = item.employee_id
+          record.id = item['id']
+          record.badge = item['employee.badge']
+          record.first_name = item['employee.first_name']
+          record.last_name = item['employee.last_name']
+          record.sector = item['position.sector.name']
+          record.position = item['position.name']
         }
         for (let i = 1; i < 27; i++) {
-          let hour = `0${i.toString()}`;
-          hour = hour.substr(hour.length - 2);
-          if (item["from"] <= i && item["to"] > i) {
-            record[`h${hour}`] = `<div title="${
-              item["position.name"]
-            }" style="background-color:${item["position.color"]}">&nbsp;</div>`;
+          let hour = `0${i.toString()}`
+          hour = hour.substr(hour.length - 2)
+          if (item['from'] <= i && item['to'] > i) {
+            record[`h${hour}`] = `<div title="${item['position.name']}" style="background-color:${item['position.color']}">&nbsp;</div>`
           }
         }
-        i++;
+        i++
       }
-      rows.push(record);
+      rows.push(record)
       if (rows[0].id) {
-        this.rows = rows;
+        this.rows = rows
         const colorsRows = colorRows.map(item => {
-          item.hours = hours[item.position_id];
-          return item;
-        });
-        colorsRows.sort(this.compare);
-        this.colors = colorsRows;
+          item.hours = hours[item.position_id]
+          return item
+        })
+        colorsRows.sort(this.compare)
+        this.colors = colorsRows
       }
     },
-    compare(a, b) {
+    compare (a, b) {
       if (a.sector_position < b.sector_position) {
-        return -1;
+        return -1
       }
       if (a.sector_position > b.sector_position) {
-        return 1;
+        return 1
       }
-      return 0;
+      return 0
     }
   },
   watch: {
-    budgetTimeoffs() {
-      const items = Store.state.budgetTimeoffs.rows;
-      const list = [];
+    budgetTimeoffs () {
+      const items = Store.state.budgetTimeoffs.rows
+      const list = []
       for (let i = 0; i < items.length; i++) {
         let item = {
-          badge: items[i]["employee"]["badge"],
-          first_name: items[i]["employee"]["first_name"],
-          last_name: items[i]["employee"]["last_name"]
-        };
-        list.push(item);
+          badge: items[i]['employee']['badge'],
+          first_name: items[i]['employee']['first_name'],
+          last_name: items[i]['employee']['last_name']
+        }
+        list.push(item)
       }
-      this.timeoffRows = list;
+      this.timeoffRows = list
     },
-    schedules() {
-      this.loadGrid();
+    schedules () {
+      this.loadGrid()
     }
   },
   computed: {
-    item() {
-      return Store.state.record;
+    item () {
+      return Store.state.record
     },
-    budget() {
-      return Store.state.budget.rows;
+    budget () {
+      return Store.state.budget.rows
     },
-    budgetTimeoffs() {
-      return Store.state.budgetTimeoffs;
+    budgetTimeoffs () {
+      return Store.state.budgetTimeoffs
     },
-    totalHoursBudget() {
-      return Store.state.budget.rows.hours;
+    totalHoursBudget () {
+      return Store.state.budget.rows.hours
     },
-    totalScheduledHours() {
-      return Store.state.schedules.scheduled;
+    totalScheduledHours () {
+      return Store.state.schedules.scheduled
     },
-    footer() {
-      return Store.state.budget.rows.footer;
+    footer () {
+      return Store.state.budget.rows.footer
     },
-    isLogged() {
-      return Store.state.user.id;
+    isLogged () {
+      return Store.state.user.id
     },
-    schedules() {
-      return Store.state.schedules;
+    schedules () {
+      return Store.state.schedules
     },
-    dataOk() {
-      return this.form.date !== "" && this.form.branch_id !== 0;
+    dataOk () {
+      return this.form.date !== '' && this.form.branch_id !== 0
     },
-    branches() {
-      const branches = Store.state.branches.rows;
-      const options = [];
+    branches () {
+      const branches = Store.state.branches.rows
+      const options = []
       for (let i = 0; i < branches.length; i++) {
         options.push({
           value: branches[i].id,
           text: branches[i].name
-        });
+        })
       }
-      return options;
+      return options
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
+      this.$router.push({ name: 'Login' })
     }
-    Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    this.showForm = false;
-    this.form.branch_id = this.item.branch_id;
-    this.form.date = this.item._date;
-    this.loadData();
-    Store.dispatch("LOAD_BUDGET_TIMEOFF", this.item._date);
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    this.showForm = false
+    this.form.branch_id = this.item.branch_id
+    this.form.date = this.item._date
+    this.loadData()
+    Store.dispatch('LOAD_BUDGET_TIMEOFF', this.item._date)
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

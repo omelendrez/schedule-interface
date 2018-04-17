@@ -104,18 +104,18 @@
 </template>
 
 <script>
-import Store from "../store/store";
-import Header from "./Header";
-import Autocomplete from "./lib/Autocomplete";
+import Store from '../store/store'
+import Header from './Header'
+import Autocomplete from './lib/Autocomplete'
 
 export default {
-  name: "GridList",
-  data() {
+  name: 'GridList',
+  data () {
     return {
-      employeeName: "",
-      positionName: "",
-      autocompleteEmployeeSelected: "",
-      autocompletePositionSelected: "",
+      employeeName: '',
+      positionName: '',
+      autocompleteEmployeeSelected: '',
+      autocompletePositionSelected: '',
       isEditing: false,
       filter: null,
       show: false,
@@ -125,10 +125,10 @@ export default {
       showMessage: false,
       showWarning: false,
       timeoffAlert: false,
-      message: "",
-      errMsg: "",
-      errorMessage: "",
-      warningMessage: "",
+      message: '',
+      errMsg: '',
+      errorMessage: '',
+      warningMessage: '',
       form: {},
       selectedItem: {},
       branchOptions: [],
@@ -138,446 +138,444 @@ export default {
       timeoffRows: [],
       scheduleFields: [
         {
-          key: "sectorPosition",
-          label: "Función",
-          variant: "info",
-          class: "px-3",
+          key: 'sectorPosition',
+          label: 'Función',
+          variant: 'info',
+          class: 'px-3',
           thStyle: {
-            width: "20%"
+            width: '20%'
           }
         },
         {
-          key: "fullName",
-          label: "Empleado",
-          class: "px-2",
+          key: 'fullName',
+          label: 'Empleado',
+          class: 'px-2',
           thStyle: {
-            width: "20%"
+            width: '20%'
           }
         },
         {
-          key: "from",
-          label: "De",
-          variant: "warning",
-          class: "text-center"
+          key: 'from',
+          label: 'De',
+          variant: 'warning',
+          class: 'text-center'
         },
         {
-          key: "_to",
-          label: "A",
-          variant: "warning",
-          class: "text-center"
+          key: '_to',
+          label: 'A',
+          variant: 'warning',
+          class: 'text-center'
         },
         {
-          key: "hours",
-          label: "Horas",
-          variant: "danger",
-          class: "text-center"
+          key: 'hours',
+          label: 'Horas',
+          variant: 'danger',
+          class: 'text-center'
         },
         {
-          key: "created_at",
-          label: "Creado",
-          class: "text-center",
+          key: 'created_at',
+          label: 'Creado',
+          class: 'text-center',
           thStyle: {
-            width: "100px"
+            width: '100px'
           }
         },
         {
-          key: "updated_at",
-          label: "Modificado",
-          class: "text-center no-print",
+          key: 'updated_at',
+          label: 'Modificado',
+          class: 'text-center no-print',
           thStyle: {
-            width: "100px"
+            width: '100px'
           }
         },
         {
-          key: "acciones",
-          label: " ",
-          class: "text-center no-print",
+          key: 'acciones',
+          label: ' ',
+          class: 'text-center no-print',
           thStyle: {
-            width: "180px"
+            width: '180px'
           }
         }
       ]
-    };
+    }
   },
   components: {
     Header,
     Autocomplete
   },
   methods: {
-    goGrid() {
-      this.$router.push({ name: "Grid" });
+    goGrid () {
+      this.$router.push({ name: 'Grid' })
     },
-    goBack() {
-      this.$router.push({ name: "Budgets" });
+    goBack () {
+      this.$router.push({ name: 'Budgets' })
     },
-    printGrid() {
+    printGrid () {
       this.$nextTick(() => {
-        window.print();
-      });
+        window.print()
+      })
     },
-    loadData() {
-      this.showError = false;
-      this.showMessage = false;
+    loadData () {
+      this.showError = false
+      this.showMessage = false
       const data = {
         date: this.form.date,
         branch_id: this.form.branch_id
-      };
-      Store.dispatch("LOAD_SCHEDULES", data);
-      Store.dispatch("LOAD_BRANCH_EMPLOYEES", data);
+      }
+      Store.dispatch('LOAD_SCHEDULES', data)
+      Store.dispatch('LOAD_BRANCH_EMPLOYEES', data)
     },
-    addItem() {
-      this.employeeName = "";
-      this.positionName = "";
+    addItem () {
+      this.employeeName = ''
+      this.positionName = ''
       const item = {
         id: 0,
         employee_id: 0,
         position_id: 0,
         date: this.form.date,
         branch_id: this.form.branch_id,
-        "employee.badge": "",
-        "employee.first_name": "",
-        "employee.last_name": "",
-        "position.sector.name": "",
-        "position.name": "",
-        from: "",
-        to: "",
+        'employee.badge': '',
+        'employee.first_name': '',
+        'employee.last_name': '',
+        'position.sector.name': '',
+        'position.name': '',
+        from: '',
+        to: '',
         editing: true,
         isNew: true
-      };
-      this.scheduleRows.push(item);
-      this.isEditing = true;
-      this.form = item;
+      }
+      this.scheduleRows.push(item)
+      this.isEditing = true
+      this.form = item
     },
-    refreshPositions(id) {
-      Store.dispatch("LOAD_EMPLOYEE", { id: id });
-    },
-    editItem(item, index, target) {
-      item.editing = true;
-      this.isEditing = true;
-      this.id = item.id;
-      this.form.employee_id = item.employee_id;
-      this.form.position_id = item.position_id;
-      this.form.from = item.from;
-      this.form.to = item._to;
-      item.budget_id = Store.state.budget.rows.id;
+    editItem (item, index, target) {
+      item.editing = true
+      this.isEditing = true
+      this.form.id = item.id
+      this.form.employee_id = item.employee_id
+      this.form.position_id = item.position_id
+      this.form.from = item.from
+      this.form.to = item._to
+      item.budget_id = this.budget.id
       this.autocompleteEmployeeSelected = this.employeesOptions.find(
         emp => item.employee_id === emp.value
-      );
-      this.employeeName = this.autocompleteEmployeeSelected.text;
+      )
+      this.employeeName = this.autocompleteEmployeeSelected.text
 
       this.autocompletePositionSelected = this.positionsOptions.find(
         emp => item.position_id === emp.value
-      );
-      this.positionName = this.autocompletePositionSelected.text;
+      )
+      this.positionName = this.autocompletePositionSelected.text
 
-      Store.dispatch("LOAD_EMPLOYEE", { id: item.employee_id });
+      Store.dispatch('LOAD_EMPLOYEE', { id: item.employee_id })
     },
-    saveItem(item, index, target) {
-      this.form.employee_id = this.selectedEmployee.value;
-      this.form.position_id = this.selectedPosition.value;
+    saveItem (item, index, target) {
+      this.form.employee_id = this.selectedEmployee.value
+      this.form.position_id = this.selectedPosition.value
       if (
         !this.form.employee_id ||
         !this.form.position_id ||
         !this.form.from ||
         !this.form.to
       ) {
-        this.errorMessage = `Empleado, Función, Desde y Hasta son campos obligatorios y deben completarse para poder grabar. No deje ningún campo vacío`;
-        this.showError = true;
-        return;
+        this.errorMessage =
+          'Empleado, Función, Desde y Hasta son campos obligatorios y deben completarse para poder grabar. No deje ningún campo vacío'
+        this.showError = true
+        return
       }
 
-      const from = parseInt(this.form.from);
-      const to = parseInt(this.form.to);
+      const from = parseInt(this.form.from)
+      const to = parseInt(this.form.to)
 
       if (from === to) {
-        this.errorMessage = `La hora de entrada no puede ser igual a la hora de salida`;
-        this.showError = true;
-        return;
+        this.errorMessage =
+          'La hora de entrada no puede ser igual a la hora de salida'
+        this.showError = true
+        return
       }
 
       if (from < to) {
         if (from < 6) {
-          this.errorMessage = `La hora de entrada no puede ser anterior a las 6am`;
-          this.showError = true;
-          return;
+          this.errorMessage =
+            'La hora de entrada no puede ser anterior a las 6am'
+          this.showError = true
+          return
         }
         if (from < 6) {
-          this.errorMessage = `La hora de entrada no puede ser anterior a las 6am`;
-          this.showError = true;
-          return;
+          this.errorMessage =
+            'La hora de entrada no puede ser anterior a las 6am'
+          this.showError = true
+          return
         }
       } else {
         if (to > 2) {
-          this.errorMessage = `La hora de salida no puede ser posterior a las 2am`;
-          this.showError = true;
-          return;
+          this.errorMessage =
+            'La hora de salida no puede ser posterior a las 2am'
+          this.showError = true
+          return
         }
       }
 
-      this.form.budget_id = Store.state.budget.rows.id;
-      this.form.id = this.form.isNew ? 0 : item.id;
-      Store.dispatch("SCHEDULE_VERIFY_INPUT", this.form);
+      this.form.budget_id = this.budget.id
+      this.form.id = this.form.isNew ? 0 : item.id
+      Store.dispatch('SCHEDULE_VERIFY_INPUT', this.form)
     },
-    cancelSave(item, index, target) {
-      item.editing = false;
-      this.isEditing = false;
+    cancelSave (item, index, target) {
+      item.editing = false
+      this.isEditing = false
       if (item.isNew) {
-        this.scheduleRows.splice(index, 1);
+        this.scheduleRows.splice(index, 1)
       }
     },
-    deleteItem(item) {
-      this.selectedItem = item;
-      this.show = true;
+    deleteItem (item) {
+      this.selectedItem = item
+      this.show = true
     },
-    handleOkDelete() {
-      Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
+    handleOkDelete () {
+      Store.dispatch('DELETE_SCHEDULE', this.selectedItem)
     },
-    handleOkSave() {
+    handleOkSave () {
       if (this.timeoffAlert) {
-        return;
+        return
       }
-      this.form.budget_id = Store.state.budget.rows.id;
-      Store.dispatch("SAVE_SCHEDULE", this.form);
+      this.form.budget_id = this.budget.id
+      Store.dispatch('SAVE_SCHEDULE', this.form)
     },
-    handleCancelSave() {
+    handleCancelSave () {
       if (this.timeoffAlert) {
-        this.$refs.cancelSave.click();
+        this.$refs.cancelSave.click()
       }
     },
-    closeGrid() {
-      this.scheduleRows = [];
-      this.showForm = true;
+    closeGrid () {
+      this.scheduleRows = []
+      this.showForm = true
     },
-    hideModal() {
-      this.showError = false;
+    hideModal () {
+      this.showError = false
     }
   },
   watch: {
-    employeesByPosition() {
-      const employees = this.employeesByPosition.rows;
-      const employeesOptions = [];
-      for (let i = 0; i < employees.length; i++) {
-        employeesOptions.push({
-          value: employees[i].id,
-          text: `${employees[i].badge} ${employees[i].last_name}, ${
-            employees[i].first_name
-          }`
-        });
+    employeesByPosition () {
+      if (!this.employeesByPosition) {
+        return
       }
-      this.employeesOptions = employeesOptions;
+      const employees = this.employeesByPosition.rows
+      const employeesOptions = []
+      for (let i = 0; i < employees.length; i++) {
+        const employee = employees[i]
+        employeesOptions.push({
+          value: employee['employee.id'],
+          text: `${employee['employee.badge']} ${employee['employee.last_name']}, ${employee['employee.first_name']}`
+        })
+      }
+      this.employeesOptions = employeesOptions
     },
-    selectedEmployee() {
-      this.autocompleteEmployeeSelected = this.selectedEmployee;
+    selectedEmployee () {
+      this.autocompleteEmployeeSelected = this.selectedEmployee
     },
-    selectedPosition() {
-      this.autocompletePositionSelected = this.selectedPosition;
-      Store.dispatch("LOAD_EMPLOYEES_BY_POSITION", this.selectedPosition);
+    selectedPosition () {
+      this.autocompletePositionSelected = this.selectedPosition
+      Store.dispatch('LOAD_EMPLOYEES_BY_POSITION', this.selectedPosition)
     },
-    results() {
-      const results = Store.state.results;
+    results () {
+      const results = this.results
       if (results.id || results.status) {
-        this.isEditing = false;
+        this.isEditing = false
         const data = {
           date: this.budget._date,
           branch_id: this.budget.branch_id
-        };
-        Store.dispatch("LOAD_SCHEDULES", data);
+        }
+        Store.dispatch('LOAD_SCHEDULES', data)
       } else {
         if (results.error) {
           switch (results.error.type) {
             case 0:
               if (this.isEditing) {
-                Store.dispatch("SAVE_SCHEDULE", this.form);
+                Store.dispatch('SAVE_SCHEDULE', this.form)
               } else {
-                Store.dispatch("DELETE_SCHEDULE", this.selectedItem);
+                Store.dispatch('DELETE_SCHEDULE', this.selectedItem)
               }
-              break;
+              break
             case 1:
-              this.errorMessage = results.error.message;
-              this.showError = true;
-              break;
+              this.errorMessage = results.error.message
+              this.showError = true
+              break
             case 2:
-              this.warningMessage = results.error.message;
-              this.showWarning = true;
-              break;
+              this.warningMessage = results.error.message
+              this.showWarning = true
+              break
           }
         }
       }
     },
-    branches() {
-      if (!Store.state.branches.rows) {
-        return;
+    branches () {
+      if (!this.branches.rows) {
+        return
       }
-      const branches = Store.state.branches.rows;
-      const branchOptions = [];
+      const branches = this.branches.rows
+      const branchOptions = []
       for (let i = 0; i < branches.length; i++) {
         branchOptions.push({
           value: branches[i].id,
           text: branches[i].name
-        });
+        })
       }
-      this.branchOptions = branchOptions;
+      this.branchOptions = branchOptions
     },
-    employees() {
+    employees () {
       if (!this.employees.rows) {
-        return;
+        return
       }
-      const employees = this.employees.rows;
-      const employeesOptions = [];
+      const employees = this.employees.rows
+      const employeesOptions = []
       for (let i = 0; i < employees.length; i++) {
         employeesOptions.push({
           value: employees[i].id,
-          text: `${employees[i].badge} ${employees[i].last_name}, ${
-            employees[i].first_name
-          }`
-        });
+          text: `${employees[i].badge} ${employees[i].last_name}, ${employees[i].first_name}`
+        })
       }
-      this.employeesOptions = employeesOptions;
+      this.employeesOptions = employeesOptions
     },
-    positionSector() {
-      const pos = Store.state.positionSector;
-      const positionsOptions = [];
+    positionSector () {
+      const pos = this.positionSector
+      const positionsOptions = []
       for (let el in pos) {
-        positionsOptions.push(pos[el]);
+        positionsOptions.push(pos[el])
       }
-      this.positionsOptions = positionsOptions;
+      this.positionsOptions = positionsOptions
     },
-    employee() {
-      if (!Store.state.employee.employee_positions) {
-        return;
+    employee () {
+      if (!this.employee.employee_positions) {
+        return
       }
       const timeoff = this.timeoffRows.find(item => {
-        return item.id === this.employee.id;
-      });
-      let isTimeoff = false;
+        return item.id === this.employee.id
+      })
+      let isTimeoff = false
       if (timeoff) {
-        isTimeoff = true;
-        this.timeoffAlert = true;
+        isTimeoff = true
+        this.timeoffAlert = true
       }
       this.warningMessage = isTimeoff
-        ? "El empleado debería estar de franco en este día"
-        : "";
-      this.showWarning = isTimeoff;
+        ? 'El empleado debería estar de franco en este día'
+        : ''
+      this.showWarning = isTimeoff
     },
-    schedules() {
-      if (!Store.state.budget.rows) {
-        return;
+    schedules () {
+      if (!this.schedules) {
+        return
       }
-      const records = Store.state.budget;
-      this.errMsg = "No existe presupuesto para ese día";
-      this.showErr = !records.count;
-      this.showForm = !records.count;
-      const sch = Store.state.schedules.rows;
-      const arr = [];
+      const sch = this.schedules.rows
+      const arr = []
       for (let i = 0; i < sch.length; i++) {
         let row = {
           editing: false,
           created_at: sch[i].created_at,
-          "employee.badge": sch[i]["employee.badge"],
-          "employee.first_name": sch[i]["employee.first_name"],
-          "employee.last_name": sch[i]["employee.last_name"],
+          'employee.badge': sch[i]['employee.badge'],
+          'employee.first_name': sch[i]['employee.first_name'],
+          'employee.last_name': sch[i]['employee.last_name'],
           employee_id: sch[i].employee_id,
           from: sch[i].from,
           id: sch[i].id,
-          "position.color": sch[i]["position.color"],
-          "position.name": sch[i]["position.name"],
+          'position.color': sch[i]['position.color'],
+          'position.name': sch[i]['position.name'],
           position_id: sch[i].position_id,
-          "sector.name": sch[i]["position.sector.name"],
+          'sector.name': sch[i]['position.sector.name'],
           sector_id: sch[i].sector_id,
           to: sch[i].to,
           _to: sch[i]._to,
           updated_at: sch[i].updated_at
-        };
-        arr.push(row);
+        }
+        arr.push(row)
       }
-      this.scheduleRows = arr;
-      Store.dispatch("LOAD_TIMEOFF", {
-        budget_id: Store.state.budget.rows.id
-      });
+      this.scheduleRows = arr
+      Store.dispatch('LOAD_TIMEOFF', {
+        budget_id: this.budget.id
+      })
     },
-    timeoff() {
-      const to = Store.state.timeoff;
-      if (!Store.state.timeoff) {
-        return;
+    timeoff () {
+      if (!this.timeoff) {
+        return
       }
+      const to = this.timeoff
       for (let i = 0; i < to.length; i++) {
-        const item = to[i];
+        const item = to[i]
         if (item.presence > 5) {
-          this.timeoffRows.push(item);
+          this.timeoffRows.push(item)
         }
       }
     }
   },
   computed: {
-    employeesByPosition() {
-      return Store.state.employeesByPosition;
+    employeesByPosition () {
+      return Store.state.employeesByPosition
     },
-    item() {
-      return Store.state.record;
+    item () {
+      return Store.state.record
     },
-    positionSector() {
-      return Store.state.positionSector;
+    positionSector () {
+      return Store.state.positionSector
     },
-    selectedEmployee() {
-      return Store.state.selectedEmployee;
+    selectedEmployee () {
+      return Store.state.selectedEmployee
     },
-    selectedPosition() {
-      return Store.state.selectedPosition;
+    selectedPosition () {
+      return Store.state.selectedPosition
     },
-    hoursWorked() {
-      const from = parseInt(this.form.from);
-      const to = parseInt(this.form.to);
-      return from < to ? to - from : to + 24 - from;
+    hoursWorked () {
+      const from = parseInt(this.form.from)
+      const to = parseInt(this.form.to)
+      return from < to ? to - from : to + 24 - from
     },
-    timeoff() {
-      return Store.state.timeoff;
+    timeoff () {
+      return Store.state.timeoff
     },
-    results() {
-      return Store.state.results;
+    results () {
+      return Store.state.results
     },
-    employees() {
-      return Store.state.employees;
+    employees () {
+      return Store.state.employees
     },
-    employee() {
-      return Store.state.employee;
+    employee () {
+      return Store.state.employee
     },
-    isLogged() {
-      return Store.state.user.id;
+    isLogged () {
+      return Store.state.user.id
     },
-    schedules() {
-      return Store.state.schedules;
+    schedules () {
+      return Store.state.schedules
     },
-    budget() {
-      return Store.state.budget.rows;
+    budget () {
+      return Store.state.budget.rows
     },
-    totalHoursBudget() {
-      return Store.state.budget.rows.hours;
+    totalHoursBudget () {
+      return Store.state.budget.rows.hours
     },
-    totalScheduledHours() {
-      return Store.state.schedules.scheduled;
+    totalScheduledHours () {
+      return Store.state.schedules.scheduled
     },
-    dataOk() {
-      return this.form.date !== "" && this.form.branch_id !== 0;
+    dataOk () {
+      return this.form.date !== '' && this.form.branch_id !== 0
     },
-    branches() {
-      return Store.state.branches;
+    branches () {
+      return Store.state.branches
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
-    Store.dispatch("SET_MENU_OPTION", this.$route.path);
-    Store.dispatch("LOAD_BRANCHES");
-    Store.dispatch("LOAD_POSITIONS");
-    Store.dispatch("LOAD_POSITION_SECTOR");
-    this.showForm = false;
-    this.form.branch_id = this.item.branch_id;
-    this.form.date = this.item._date;
-    this.loadData();
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    Store.dispatch('LOAD_BRANCHES')
+    Store.dispatch('LOAD_POSITIONS')
+    Store.dispatch('LOAD_POSITION_SECTOR')
+    this.showForm = false
+    this.form.branch_id = this.item.branch_id
+    this.form.date = this.item._date
+    this.loadData()
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -614,7 +612,7 @@ export default {
   margin-top: 18px;
   float: right;
 }
-table input[type="text"] {
+table input[type='text'] {
   max-width: 60px;
   margin: 0 auto;
   text-align: center;

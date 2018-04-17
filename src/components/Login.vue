@@ -23,73 +23,73 @@
 </template>
 
 <script>
-import Store from "../store/store";
-import Header from "./Header";
+import Store from '../store/store'
+import Header from './Header'
 
 export default {
-  name: "Login",
-  data() {
+  name: 'Login',
+  data () {
     return {
       form: {
-        user_name: "",
-        password: ""
+        user_name: '',
+        password: ''
       },
       show: true,
       isLoginError: false,
       isLoginCorrect: false
-    };
+    }
   },
   components: {
     Header
   },
   watch: {
-    user: function() {
-      const user = Store.state.user;
+    user: function () {
+      const user = Store.state.user
       if (user.id === null) {
-        return;
+        return
       }
       if (user.id > 0) {
-        this.isLoginCorrect = true;
-        this.$router.push({ name: "Home" });
+        this.isLoginCorrect = true
+        this.$router.push({ name: 'Home' })
       } else {
-        this.isLoginError = true;
+        this.isLoginError = true
       }
     }
   },
   computed: {
-    user() {
-      return Store.state.user;
+    user () {
+      return Store.state.user
     }
   },
   methods: {
-    onSubmit(evt) {
-      this.isLoginError = false;
-      evt.preventDefault();
+    onSubmit (evt) {
+      this.isLoginError = false
+      evt.preventDefault()
       const payload = {
         user_name: this.form.user_name,
         password: this.form.password
-      };
-      Store.dispatch("LOGIN", payload);
+      }
+      Store.dispatch('LOGIN', payload)
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset (evt) {
+      evt.preventDefault()
       /* Reset our form values */
-      this.form.user_name = "";
-      this.form.password = "";
+      this.form.user_name = ''
+      this.form.password = ''
       /* Trick to reset/clear native browser form validation state */
-      this.show = false;
+      this.show = false
       this.$nextTick(() => {
-        this.show = true;
-      });
+        this.show = true
+      })
     }
   },
-  isLogged() {
-    return Store.state.user.id;
+  isLogged () {
+    return Store.state.user.id
   },
-  created() {
-    Store.dispatch("LOGOUT_USER");
+  created () {
+    Store.dispatch('LOGOUT_USER')
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

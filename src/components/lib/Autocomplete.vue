@@ -12,22 +12,23 @@
 </template>
 
 <script>
-import Store from "./../../store/store";
+import Store from './../../store/store'
 
 export default {
-  name: "Autocomplete",
-  data() {
+  name: 'Autocomplete',
+  data () {
     return {
       open: false,
       current: 0,
       mutableSuggestions: this.suggestions,
       mutableSelection: this.selection
-    };
+    }
   },
   props: {
     suggestions: {
       type: Array,
-      required: true
+      required: true,
+      twoWay: true
     },
     selection: {
       type: String,
@@ -40,57 +41,56 @@ export default {
     }
   },
   computed: {
-    matches() {
+    matches () {
       return this.mutableSuggestions.filter(str => {
-        return str.text.toLowerCase().indexOf(this.mutableSelection) >= 0;
-      });
+        return str.text.toLowerCase().indexOf(this.mutableSelection) >= 0
+      })
     },
-    openSuggestion() {
+    openSuggestion () {
       return (
-        this.mutableSelection !== "" &&
+        this.mutableSelection !== '' &&
         this.matches.length !== 0 &&
         this.open === true
-      );
+      )
     }
   },
   methods: {
-    enter() {
-      Store.dispatch("SET_VALUE", {
-        type: this.fieldType,
-        selected: this.matches[this.current]
-      });
-      this.mutableSelection = this.matches[this.current].text;
-      this.open = false;
+    enter () {
+      this.doSelect()
     },
-    up() {
+    suggestionClick () {
+      this.doSelect()
+    },
+    up () {
       if (this.current > 0) {
-        this.current--;
+        this.current--
       }
     },
-    down() {
+    down () {
       if (this.current < this.matches.length - 1) {
-        this.current++;
+        this.current++
       }
     },
-    isActive(index) {
-      return index === this.current;
+    isActive (index) {
+      return index === this.current
     },
-    change() {
+    change () {
       if (!this.open) {
-        this.open = true;
-        this.current = 0;
+        this.open = true
+        this.current = 0
       }
     },
-    suggestionClick(index) {
-      Store.dispatch("SET_VALUE", {
+    doSelect () {
+      const selected = {
         type: this.fieldType,
         selected: this.matches[this.current]
-      });
-      this.mutableSelection = this.matches[index].text;
-      this.open = false;
+      }
+      Store.dispatch('SET_VALUE', selected)
+      this.mutableSelection = this.matches[this.current].text
+      this.open = false
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -114,6 +114,10 @@ export default {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+}
+
+.dropdown-content li {
+  list-style-type: none;
 }
 
 /* Change color of dropdown links on hover */

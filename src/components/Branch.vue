@@ -14,64 +14,64 @@
 </template>
 
 <script>
-import Store from "../store/store";
+import Store from '../store/store'
 
 export default {
-  name: "Branch",
-  data() {
+  name: 'Branch',
+  data () {
     return {
       show: true,
       form: {
-        name: "",
+        name: '',
         id: 0
       }
-    };
+    }
   },
   watch: {
-    results() {
-      const results = Store.state.results;
+    results () {
+      const results = Store.state.results
       if (results.error) {
-        return;
+        return
       }
-      this.$router.push({ name: "Branches" });
+      this.$router.push({ name: 'Branches' })
     }
   },
   computed: {
-    results() {
-      return Store.state.results;
+    results () {
+      return Store.state.results
     },
-    isLogged() {
-      return Store.state.user.id;
+    isLogged () {
+      return Store.state.user.id
     },
-    item() {
-      return Store.state.record;
+    item () {
+      return Store.state.record
     }
   },
   methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      Store.dispatch("SAVE_BRANCH", this.form);
+    onSubmit (evt) {
+      evt.preventDefault()
+      Store.dispatch('SAVE_BRANCH', this.form)
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset (evt) {
+      evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
-      this.show = false;
+      this.show = false
       this.$nextTick(() => {
-        this.$router.push({ name: "Branches" });
-      });
+        this.$router.push({ name: 'Branches' })
+      })
     }
   },
-  created() {
+  created () {
     if (!this.isLogged) {
-      this.$router.push({ name: "Login" });
-      return;
+      this.$router.push({ name: 'Login' })
+      return
     }
     if (this.item) {
-      this.form.name = this.item.name;
-      this.form.id = this.item.id;
+      this.form.name = this.item.name
+      this.form.id = this.item.id
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
