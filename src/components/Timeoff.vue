@@ -107,7 +107,7 @@ export default {
       this.$router.push({ name: 'Login' })
       return
     }
-    Store.dispatch("LOAD_EMPLOYEES")
+    Store.dispatch('LOAD_EMPLOYEES')
     if (this.item) {
       this.form.id = this.item.id
       this.form.employee_id = this.item.employee_id
