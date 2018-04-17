@@ -3,11 +3,11 @@
     <h1>Francos</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
-      <b-form-group horizontal id="employee_id" label="Sector" label-for="employee_id">
-        <b-form-select v-model="form.employee_id" :options="employees" class="mb-3" required/>
+      <b-form-group horizontal id="employee_id" label="Empleado" label-for="employee_id">
+        <b-form-select v-model="form.employee_id" :options="employeesOptions" class="mb-3" required/>
       </b-form-group>
 
-      <b-form-group horizontal label="Nombre" label-for="date">
+      <b-form-group horizontal label="Día" label-for="date">
         <b-form-input id="date" type="date" v-model="form.date" required></b-form-input>
       </b-form-group>
 
@@ -34,6 +34,7 @@ export default {
         employee_id: 0,
         date: ''
       },
+      employeesOptions: [],
       show: true,
       errorShow: false,
       errorMessage: ''
@@ -48,17 +49,9 @@ export default {
         return
       }
       this.$router.push({ name: 'Timeoffs' })
-    }
-  },
-  computed: {
-    results () {
-      return Store.state.results
-    },
-    isLogged () {
-      return Store.state.user.id
     },
     employees () {
-      const employees = Store.state.employees.rows
+      const employees = this.employees.rows
       const options = []
       for (let i = 0; i < employees.length; i++) {
         options.push({
@@ -71,7 +64,18 @@ export default {
             employees[i].last_name
         })
       }
-      return options
+      this.employeesOptions = options
+    }
+  },
+  computed: {
+    results () {
+      return Store.state.results
+    },
+    isLogged () {
+      return Store.state.user.id
+    },
+    employees () {
+      return Store.state.employees
     },
     item () {
       return Store.state.record
@@ -103,6 +107,7 @@ export default {
       this.$router.push({ name: 'Login' })
       return
     }
+    Store.dispatch('LOAD_EMPLOYEES')
     if (this.item) {
       this.form.id = this.item.id
       this.form.employee_id = this.item.employee_id

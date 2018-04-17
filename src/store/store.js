@@ -413,7 +413,14 @@ export default new Vuex.Store({
     },
 
     [types.SET_EMPLOYEES_BY_POSITION]: (state, { payload }) => {
-      state.employeesByPosition = payload
+      const rows = payload.rows.filter(item => {
+        return item['employee.branch_id'] === state.budget.rows.branch_id
+      })
+      const result = {
+        count: rows.length,
+        rows: rows
+      }
+      state.employeesByPosition = result
     },
 
     [types.SET_USERS]: (state, { payload }) => {
