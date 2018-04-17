@@ -367,6 +367,18 @@ export default {
       }
       this.employeesOptions = employeesOptions
     },
+    employees () {
+      const employees = this.employees.rows
+      const employeesOptions = []
+      for (let i = 0; i < employees.length; i++) {
+        const employee = employees[i]
+        employeesOptions.push({
+          value: employee['id'],
+          text: `${employee['badge']} ${employee['last_name']}, ${employee['first_name']}`
+        })
+      }
+      this.employeesOptions = employeesOptions
+    },
     selectedEmployee () {
       this.autocompleteEmployeeSelected = this.selectedEmployee
     },
@@ -481,6 +493,9 @@ export default {
   computed: {
     employeesByPosition () {
       return Store.state.employeesByPosition
+    },
+    employees () {
+      return Store.state.employees
     },
     item () {
       return Store.state.record
