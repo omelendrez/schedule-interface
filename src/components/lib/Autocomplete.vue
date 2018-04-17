@@ -24,22 +24,7 @@ export default {
       mutableSelection: this.selection
     }
   },
-  props: {
-    suggestions: {
-      type: Array,
-      required: true,
-      twoWay: true
-    },
-    selection: {
-      type: String,
-      required: true,
-      twoWay: true
-    },
-    fieldType: {
-      type: String,
-      required: true
-    }
-  },
+  props: ['suggestions', 'selection', 'fieldType'],
   computed: {
     matches () {
       return this.mutableSuggestions.filter(str => {
@@ -48,9 +33,7 @@ export default {
     },
     openSuggestion () {
       return (
-        this.mutableSelection !== '' &&
-        this.matches.length !== 0 &&
-        this.open === true
+        this.mutableSelection && this.matches.length && this.open
       )
     }
   },

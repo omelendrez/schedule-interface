@@ -233,7 +233,7 @@ export default {
         employee_id: 0,
         position_id: 0,
         date: this.form.date,
-        branch_id: this.form.branch_id,
+        branch_id: this.budget.branch_id,
         'employee.badge': '',
         'employee.first_name': '',
         'employee.last_name': '',
@@ -356,9 +356,6 @@ export default {
   },
   watch: {
     employeesByPosition () {
-      if (!this.employeesByPosition) {
-        return
-      }
       const employees = this.employeesByPosition.rows
       const employeesOptions = []
       for (let i = 0; i < employees.length; i++) {
@@ -375,6 +372,7 @@ export default {
     },
     selectedPosition () {
       this.autocompletePositionSelected = this.selectedPosition
+      this.employeesOptions = []
       Store.dispatch('LOAD_EMPLOYEES_BY_POSITION', this.selectedPosition)
     },
     results () {
@@ -409,9 +407,6 @@ export default {
       }
     },
     branches () {
-      if (!this.branches.rows) {
-        return
-      }
       const branches = this.branches.rows
       const branchOptions = []
       for (let i = 0; i < branches.length; i++) {
@@ -422,20 +417,6 @@ export default {
       }
       this.branchOptions = branchOptions
     },
-    employees () {
-      if (!this.employees.rows) {
-        return
-      }
-      const employees = this.employees.rows
-      const employeesOptions = []
-      for (let i = 0; i < employees.length; i++) {
-        employeesOptions.push({
-          value: employees[i].id,
-          text: `${employees[i].badge} ${employees[i].last_name}, ${employees[i].first_name}`
-        })
-      }
-      this.employeesOptions = employeesOptions
-    },
     positionSector () {
       const pos = this.positionSector
       const positionsOptions = []
@@ -445,9 +426,6 @@ export default {
       this.positionsOptions = positionsOptions
     },
     employee () {
-      if (!this.employee.employee_positions) {
-        return
-      }
       const timeoff = this.timeoffRows.find(item => {
         return item.id === this.employee.id
       })
@@ -462,9 +440,6 @@ export default {
       this.showWarning = isTimeoff
     },
     schedules () {
-      if (!this.schedules) {
-        return
-      }
       const sch = this.schedules.rows
       const arr = []
       for (let i = 0; i < sch.length; i++) {
@@ -494,9 +469,6 @@ export default {
       })
     },
     timeoff () {
-      if (!this.timeoff) {
-        return
-      }
       const to = this.timeoff
       for (let i = 0; i < to.length; i++) {
         const item = to[i]
@@ -532,9 +504,6 @@ export default {
     },
     results () {
       return Store.state.results
-    },
-    employees () {
-      return Store.state.employees
     },
     employee () {
       return Store.state.employee
