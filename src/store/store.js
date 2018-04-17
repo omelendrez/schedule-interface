@@ -413,6 +413,12 @@ export default new Vuex.Store({
     },
 
     [types.SET_EMPLOYEES_BY_POSITION]: (state, { payload }) => {
+      if (state.user.profile_id !== 1) {
+        payload.rows = payload.rows.filter(item => {
+          return item['employee.branch_id'] === state.user.branch_id
+        })
+        payload.count = payload.rows.length
+      }
       state.employeesByPosition = payload
     },
 
