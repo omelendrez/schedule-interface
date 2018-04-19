@@ -52,6 +52,7 @@ export default {
       currentPage: 1,
       filter: null,
       show: false,
+      reactivating: false,
       errorShow: false,
       errorMessage: '',
       selectedItem: {
@@ -115,7 +116,9 @@ export default {
       this.selectedItem = item
       if (type === 1) {
         this.show = true
+        this.reactivating = false
       } else {
+        this.reactivating = true
         this.handleOk()
       }
     },
@@ -126,8 +129,8 @@ export default {
   watch: {
     results () {
       const results = Store.state.results
-      this.errorShow = results.error
-      this.errorMessage = results.message
+      this.errorShow = this.reactivating ? false : results.error
+      this.errorMessage = this.reactivating ? '' : results.message
       Store.dispatch('LOAD_EMPLOYEES')
     }
   },
