@@ -20,7 +20,7 @@
       </template>
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-        <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
+        <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Eliminar</b-btn>
         <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
       </template>
       <template slot="table-caption">
@@ -30,8 +30,10 @@
 
     <b-pagination :total-rows="employees.count" :per-page="perPage" v-model="currentPage" />
 
-    <b-modal id="modal-center" title="Inactivar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea inactivar al empleado
+    <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
+
+    <b-modal id="modal-center" title="Eliminar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
+      <p class="my-4">Está seguro que desea eliminar al empleado
         <strong>{{ selectedItem.badge }} - {{ selectedItem.first_name }} {{ selectedItem.last_name }}</strong>?</p>
     </b-modal>
 
@@ -50,6 +52,8 @@ export default {
       currentPage: 1,
       filter: null,
       show: false,
+      errorShow: false,
+      errorMessage: '',
       selectedItem: {
         badge: '',
         first_name: '',
@@ -122,9 +126,8 @@ export default {
   watch: {
     results () {
       const results = Store.state.results
-      if (results.error) {
-        return
-      }
+      this.errorShow = results.error
+      this.errorMessage = results.message
       Store.dispatch('LOAD_EMPLOYEES')
     }
   },
