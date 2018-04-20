@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Store from './../../store/store'
+import Store from '../../store/store'
 
 export default {
   name: 'Autocomplete',
@@ -21,24 +21,12 @@ export default {
       open: false,
       current: 0,
       mutableSuggestions: this.suggestions,
-      mutableSelection: this.selection
+      mutableSelection: this.selection,
+      matches: []
     }
   },
   props: ['suggestions', 'selection', 'fieldType'],
-  watch: {
-    userInput () {
-      return this.matches
-    }
-  },
   computed: {
-    userInput () {
-      return this.mutableSelection
-    },
-    matches () {
-      return this.mutableSuggestions.filter(str => {
-        return str.text.toLowerCase().indexOf(this.mutableSelection) >= 0
-      })
-    },
     openSuggestion () {
       return (
         this.mutableSelection && this.matches.length && this.open
@@ -47,10 +35,10 @@ export default {
   },
   methods: {
     enter () {
-      this.doSelect()
+      this.doSelect(false)
     },
-    suggestionClick () {
-      this.doSelect()
+    suggestionClick (index) {
+      this.doSelect(index)
     },
     up () {
       if (this.current > 0) {
@@ -66,18 +54,21 @@ export default {
       return index === this.current
     },
     change () {
+      this.open = this.matches && this.mutableSuggestions && this.mutableSelection
       if (!this.open) {
-        this.open = true
         this.current = 0
       }
+      this.matches = this.suggestions.filter(str => {
+        return str.text.toLowerCase().indexOf(this.mutableSelection) >= 0
+      })
     },
-    doSelect () {
+    doSelect (index) {
       const selected = {
         type: this.fieldType,
-        selected: this.matches[this.current]
+        selected: this.matches[index || this.current]
       }
       Store.dispatch('SET_VALUE', selected)
-      this.mutableSelection = this.matches[this.current].text
+      this.mutableSelection = this.matches[index || this.current].text
       this.open = false
     }
   }

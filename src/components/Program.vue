@@ -494,9 +494,6 @@ export default {
     employeesByPosition () {
       return Store.state.employeesByPosition
     },
-    employees () {
-      return Store.state.employees
-    },
     item () {
       return Store.state.record
     },
@@ -519,9 +516,6 @@ export default {
     },
     results () {
       return Store.state.results
-    },
-    employee () {
-      return Store.state.employee
     },
     isLogged () {
       return Store.state.user.id
