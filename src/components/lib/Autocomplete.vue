@@ -34,12 +34,11 @@ export default {
     }
   },
   methods: {
-
     enter () {
-      this.doSelect()
+      this.doSelect(false)
     },
-    suggestionClick () {
-      this.doSelect()
+    suggestionClick (index) {
+      this.doSelect(index)
     },
     up () {
       if (this.current > 0) {
@@ -63,13 +62,13 @@ export default {
         return str.text.toLowerCase().indexOf(this.mutableSelection) >= 0
       })
     },
-    doSelect () {
+    doSelect (index) {
       const selected = {
         type: this.fieldType,
-        selected: this.matches[this.current]
+        selected: this.matches[index || this.current]
       }
       Store.dispatch('SET_VALUE', selected)
-      this.mutableSelection = this.matches[this.current].text
+      this.mutableSelection = this.matches[index || this.current].text
       this.open = false
     }
   }
