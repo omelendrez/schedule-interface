@@ -4,7 +4,7 @@
     <h1>Presupuestos</h1>
 
     <div class="add-button">
-      <b-button @click="addItem" variant="info">Agregar</b-button>
+      <b-button @click="addItem" variant="info" v-if="isAdmin">Agregar</b-button>
     </div>
 
     <b-form-group class="filter-form">
@@ -16,10 +16,10 @@
 
     <b-table hover outlined :items="budgets.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell">
-        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
+        <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)" v-if="isAdmin">Editar</b-btn>
         <b-btn size="sm" variant="primary" @click.stop="openProgram(cell.item)">Programa</b-btn>
         <b-btn size="sm" variant="success" @click.stop="openGrid(cell.item)">Grilla</b-btn>
-        <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)">Eliminar</b-btn>
+        <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item)" v-if="isAdmin">Eliminar</b-btn>
       </template>
       <template slot="table-caption">
         {{budgets.count}} registros
@@ -57,27 +57,29 @@ export default {
         {
           key: 'weekday',
           label: 'Día',
-          sortable: true,
           class: 'text-center'
         },
         {
           key: 'date',
           label: 'Fecha',
-          sortable: true,
           variant: 'success',
           class: 'text-center'
         },
         {
           key: 'hours',
-          label: 'Total horas',
-          sortable: true,
+          label: 'Horas budget',
+          variant: 'warning',
+          class: 'text-center'
+        },
+        {
+          key: 'program',
+          label: 'Horas programa',
           variant: 'warning',
           class: 'text-center'
         },
         {
           key: 'branch.name',
           label: 'Local',
-          sortable: true,
           variant: 'info',
           class: 'text-center'
         },
@@ -145,6 +147,9 @@ export default {
     },
     budgets () {
       return Store.state.budgets
+    },
+    isAdmin () {
+      return Store.state.user.profile_id === 1
     }
   },
   created () {

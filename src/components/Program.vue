@@ -257,15 +257,28 @@ export default {
       this.form.from = item.from
       this.form.to = item._to
       item.budget_id = this.budget.id
-      this.autocompleteEmployeeSelected = this.employeesOptions.find(
-        emp => item.employee_id === emp.value
-      )
-      this.employeeName = this.autocompleteEmployeeSelected.text
-
       this.autocompletePositionSelected = this.positionsOptions.find(
         emp => item.position_id === emp.value
       )
       this.positionName = this.autocompletePositionSelected.text
+
+      const employees = Store.state.employees.rows
+      const employeesOptions = []
+      for (let i = 0; i < employees.length; i++) {
+        const employee = employees[i]
+        if (employee.id === item.employee_id) {
+          employeesOptions.push({
+            value: employee['id'],
+            text: `${employee['badge']} ${employee['last_name']}, ${employee['first_name']}`
+          })
+        }
+      }
+      this.employeesOptions = employeesOptions
+
+      this.autocompleteEmployeeSelected = this.employeesOptions.find(
+        emp => item.employee_id === emp.value
+      )
+      this.employeeName = this.autocompleteEmployeeSelected.text
 
       Store.dispatch('LOAD_EMPLOYEE', { id: item.employee_id })
     },
