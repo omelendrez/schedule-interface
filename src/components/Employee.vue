@@ -198,7 +198,8 @@ export default {
       }
     },
     results () {
-      this.$router.push({ name: 'Employees' })
+      // this.$router.push({ name: 'Employees' })
+      this.$router.go(-1)
     }
   },
   computed: {
@@ -257,7 +258,8 @@ export default {
       /* Trick to reset/clear native browser form validation state */
       this.form.show = false
       this.$nextTick(() => {
-        this.$router.push({ name: 'Employees' })
+        // this.$router.push({ name: 'Employees' })
+        this.$router.go(-1)
       })
     }
   },

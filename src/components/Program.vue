@@ -330,7 +330,6 @@ export default {
       }
 
       this.form.budget_id = this.budget.id
-      this.form.id = this.form.isNew ? 0 : item.id
       Store.dispatch('SCHEDULE_VERIFY_INPUT', this.form)
     },
     cancelSave (item, index, target) {
