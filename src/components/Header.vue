@@ -14,11 +14,11 @@
         <template v-if="isLogged">
 
           <b-navbar-nav class="admin">
-            <b-nav-item v-bind:active="menuOption === '/branches'" href="#/branches">Locales</b-nav-item>
+            <b-nav-item v-if="isAdmin" v-bind:active="menuOption === '/branches'" href="#/branches">Locales</b-nav-item>
             <b-nav-item v-bind:active="menuOption === '/sectors'" href="#/sectors">Sectores</b-nav-item>
             <b-nav-item v-bind:active="menuOption === '/positions'" href="#/positions">Funciones</b-nav-item>
-            <b-nav-item v-bind:active="menuOption === '/employees'" href="#/employees">Empleados</b-nav-item>
-            <b-nav-item v-bind:active="menuOption === '/users'" href="#/users">Usuarios</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/employees'" class="_employees" href="#/employees">Empleados</b-nav-item>
+            <b-nav-item v-if="isAdmin" v-bind:active="menuOption === '/users'" href="#/users">Usuarios</b-nav-item>
           </b-navbar-nav>
 
           <b-navbar-nav v-if="isLogged">
