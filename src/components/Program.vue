@@ -572,8 +572,6 @@ export default {
 <style scoped>
 .program {
   background-color: white;
-  position: fixed !important;
-  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
