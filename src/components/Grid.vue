@@ -355,8 +355,6 @@ export default {
 <style scoped>
 .grid {
   background-color: white;
-  position: fixed !important;
-  position: absolute;
   font-size: smaller;
   top: 0;
   right: 0;
