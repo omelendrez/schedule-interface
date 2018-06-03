@@ -17,10 +17,6 @@
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
 
-      <div class="add-button no-print">
-        <b-button @click="addItem" variant="info" :disabled="isEditing">Agregar</b-button>
-      </div>
-
       <b-form-group class="filter-form no-print">
         <b-input-group>
           <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
@@ -186,14 +182,6 @@ export default {
           class: 'text-center no-print',
           thStyle: {
             width: '100px'
-          }
-        },
-        {
-          key: 'acciones',
-          label: ' ',
-          class: 'text-center no-print',
-          thStyle: {
-            width: '180px'
           }
         }
       ]
@@ -470,16 +458,16 @@ export default {
         let row = {
           editing: false,
           created_at: sch[i].created_at,
-          'employee.badge': sch[i]['employee.badge'],
-          'employee.first_name': sch[i]['employee.first_name'],
-          'employee.last_name': sch[i]['employee.last_name'],
+          'employee.badge': sch[i].employee.badge,
+          'employee.first_name': sch[i].employee.first_name,
+          'employee.last_name': sch[i].employee.last_name,
           employee_id: sch[i].employee_id,
           from: sch[i].from,
           id: sch[i].id,
-          'position.color': sch[i]['position.color'],
-          'position.name': sch[i]['position.name'],
+          'position.color': sch[i].position.color,
+          'position.name': sch[i].position.name,
           position_id: sch[i].position_id,
-          'sector.name': sch[i]['position.sector.name'],
+          'sector.name': sch[i].position.sector.name,
           sector_id: sch[i].sector_id,
           to: sch[i].to,
           _to: sch[i]._to,
@@ -572,10 +560,6 @@ export default {
 <style scoped>
 .program {
   background-color: white;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
 }
 .load-button {
   margin-bottom: 18px;

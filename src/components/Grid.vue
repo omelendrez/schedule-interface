@@ -2,18 +2,26 @@
   <b-container class="grid" fluid>
     <Header />
 
-    <div v-show="!showForm" class="pull-right no-print">
+    <div class="pull-right no-print">
       <b-btn variant="info" @click.stop="goProgram">Programa</b-btn>
       <b-btn variant="primary" @click.stop="printGrid">Imprimir</b-btn>
       <b-btn variant="success" @click.stop="goBack">Volver</b-btn>
     </div>
 
-    <div v-show="!showForm">
+    <div>
+
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
       <h5>
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
-      <b-table small bordered :items="rows" :fields="fields" head-variant="light">
+
+      <div @click="$refs.Positions.show()" class="position-group">
+        <div class="position">Sector seleccionado:</div>
+        <div class="position-color" v-bind:style="{background:selectedPosition.color}">&nbsp;</div>
+        <div class="position-name">{{selectedPosition.name}}</div>
+      </div>
+
+      <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields" head-variant="light" class="schedule-table">
         <template slot="fullName" slot-scope="data">
           {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
@@ -23,12 +31,28 @@
         <p class="card-text"> {{ footer }} </p>
       </b-card>
 
+      <b-modal ref="Alert" title="Error" size="sm" centered hide-header ok-only>
+        {{alertMessage}}
+      </b-modal>
+
+      <b-modal ref="Positions" title="Sectores" centered ok-only>
+        <b-table small :items="colors" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)" />
+        <hr />
+        <div>
+          <div class="delete-sector" @click="deleteSector"></div>
+          <div class="in-line">Borrar actividad</div>
+        </div>
+        <div>
+          <div class="de-activate" @click="deActivate"></div>
+          <div class="in-line">Desactivar click</div>
+        </div>
+      </b-modal>
+
       <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left">
         <template slot="fullName" slot-scope="data">
           {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
       </b-table>
-      <b-table small :items="colors" :fields="colorFields" head-variant="light" class="compact pull-right" />
 
     </div>
 
@@ -43,11 +67,8 @@ export default {
   name: 'Grid',
   data () {
     return {
-      showForm: false,
-      form: {
-        branch_id: 0,
-        date: ''
-      },
+      showAlert: false,
+      alertMessage: '',
       fields: [
         {
           key: 'fullName',
@@ -158,9 +179,14 @@ export default {
           class: 'text-center p-0 pt-1'
         }
       ],
-      rows: [],
+      scheduleRows: [],
       colors: [],
       timeoffRows: [],
+      clickActive: true,
+      selectedPosition: {
+        name: ''
+      },
+      text: 'Haga click aquí para seleccionar un Sector',
       colorFields: [
         {
           key: 'color',
@@ -189,99 +215,16 @@ export default {
   components: {
     Header
   },
-  methods: {
-    goProgram () {
-      this.$router.push({ name: 'Program' })
-    },
-    goBack () {
-      this.$router.push({ name: 'Budgets' })
-    },
-    printGrid () {
-      this.$nextTick(() => {
-        window.print()
-      })
-    },
-    loadData () {
-      const data = {
-        date: this.form.date,
-        branch_id: this.form.branch_id
-      }
-      Store.dispatch('LOAD_SCHEDULES', data)
-    },
-    loadGrid () {
-      const data = Store.state.schedules.rows
-      let i = 0
-      let employeeId = 0
-      let record = {}
-      let colors = {}
-      const rows = []
-      const colorRows = []
-      const hours = []
-      while (i < data.length) {
-        const item = data[i]
-        if (!hours[item.position_id]) {
-          hours[item.position_id] = 0
-        }
-        hours[item.position_id] = hours[item.position_id] + (item.to - item.from)
-        colors.position_id = item.position_id
-        colors.sector_position = `${item['position.sector.name']} / ${item['position.name']}`
-        colors.color = `<div style="background-color:${item['position.color']}">&nbsp;&nbsp;&nbsp;&nbsp;</div>`
-        if (
-          !colorRows.find(child => {
-            return (
-              child.sector_position === `${item['position.sector.name']} / ${item['position.name']}`
-            )
-          })
-        ) {
-          colorRows.push(colors)
-        }
-        colors = {}
-        if (item.employee_id !== employeeId) {
-          if (employeeId !== 0) {
-            rows.push(record)
-            record = {}
-          }
-          employeeId = item.employee_id
-          record.id = item['id']
-          record.badge = item['employee.badge']
-          record.first_name = item['employee.first_name']
-          record.last_name = item['employee.last_name']
-          record.sector = item['position.sector.name']
-          record.position = item['position.name']
-        }
-        for (let i = 1; i < 27; i++) {
-          let hour = `0${i.toString()}`
-          hour = hour.substr(hour.length - 2)
-          if (item['from'] <= i && item['to'] > i) {
-            record[`h${hour}`] = `<div title="${item['position.name']}" style="background-color:${item['position.color']}">&nbsp;</div>`
-          }
-        }
-        i++
-      }
-      rows.push(record)
-      if (rows[0].id) {
-        this.rows = rows
-        const colorsRows = colorRows.map(item => {
-          item.hours = hours[item.position_id]
-          return item
-        })
-        colorsRows.sort(this.compare)
-        this.colors = colorsRows
-      }
-    },
-    compare (a, b) {
-      if (a.sector_position < b.sector_position) {
-        return -1
-      }
-      if (a.sector_position > b.sector_position) {
-        return 1
-      }
-      return 0
-    }
-  },
   watch: {
+    results () {
+      this.loadData()
+    },
+    schedule () {
+      const rows = this.schedule.rows
+      this.loadGrid(rows)
+    },
     budgetTimeoffs () {
-      const items = Store.state.budgetTimeoffs.rows
+      const items = this.budgetTimeoffs.rows
       const list = []
       for (let i = 0; i < items.length; i++) {
         let item = {
@@ -293,48 +236,162 @@ export default {
       }
       this.timeoffRows = list
     },
-    schedules () {
-      this.loadGrid()
+    positions () {
+      const colors = []
+      const positions = this.positions.rows
+      for (let i = 0; i < positions.length; i++) {
+        const pos = positions[i]
+        let color = {}
+        color.color = pos.div
+        color.hours = 0
+        color.sector_position = `${pos['sector.name']} - ${pos['name']}`
+        colors.push(color)
+      }
+      this.colors = colors
     }
   },
   computed: {
-    item () {
+    results () {
+      return Store.state.results
+    },
+    record () {
       return Store.state.record
     },
     budget () {
       return Store.state.budget.rows
     },
-    budgetTimeoffs () {
-      return Store.state.budgetTimeoffs
+    schedule () {
+      return Store.state.schedule
     },
     totalHoursBudget () {
       return Store.state.budget.rows.hours
     },
     totalScheduledHours () {
-      return Store.state.schedules.scheduled
+      return Store.state.schedule.scheduled
     },
     footer () {
       return Store.state.budget.rows.footer
     },
+    budgetTimeoffs () {
+      return Store.state.budgetTimeoffs
+    },
+    positions () {
+      return Store.state.positions
+    },
     isLogged () {
       return Store.state.user.id
+    }
+  },
+  methods: {
+    loadGrid (rows) {
+      this.scheduleRows = []
+      rows.map(emp => {
+        let Employee = {}
+        Employee.id = emp.id
+        Employee.badge = emp.badge
+        Employee.first_name = emp.first_name
+        Employee.last_name = emp.last_name
+        const record = {
+          id: 0,
+          budget_id: this.record.id,
+          position_id: 0,
+          position: {
+            color: ''
+          }
+        }
+        for (let i = 1; i < 27; i++) {
+          const hour = i < 10 ? `0${i.toString()}` : `${i.toString()}`
+          this.fillCell(Employee, record, hour)
+        }
+        const data = emp.schedules
+        if (data.length) {
+          for (let i = 0; i < data.length; i++) {
+            const rec = data[i]
+            for (var h = rec.from; h < rec.to; h++) {
+              const hour = h < 10 ? `0${h.toString()}` : `${h.toString()}`
+              this.fillCell(Employee, rec, hour)
+            }
+          }
+        }
+        this.scheduleRows.push(Employee)
+      })
     },
-    schedules () {
-      return Store.state.schedules
+    fillCell (Employee, rec, h) {
+      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color};cursor:pointer">&nbsp;</div>`
     },
-    dataOk () {
-      return this.form.date !== '' && this.form.branch_id !== 0
-    },
-    branches () {
-      const branches = Store.state.branches.rows
-      const options = []
-      for (let i = 0; i < branches.length; i++) {
-        options.push({
-          value: branches[i].id,
-          text: branches[i].name
-        })
+    selectCell (item) {
+      const data = item.target.dataset
+      if (data.recordId) {
+        if (!this.selectedPosition.id) {
+          this.alertMessage = 'Debe seleccionar un Sector'
+          if (this.clickActive) {
+            this.$refs.Alert.show()
+          }
+          return
+        }
+        const record = {
+          id: parseInt(data.recordId),
+          budget_id: parseInt(data.budgetId),
+          position_id: parseInt(this.selectedPosition.id),
+          employee_id: parseInt(data.employeeId),
+          from: parseInt(data.hour),
+          to: parseInt(data.hour) + 1
+        }
+        if (this.selectedPosition.id === -1) {
+          if (record.id !== 0) {
+            Store.dispatch('DELETE_SCHEDULE', record)
+          }
+        } else {
+          Store.dispatch('SAVE_SCHEDULE', record)
+        }
       }
-      return options
+    },
+    selectPosition (item) {
+      const data = item.target.dataset
+      if (data.positionId) {
+        const pos = {
+          id: data.positionId,
+          name: data.positionName,
+          color: data.positionColor
+        }
+        this.selectedPosition = pos
+      }
+    },
+    deleteSector () {
+      const pos = {
+        id: -1,
+        name: 'Borrar actividad',
+        color: 'red'
+      }
+      this.selectedPosition = pos
+    },
+    deActivate () {
+      const pos = {
+        id: 0,
+        name: this.text,
+        color: '#ccc'
+      }
+      this.selectedPosition = pos
+      this.clickActive = false
+    },
+    loadData () {
+      const data = {
+        date: this.record._date,
+        branch_id: this.record.branch_id
+      }
+      Store.dispatch('LOAD_SCHEDULE', data)
+      Store.dispatch('LOAD_BUDGET_TIMEOFF', this.record._date)
+    },
+    goProgram () {
+      this.$router.push({ name: 'Program' })
+    },
+    goBack () {
+      this.$router.push({ name: 'Budgets' })
+    },
+    printGrid () {
+      this.$nextTick(() => {
+        window.print()
+      })
     }
   },
   created () {
@@ -342,11 +399,9 @@ export default {
       this.$router.push({ name: 'Login' })
     }
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
-    this.showForm = false
-    this.form.branch_id = this.item.branch_id
-    this.form.date = this.item._date
+    Store.dispatch('LOAD_POSITIONS')
     this.loadData()
-    Store.dispatch('LOAD_BUDGET_TIMEOFF', this.item._date)
+    this.selectedPosition.name = this.text
   }
 }
 </script>
@@ -355,11 +410,6 @@ export default {
 <style scoped>
 .grid {
   background-color: white;
-  font-size: smaller;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
 }
 @media print {
   table {
@@ -383,6 +433,48 @@ export default {
 }
 .compact {
   width: auto;
-  background-color: white;
+}
+.position {
+  display: inline-block;
+}
+.position-name {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.position-color {
+  width: 21px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #ccc;
+}
+.position-group {
+  cursor: pointer;
+}
+.in-line {
+  height: 30px;
+  display: inline-block;
+  margin-left: 14px;
+  vertical-align: middle;
+}
+.delete-sector {
+  display: inline-block;
+  width: 21px;
+  height: 21px;
+  border-radius: 4px;
+  margin-left: 14px;
+  cursor: pointer;
+  border: 1px solid red;
+}
+.de-activate {
+  display: inline-block;
+  width: 21px;
+  height: 21px;
+  border-radius: 4px;
+  margin-left: 14px;
+  cursor: pointer;
+  border: 1px solid #ccc;
 }
 </style>
