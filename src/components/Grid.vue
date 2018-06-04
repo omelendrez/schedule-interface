@@ -31,7 +31,7 @@
         <p class="card-text"> {{ footer }} </p>
       </b-card>
 
-      <b-modal ref="Alert" title="Error" size="sm" centered hide-header ok-only>
+      <b-modal ref="Alert" header-bg-variant="info" title="Confirmación requerida" centered header="danger">
         {{alertMessage}}
       </b-modal>
 
@@ -182,7 +182,6 @@ export default {
       scheduleRows: [],
       colors: [],
       timeoffRows: [],
-      clickActive: true,
       selectedPosition: {
         name: ''
       },
@@ -323,10 +322,7 @@ export default {
       const data = item.target.dataset
       if (data.recordId) {
         if (!this.selectedPosition.id) {
-          this.alertMessage = 'Debe seleccionar un Sector'
-          if (this.clickActive) {
-            this.$refs.Alert.show()
-          }
+          this.$refs.Positions.show()
           return
         }
         const record = {
@@ -372,7 +368,6 @@ export default {
         color: '#ccc'
       }
       this.selectedPosition = pos
-      this.clickActive = false
     },
     loadData () {
       const data = {
