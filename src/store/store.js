@@ -35,6 +35,7 @@ const state = {
   positionSector: [],
   profiles: [],
   schedules: [],
+  schedule: [],
   timeoffs: [],
   budgetTimeoffs: [],
   status: [],
@@ -182,6 +183,13 @@ export default new Vuex.Store({
       const schedules = await Schedule.fetchBudgetSchedules(payload)
       commit(types.SET_SCHEDULES, {
         payload: schedules.data
+      })
+    },
+
+    async [types.LOAD_SCHEDULE] ({ commit }, payload) {
+      const schedule = await Schedule.fetchSchedule(payload)
+      commit(types.SET_SCHEDULE, {
+        payload: schedule.data
       })
     },
 
@@ -366,7 +374,7 @@ export default new Vuex.Store({
           created_at: positions[i].created_at,
           name: positions[i].name,
           color: positions[i].color,
-          div: `<div style='background-color:${positions[i].color};width:90px;border-radius:4px' class='mx-auto'>&nbsp</div>`,
+          div: `<div data-position-id='${positions[i].id}' data-position-name='${positions[i]['sector.name']} - ${positions[i].name}' data-position-color='${positions[i].color}' style='background-color:${positions[i].color};width:21px;border-radius:4px;cursor:pointer' class='mx-auto'>&nbsp</div>`,
           sector_id: positions[i].sector_id,
           updated_at: positions[i].updated_at,
           'sector.name': positions[i]['sector.name']
@@ -456,6 +464,20 @@ export default new Vuex.Store({
       }
       payload.rows = bud
       state.budgets = payload
+    },
+
+    [types.SET_SCHEDULE]: (state, { payload }) => {
+      const rows = payload.schedule.rows
+      let hours = 0
+      for (let i = 0; i < rows.length; i++) {
+        const schedules = rows[i].schedules
+        for (let j = 0; j < schedules.length; j++) {
+          const sch = schedules[j]
+          hours = hours + sch.to - sch.from
+        }
+      }
+      payload.schedule.scheduled = hours
+      state.schedule = payload.schedule
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {
