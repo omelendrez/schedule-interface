@@ -33,7 +33,7 @@
         </template>
 
         <template slot="from" slot-scope="row">
-          {{row.item["from"]}}
+          {{row.item["_from"]}}
         </template>
 
         <template slot="_to" slot-scope="row">
@@ -41,7 +41,7 @@
         </template>
 
         <template slot="hours" slot-scope="row">
-
+          {{row.item["hours"]}}
         </template>
 
         <template slot="table-caption">
@@ -120,7 +120,7 @@ export default {
     },
     loadData () {
       const data = {
-        date: this.item.date,
+        date: this.item._date,
         branch_id: this.item.branch_id
       }
       Store.dispatch('LOAD_SCHEDULES', data)
@@ -130,26 +130,20 @@ export default {
     schedules () {
       const sch = this.schedules.rows
       const arr = []
-      let group = ''
       for (let i = 0; i < sch.length; i++) {
         let row = {
           'employee.badge': sch[i].employee.badge,
           'employee.first_name': sch[i].employee.first_name,
           'employee.last_name': sch[i].employee.last_name,
-          employee_id: sch[i].employee_id,
           from: sch[i].from,
-          'position.color': sch[i].position.color,
+          _from: sch[i]._from,
           'position.name': sch[i].position.name,
-          position_id: sch[i].position_id,
           'sector.name': sch[i].position.sector.name,
-          sector_id: sch[i].sector_id,
           to: sch[i].to,
-          _to: sch[i]._to
+          _to: sch[i]._to,
+          hours: sch[i].to - sch[i].from
         }
-        if (group !== sch[i].employee.badge + sch[i].position.sector.name + sch[i].position.name) {
-          group = sch[i].employee.badge + sch[i].position.sector.name + sch[i].position.name
-          arr.push(row)
-        }
+        arr.push(row)
       }
       this.scheduleRows = arr
     }

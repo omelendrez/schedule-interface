@@ -324,7 +324,7 @@ export default {
             color: ''
           }
         }
-        for (let i = 1; i < 27; i++) {
+        for (let i = 6; i < 26; i++) {
           const hour = i < 10 ? `0${i.toString()}` : `${i.toString()}`
           this.fillCell(Employee, record, hour)
         }
