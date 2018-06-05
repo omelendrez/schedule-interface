@@ -478,6 +478,11 @@ export default new Vuex.Store({
       }
       payload.schedule.scheduled = hours
       state.schedule = payload.schedule
+      const bud = payload.budget.rows
+      const weekdays = Budgets.weekdays
+      bud.weekday = weekdays[bud.weekday]
+      payload.budget.rows = bud
+      state.budget = payload.budget
     },
 
     [types.SET_SCHEDULES]: (state, { payload }) => {

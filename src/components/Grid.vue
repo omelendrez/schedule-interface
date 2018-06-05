@@ -15,12 +15,12 @@
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
 
-      <div @click="$refs.Positions.show()" class="position-group">
+      <div @click="showPositions = true" class="position-group">
         <div class="position">Sector seleccionado:</div>
         <div class="position-color" v-bind:style="{background:selectedPosition.color}">&nbsp;</div>
         <div class="position-name">{{selectedPosition.name}}</div>
+        <div class="pull-right error" :show="showError">{{ errorMessage }}</div>
       </div>
-
       <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields" head-variant="light" class="schedule-table">
         <template slot="fullName" slot-scope="data">
           {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
@@ -31,12 +31,12 @@
         <p class="card-text"> {{ footer }} </p>
       </b-card>
 
-      <b-modal ref="Alert" header-bg-variant="info" title="Confirmación requerida" centered header="danger">
-        {{alertMessage}}
+      <b-modal v-model="showAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered @ok="handleOk" ok-title="Si. Continuar" cancel-title="No. Dejar como está" cancel-variant="danger">
+        <strong>{{alertMessage}}.</strong> Querés continuar?
       </b-modal>
 
-      <b-modal ref="Positions" title="Sectores" centered ok-only>
-        <b-table small :items="colors" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)" />
+      <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" centered ok-only>
+        <b-table small :items="positionRows" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)" />
         <hr />
         <div>
           <div class="delete-sector" @click="deleteSector"></div>
@@ -62,13 +62,15 @@
 <script>
 import Store from '../store/store'
 import Header from './Header'
+import { hoursLimit } from './../store/constants'
 
 export default {
   name: 'Grid',
   data () {
     return {
-      showAlert: false,
       alertMessage: '',
+      showError: false,
+      errorMessage: '',
       fields: [
         {
           key: 'fullName',
@@ -177,11 +179,20 @@ export default {
           key: 'h25',
           label: '01',
           class: 'text-center p-0 pt-1'
+        },
+        {
+          key: 'hours',
+          label: 'Horas',
+          class: 'text-center p-0 pt-1'
         }
       ],
       scheduleRows: [],
-      colors: [],
+      positionRows: [],
       timeoffRows: [],
+      recordData: {},
+      showAlert: false,
+      showPositions: false,
+      weekday: null,
       selectedPosition: {
         name: ''
       },
@@ -216,10 +227,11 @@ export default {
   },
   watch: {
     results () {
-      this.loadData()
+      Store.dispatch('LOAD_POSITIONS')
     },
     schedule () {
       const rows = this.schedule.rows
+      this.weekday = this.budget._weekday
       this.loadGrid(rows)
     },
     budgetTimeoffs () {
@@ -236,17 +248,19 @@ export default {
       this.timeoffRows = list
     },
     positions () {
-      const colors = []
+      const positionRows = []
       const positions = this.positions.rows
       for (let i = 0; i < positions.length; i++) {
         const pos = positions[i]
-        let color = {}
-        color.color = pos.div
-        color.hours = 0
-        color.sector_position = `${pos['sector.name']} - ${pos['name']}`
-        colors.push(color)
+        let position = {}
+        position.color = pos.div
+        position.hours = 0
+        position.id = pos.id
+        position.sector_position = `${pos['sector.name']} - ${pos['name']}`
+        positionRows.push(position)
       }
-      this.colors = colors
+      this.positionRows = positionRows
+      this.loadData()
     }
   },
   computed: {
@@ -286,14 +300,26 @@ export default {
       this.scheduleRows = []
       rows.map(emp => {
         let Employee = {}
+        const blockers = emp.availabilities
+        Employee.blockedFrom = null
+        Employee.blockedTo = null
+        for (let i = 0; i < blockers.length; i++) {
+          const blk = blockers[i]
+          if (blk.week_day === this.weekday) {
+            Employee.blockedFrom = blk.from
+            Employee.blockedTo = blk.to
+          }
+        }
         Employee.id = emp.id
         Employee.badge = emp.badge
         Employee.first_name = emp.first_name
         Employee.last_name = emp.last_name
+        Employee.hours = 0
         const record = {
           id: 0,
           budget_id: this.record.id,
           position_id: 0,
+          hours: 0,
           position: {
             color: ''
           }
@@ -306,10 +332,25 @@ export default {
         if (data.length) {
           for (let i = 0; i < data.length; i++) {
             const rec = data[i]
+            const hours = (parseInt(rec.to) - parseInt(rec.from))
+            Employee.hours += hours
+            this.positionRows.map(pos => {
+              if (pos.id === rec.position_id) {
+                pos.hours += hours
+              }
+              return pos
+            })
             for (var h = rec.from; h < rec.to; h++) {
               const hour = h < 10 ? `0${h.toString()}` : `${h.toString()}`
               this.fillCell(Employee, rec, hour)
             }
+          }
+          if (Employee.hours < 4) {
+            this.errorMessage = 'ATENCIÓN! Tenés empleados con menos de 4 horas asignadas'
+            this.showError = true
+          } else {
+            this.errorMessage = ''
+            this.showError = false
           }
         }
         this.scheduleRows.push(Employee)
@@ -322,7 +363,7 @@ export default {
       const data = item.target.dataset
       if (data.recordId) {
         if (!this.selectedPosition.id) {
-          this.$refs.Positions.show()
+          this.showPositions = true
           return
         }
         const record = {
@@ -333,14 +374,42 @@ export default {
           from: parseInt(data.hour),
           to: parseInt(data.hour) + 1
         }
+        this.recordData = record
+        let showAlert = false
         if (this.selectedPosition.id === -1) {
           if (record.id !== 0) {
             Store.dispatch('DELETE_SCHEDULE', record)
           }
         } else {
-          Store.dispatch('SAVE_SCHEDULE', record)
+          this.scheduleRows.map(emp => {
+            if (emp.id === parseInt(data.employeeId)) {
+              if (parseInt(data.recordId) === 0) {
+                if (emp.hours + 1 > hoursLimit) {
+                  this.alertMessage = `Le estás asignando más de 8 horas a ${emp.first_name} ${emp.last_name}`
+                  showAlert = true
+                }
+                if (emp.blockedFrom) {
+                  if (data.hour >= emp.blockedFrom && data.hour <= emp.blockedTo - 1) {
+                    this.alertMessage = `${emp.first_name} ${emp.last_name} tiene bloquedo de ${emp.blockedFrom} hs a ${emp.blockedTo} hs para este día de la semana`
+                    showAlert = true
+                  }
+                }
+              }
+            }
+          })
+          if (showAlert) {
+            this.showAlert = true
+          } else {
+            this.saveSchedule()
+          }
         }
       }
+    },
+    handleOk () {
+      this.saveSchedule()
+    },
+    saveSchedule () {
+      Store.dispatch('SAVE_SCHEDULE', this.recordData)
     },
     selectPosition (item) {
       const data = item.target.dataset
@@ -395,7 +464,6 @@ export default {
     }
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
     Store.dispatch('LOAD_POSITIONS')
-    this.loadData()
     this.selectedPosition.name = this.text
   }
 }
@@ -471,5 +539,9 @@ export default {
   margin-left: 14px;
   cursor: pointer;
   border: 1px solid #ccc;
+}
+.error {
+  color: red;
+  font-weight: bold;
 }
 </style>
