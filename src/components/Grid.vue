@@ -324,7 +324,7 @@ export default {
             color: ''
           }
         }
-        for (let i = 1; i < 27; i++) {
+        for (let i = 6; i < 26; i++) {
           const hour = i < 10 ? `0${i.toString()}` : `${i.toString()}`
           this.fillCell(Employee, record, hour)
         }
@@ -357,7 +357,7 @@ export default {
       })
     },
     fillCell (Employee, rec, h) {
-      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color};cursor:pointer">&nbsp;</div>`
+      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color};cursor:pointer" title="${rec.position.name}">&nbsp;</div>`
     },
     selectCell (item) {
       const data = item.target.dataset

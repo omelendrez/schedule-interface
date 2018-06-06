@@ -504,6 +504,8 @@ export default new Vuex.Store({
         }
         const to = parseInt(item.to)
         item['_to'] = to > 24 ? to - 24 : to
+        const from = parseInt(item.from)
+        item['_from'] = from > 24 ? from - 24 : from
         return item
       })
       state.schedules = payload.schedule
