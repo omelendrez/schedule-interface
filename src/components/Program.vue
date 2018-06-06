@@ -130,21 +130,40 @@ export default {
     schedules () {
       const sch = this.schedules.rows
       const arr = []
+      let row = {}
+      let from = null
+      let _from = null
       for (let i = 0; i < sch.length; i++) {
-        let row = {
+        from = from ? from : sch[i].from
+        _from = _from ? _from : sch[i]._from
+        row = {
           'employee.badge': sch[i].employee.badge,
           'employee.first_name': sch[i].employee.first_name,
           'employee.last_name': sch[i].employee.last_name,
-          from: sch[i].from,
-          _from: sch[i]._from,
+          from: from,
+          _from: _from,
           'position.name': sch[i].position.name,
           'sector.name': sch[i].position.sector.name,
           to: sch[i].to,
           _to: sch[i]._to,
-          hours: sch[i].to - sch[i].from
         }
-        arr.push(row)
+        if (
+          (i < sch.length - 1) &&
+          (
+            (sch[i].employee.badge !== sch[i + 1].employee.badge) ||
+            (sch[i].position_id !== sch[i + 1].position_id) ||
+            (sch[i].sector_id !== sch[i + 1].sector_id) ||
+            (sch[i].to !== sch[i + 1].from)
+          )
+        ) {
+          row.hours = row.to - row.from
+          arr.push(row)
+          from = null
+          _from = null
+        }
       }
+      row.hours = row.to - row.from
+      arr.push(row)
       this.scheduleRows = arr
     }
   },
