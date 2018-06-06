@@ -29,6 +29,7 @@ module.exports = {
     "semi": ["error", "never"],
     "quotes": ["error", "single"],
     "no-unused-vars": "warn",
+    "no-unneeded-ternary": "warn",
     "no-console": "warn",
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

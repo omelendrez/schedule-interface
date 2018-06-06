@@ -134,8 +134,8 @@ export default {
       let from = null
       let _from = null
       for (let i = 0; i < sch.length; i++) {
-        from = from ? from : sch[i].from
-        _from = _from ? _from : sch[i]._from
+        from = from || sch[i].from
+        _from = _from || sch[i]._from
         row = {
           'employee.badge': sch[i].employee.badge,
           'employee.first_name': sch[i].employee.first_name,
@@ -145,7 +145,7 @@ export default {
           'position.name': sch[i].position.name,
           'sector.name': sch[i].position.sector.name,
           to: sch[i].to,
-          _to: sch[i]._to,
+          _to: sch[i]._to
         }
         if (
           (i < sch.length - 1) &&
