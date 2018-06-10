@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import Absenteeisms from './../services/absenteeisms'
 import Branches from './../services/branches'
 import Budgets from './../services/budgets'
 import Sectors from './../services/sectors'
@@ -38,6 +39,7 @@ const state = {
   schedule: [],
   timeoffs: [],
   budgetTimeoffs: [],
+  absenteeisms: [],
   status: [],
   employees: [],
   employee: [],
@@ -102,6 +104,42 @@ export default new Vuex.Store({
         payload: branches.data
       })
     },
+
+    async [types.SAVE_BRANCH] ({ commit }, item) {
+      const branch = await Branches.saveBranch(item)
+      commit(types.SET_RESULTS, {
+        payload: branch.data
+      })
+    },
+
+    async [types.DELETE_BRANCH] ({ commit }, item) {
+      const branch = await Branches.deleteBranch(item.id)
+      commit(types.SET_RESULTS, {
+        payload: branch.data
+      })
+    },
+
+    async [types.LOAD_ABSENTEEISMS] ({ commit }) {
+      const absenteeisms = await Absenteeisms.fetchAbsenteeisms()
+      commit(types.SET_ABSENTEEISMS, {
+        payload: absenteeisms.data
+      })
+    },
+
+    async [types.SAVE_ABSENTEEISM] ({ commit }, item) {
+      const absenteeism = await Absenteeisms.saveAbsenteeism(item)
+      commit(types.SET_RESULTS, {
+        payload: absenteeism.data
+      })
+    },
+
+    async [types.DELETE_ABSENTEEISM] ({ commit }, item) {
+      const absenteeism = await Absenteeisms.deleteAbsenteeism(item.id)
+      commit(types.SET_RESULTS, {
+        payload: absenteeism.data
+      })
+    },
+
     async [types.LOAD_SECTORS] ({ commit }) {
       const sectors = await Sectors.fetchSectors()
       commit(types.SET_SECTORS, {
@@ -204,20 +242,6 @@ export default new Vuex.Store({
       const timeoffs = await Timeoffs.findByDate(payload)
       commit(types.SET_BUDGET_TIMEOFF, {
         payload: timeoffs.data
-      })
-    },
-
-    async [types.SAVE_BRANCH] ({ commit }, item) {
-      const branch = await Branches.saveBranch(item)
-      commit(types.SET_RESULTS, {
-        payload: branch.data
-      })
-    },
-
-    async [types.DELETE_BRANCH] ({ commit }, item) {
-      const branch = await Branches.deleteBranch(item.id)
-      commit(types.SET_RESULTS, {
-        payload: branch.data
       })
     },
 
@@ -358,6 +382,10 @@ export default new Vuex.Store({
         payload.count = payload.rows.length
       }
       state.branches = payload
+    },
+
+    [types.SET_ABSENTEEISMS]: (state, { payload }) => {
+      state.absenteeisms = payload
     },
 
     [types.SET_SECTORS]: (state, { payload }) => {
