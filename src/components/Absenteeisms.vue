@@ -1,9 +1,9 @@
 <template>
-  <b-container class="timeoffs" fluid>
+  <b-container class="absenteeisms" fluid>
     <Header />
-    <h1>Ausencias</h1>
+    <h1>Ausentismo</h1>
 
-    <div class="add-button">
+    <div class="add-button" v-if="isAdmin">
       <b-button @click="addItem" variant="info">Agregar</b-button>
     </div>
 
@@ -14,21 +14,22 @@
       </b-input-group>
     </b-form-group>
 
-    <b-table hover outlined :items="timeoffs.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
-      <template slot="acciones" slot-scope="cell">
+    <b-table hover outlined :items="absenteeisms.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+      <template slot="acciones" slot-scope="cell" v-if="isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
-        <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item, 1)">Eliminar</b-btn>
+        <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">Inactivar</b-btn>
+        <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
       </template>
       <template slot="table-caption">
-        {{timeoffs.count}} registros
+        {{absenteeisms.count}} registros
       </template>
     </b-table>
 
-    <b-pagination :total-rows="timeoffs.count" :per-page="perPage" v-model="currentPage" />
+    <b-pagination :total-rows="absenteeisms.count" :per-page="perPage" v-model="currentPage" />
 
-    <b-modal id="modal-center" title="Eliminar franco" v-model="show" @ok="handleOk" ok-title="Si. Eliminar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea eliminar el franco
-        <strong>{{ selectedItem.first_name }} {{ selectedItem.last_name }} {{ selectedItem.date }} </strong>?</p>
+    <b-modal id="modal-center" title="Inactivar local" v-model="show" @ok="handleOk" ok-title="Si. Inactivar" cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
+      <p class="my-4">Está seguro que desea inactivar el ausentismo
+        <strong>{{ selectedItem.name }} </strong>?</p>
     </b-modal>
 
   </b-container>
@@ -39,7 +40,7 @@ import Store from '../store/store'
 import Header from './Header'
 
 export default {
-  name: 'Timeoffs',
+  name: 'Absenteeisms',
   data () {
     return {
       perPage: 10,
@@ -47,32 +48,17 @@ export default {
       filter: null,
       show: false,
       selectedItem: {
-        date: ''
+        name: ''
       },
       fields: [
         {
-          key: 'employee.badge',
-          label: 'Legajo',
-          sortable: true
-        },
-        {
-          key: 'employee.first_name',
+          key: 'name',
           label: 'Nombre',
           sortable: true
         },
         {
-          key: 'employee.last_name',
-          label: 'Apellido',
-          sortable: true
-        },
-        {
-          key: 'absenteeism.name',
-          label: 'Tipo',
-          class: 'text-center'
-        },
-        {
-          key: 'date',
-          label: 'Día',
+          key: 'status.name',
+          label: 'Status',
           class: 'text-center'
         },
         {
@@ -84,10 +70,6 @@ export default {
           key: 'updated_at',
           label: 'Modificado',
           class: 'text-center'
-        },
-        {
-          key: 'acciones',
-          class: 'text-center'
         }
       ]
     }
@@ -97,12 +79,12 @@ export default {
   },
   methods: {
     addItem () {
-      Store.dispatch('ADD_ITEM', { id: 0, date: '', employee_id: 0, absenteeism_id: 0, color: '' })
-      this.$router.push({ name: 'Timeoff' })
+      Store.dispatch('ADD_ITEM', { id: 0, name: '' })
+      this.$router.push({ name: 'Absenteeism' })
     },
     editItem (item) {
       Store.dispatch('ADD_ITEM', item)
-      this.$router.push({ name: 'Timeoff' })
+      this.$router.push({ name: 'Absenteeism' })
     },
     deleteItem (item, type) {
       this.selectedItem = item
@@ -113,7 +95,7 @@ export default {
       }
     },
     handleOk () {
-      Store.dispatch('DELETE_TIMEOFF', this.selectedItem)
+      Store.dispatch('DELETE_ABSENTEEISM', this.selectedItem)
     }
   },
   watch: {
@@ -122,18 +104,21 @@ export default {
       if (results.error) {
         return
       }
-      Store.dispatch('LOAD_TIMEOFFS')
+      Store.dispatch('LOAD_ABSENTEEISMS')
     }
   },
   computed: {
     results () {
       return Store.state.results
     },
+    isAdmin () {
+      return Store.state.user.profile_id === 1
+    },
     isLogged () {
       return Store.state.user.id
     },
-    timeoffs () {
-      return Store.state.timeoffs
+    absenteeisms () {
+      return Store.state.absenteeisms
     }
   },
   created () {
@@ -142,15 +127,21 @@ export default {
       return
     }
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
-    Store.dispatch('LOAD_TIMEOFFS')
-    Store.dispatch('LOAD_EMPLOYEES')
+    Store.dispatch('LOAD_ABSENTEEISMS')
+    if (this.isAdmin) {
+      this.fields.push(
+        {
+          key: 'acciones',
+          class: 'text-center'
+        })
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.timeoffs {
+.absenteeisms {
   background-color: white;
   padding-bottom: 10px;
 }

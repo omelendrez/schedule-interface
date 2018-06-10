@@ -1,10 +1,14 @@
 <template>
   <b-container class="timeoff">
-    <h1>Francos</h1>
+    <h1>Ausencia</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
 
       <b-form-group horizontal id="employee_id" label="Empleado" label-for="employee_id">
         <b-form-select v-model="form.employee_id" :options="employeesOptions" class="mb-3" required/>
+      </b-form-group>
+
+      <b-form-group horizontal id="absenteeism_id" label="Type de Ausentismo" label-for="absenteeism_id">
+        <b-form-select v-model="form.absenteeism_id" :options="absenteeismsOptions" class="mb-3" required/>
       </b-form-group>
 
       <b-form-group horizontal label="Día" label-for="date">
@@ -32,9 +36,11 @@ export default {
       form: {
         id: 0,
         employee_id: 0,
+        absenteeism_id: 0,
         date: ''
       },
       employeesOptions: [],
+      absenteeismsOptions: [],
       show: true,
       errorShow: false,
       errorMessage: ''
@@ -59,12 +65,24 @@ export default {
           text:
             employees[i].badge +
             ' - ' +
-            employees[i].first_name +
-            ' ' +
-            employees[i].last_name
+            employees[i].last_name +
+            ', ' +
+            employees[i].first_name
         })
       }
       this.employeesOptions = options
+    },
+    absenteeisms () {
+      const absenteeisms = this.absenteeisms.rows
+      const options = []
+      for (let i = 0; i < absenteeisms.length; i++) {
+        options.push({
+          value: absenteeisms[i].id,
+          text:
+            absenteeisms[i].name
+        })
+      }
+      this.absenteeismsOptions = options
     }
   },
   computed: {
@@ -76,6 +94,9 @@ export default {
     },
     employees () {
       return Store.state.employees
+    },
+    absenteeisms () {
+      return Store.state.absenteeisms
     },
     item () {
       return Store.state.record
@@ -91,6 +112,7 @@ export default {
       /* Reset our form values */
       this.form.employee_id = 0
       this.form.date = ''
+      this.form.absenteeism_id = 0
       /* Trick to reset/clear native browser form validation state */
       this.show = false
       this.$nextTick(() => {
@@ -108,9 +130,11 @@ export default {
       return
     }
     Store.dispatch('LOAD_EMPLOYEES')
+    Store.dispatch('LOAD_ABSENTEEISMS')
     if (this.item) {
       this.form.id = this.item.id
       this.form.employee_id = this.item.employee_id
+      this.form.absenteeism_id = this.item.absenteeism_id
       this.form.date = this.item._date
     }
   }

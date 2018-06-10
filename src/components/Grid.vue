@@ -11,11 +11,11 @@
     <div>
 
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
-      <h5>
+      <h5 class="no-print">
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
 
-      <div @click="showPositions = true" class="position-group">
+      <div @click="showPositions = true" class="position-group no-print">
         <div class="position">Sector seleccionado:</div>
         <div class="position-color" v-bind:style="{background:selectedPosition.color}">&nbsp;</div>
         <div class="position-name">{{selectedPosition.name}}</div>
@@ -23,7 +23,7 @@
       </div>
       <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields" head-variant="light" class="schedule-table">
         <template slot="fullName" slot-scope="data">
-          {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
+          {{data.item["last_name"]}}, {{data.item["first_name"]}}
         </template>
       </b-table>
 
@@ -48,12 +48,6 @@
         </div>
       </b-modal>
 
-      <b-table bordered :items="timeoffRows" :fields="timeoffFields" head-variant="light" class="compact pull-left">
-        <template slot="fullName" slot-scope="data">
-          {{data.item["badge"]}} {{data.item["last_name"]}}, {{data.item["first_name"]}}
-        </template>
-      </b-table>
-
     </div>
 
   </b-container>
@@ -75,120 +69,116 @@ export default {
         {
           key: 'fullName',
           label: 'Empleado',
-          class: 'p-1',
-          thStyle: {
-            width: '320px'
-          }
+          class: 'p-0 pt-1 m-0'
         },
         {
           key: 'h06',
           label: '06',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h07',
           label: '07',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h08',
           label: '08',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h09',
           label: '09',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h10',
           label: '10',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h11',
           label: '11',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h12',
           label: '12',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h13',
           label: '13',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h14',
           label: '14',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h15',
           label: '15',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h16',
           label: '16',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h17',
           label: '17',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h18',
           label: '18',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h19',
           label: '19',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h20',
           label: '20',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h21',
           label: '21',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h22',
           label: '22',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h23',
           label: '23',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h24',
           label: '24',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'h25',
           label: '01',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         },
         {
           key: 'hours',
           label: 'Horas',
-          class: 'text-center p-0 pt-1'
+          class: 'text-center p-0 m-0'
         }
       ],
       scheduleRows: [],
       positionRows: [],
-      timeoffRows: [],
       recordData: {},
       showAlert: false,
       showPositions: false,
@@ -213,12 +203,6 @@ export default {
           label: 'Horas',
           class: 'text-right p-1 m-0'
         }
-      ],
-      timeoffFields: [
-        {
-          key: 'fullName',
-          label: 'PERSONAL DE FRANCO'
-        }
       ]
     }
   },
@@ -233,19 +217,6 @@ export default {
       const rows = this.schedule.rows
       this.weekday = this.budget._weekday
       this.loadGrid(rows)
-    },
-    budgetTimeoffs () {
-      const items = this.budgetTimeoffs.rows
-      const list = []
-      for (let i = 0; i < items.length; i++) {
-        let item = {
-          badge: items[i]['employee']['badge'],
-          first_name: items[i]['employee']['first_name'],
-          last_name: items[i]['employee']['last_name']
-        }
-        list.push(item)
-      }
-      this.timeoffRows = list
     },
     positions () {
       const positionRows = []
@@ -284,9 +255,6 @@ export default {
     },
     footer () {
       return Store.state.budget.rows.footer
-    },
-    budgetTimeoffs () {
-      return Store.state.budgetTimeoffs
     },
     positions () {
       return Store.state.positions
@@ -328,6 +296,14 @@ export default {
           const hour = i < 10 ? `0${i.toString()}` : `${i.toString()}`
           this.fillCell(Employee, record, hour)
         }
+        const timeoffs = emp.timeoffs
+        if (timeoffs.length) {
+          for (let i = 6; i < 26; i++) {
+            record.position.name = timeoffs[0].absenteeism.name
+            const hour = i < 10 ? `0${i.toString()}` : `${i.toString()}`
+            this.fillCell(Employee, record, hour)
+          }
+        }
         const data = emp.schedules
         if (data.length) {
           for (let i = 0; i < data.length; i++) {
@@ -357,7 +333,7 @@ export default {
       })
     },
     fillCell (Employee, rec, h) {
-      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color};cursor:pointer" title="${rec.position.name}">&nbsp;</div>`
+      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color || '#ffffff'};cursor:pointer;min-width:40px;overflow:hidden;">${rec.position.name || ''}</div>`
     },
     selectCell (item) {
       const data = item.target.dataset
@@ -444,7 +420,6 @@ export default {
         branch_id: this.record.branch_id
       }
       Store.dispatch('LOAD_SCHEDULE', data)
-      Store.dispatch('LOAD_BUDGET_TIMEOFF', this.record._date)
     },
     goProgram () {
       this.$router.push({ name: 'Program' })
@@ -475,8 +450,19 @@ export default {
   background-color: white;
 }
 @media print {
+  body {
+    background: #fff;
+  }
+  h4 {
+    font-size: 1em;
+    margin: 0;
+  }
   table {
-    font-size: smaller;
+    font-size: xx-small;
+  }
+  table th {
+    padding: 0;
+    margin: 0;
   }
   .no-print,
   .no-print * {

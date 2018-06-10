@@ -4,6 +4,8 @@ import Home from '@/components/Home'
 import Login from '@/components/Login'
 import ChangePassword from '@/components/ChangePassword'
 import Header from '@/components/Header'
+import Absenteeisms from '@/components/Absenteeisms'
+import Absenteeism from '@/components/Absenteeism'
 import Branches from '@/components/Branches'
 import Branch from '@/components/Branch'
 import Budgets from '@/components/Budgets'
@@ -44,6 +46,16 @@ export default new Router({
       path: '/header',
       name: 'Header',
       component: Header
+    },
+    {
+      path: '/absenteeisms',
+      name: 'Absenteeisms',
+      component: Absenteeisms
+    },
+    {
+      path: '/absenteeism',
+      name: 'Absenteeism',
+      component: Absenteeism
     },
     {
       path: '/branches',
