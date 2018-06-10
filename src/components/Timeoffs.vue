@@ -52,18 +52,15 @@ export default {
       fields: [
         {
           key: 'employee.badge',
-          label: 'Legajo',
-          sortable: true
+          label: 'Legajo'
         },
         {
           key: 'employee.first_name',
-          label: 'Nombre',
-          sortable: true
+          label: 'Nombre'
         },
         {
           key: 'employee.last_name',
-          label: 'Apellido',
-          sortable: true
+          label: 'Apellido'
         },
         {
           key: 'absenteeism.name',

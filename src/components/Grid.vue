@@ -333,7 +333,7 @@ export default {
       })
     },
     fillCell (Employee, rec, h) {
-      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color || '#ffffff'};cursor:pointer;min-width:40px;overflow:hidden;">${rec.position.name || ''}</div>`
+      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color || '#ffffff'};cursor:pointer;min-width:40px;overflow:hidden;">${rec.position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
     },
     selectCell (item) {
       const data = item.target.dataset
