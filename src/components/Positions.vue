@@ -66,6 +66,11 @@ export default {
           class: 'text-center'
         },
         {
+          key: 'div2',
+          label: 'Texto',
+          class: 'text-center'
+        },
+        {
           key: 'created_at',
           label: 'Creado',
           class: 'text-center'
@@ -83,11 +88,12 @@ export default {
   },
   methods: {
     addItem () {
-      Store.dispatch('ADD_ITEM', { id: 0, name: '', sector_id: 0, color: '' })
+      Store.dispatch('ADD_ITEM', { id: 0, name: '', sector_id: 0, color: '', text: '' })
       this.$router.push({ name: 'Position' })
     },
     editItem (item) {
       Store.dispatch('ADD_ITEM', item)
+      console.log(item)
       this.$router.push({ name: 'Position' })
     },
     deleteItem (item, type) {

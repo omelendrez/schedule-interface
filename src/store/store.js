@@ -402,7 +402,9 @@ export default new Vuex.Store({
           created_at: positions[i].created_at,
           name: positions[i].name,
           color: positions[i].color,
-          div: `<div data-position-id='${positions[i].id}' data-position-name='${positions[i]['sector.name']} - ${positions[i].name}' data-position-color='${positions[i].color}' style='background-color:${positions[i].color};width:21px;border-radius:4px;cursor:pointer' class='mx-auto'>&nbsp</div>`,
+          div: `<div style='background-color:${positions[i].color};width:21px;border-radius:4px;border:1px solid #ccc' class='mx-auto'>&nbsp</div>`,
+          text: positions[i].text,
+          div2: `<div style='background-color:${positions[i].text};width:21px;border-radius:4px;border:1px solid #ccc' class='mx-auto'>&nbsp</div>`,
           sector_id: positions[i].sector_id,
           updated_at: positions[i].updated_at,
           'sector.name': positions[i]['sector.name']
