@@ -12,7 +12,11 @@
       </b-form-group>
 
       <b-form-group horizontal id="color" label="Color" label-for="color">
-        <b-form-input id="color" type="color" v-model.trim="form.color" @change="cleanError" required></b-form-input>
+        <b-form-input id="color" type="color" v-model.trim="form.color" @change="cleanError" required class="color-selector"></b-form-input>
+      </b-form-group>
+
+      <b-form-group horizontal id="text" label="Texto" label-for="text">
+        <b-form-input id="text" type="color" v-model.trim="form.text" @change="cleanError" required class="color-selector"></b-form-input>
       </b-form-group>
 
       <div class="buttons">
@@ -37,6 +41,7 @@ export default {
         id: 0,
         name: '',
         color: '#ffffff',
+        text: '#000000',
         sector_id: 0
       },
       show: true,
@@ -78,11 +83,6 @@ export default {
   methods: {
     onSubmit (evt) {
       evt.preventDefault()
-      if (!this.form.color.length) {
-        this.errorShow = true
-        this.errorMsg = 'Debe asignar un color distinto de negro'
-        return false
-      }
       Store.dispatch('SAVE_POSITION', this.form)
     },
     onReset (evt) {
@@ -110,6 +110,7 @@ export default {
       this.form.id = this.item.id
       this.form.name = this.item.name
       this.form.color = this.item.color
+      this.form.text = this.item.text
       this.form.sector_id = this.item.sector_id
     }
   }
@@ -133,5 +134,8 @@ export default {
 .buttons {
   margin: 0 auto;
   margin-bottom: 18px;
+}
+.color-selector {
+  max-width: 40px;
 }
 </style>

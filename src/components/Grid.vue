@@ -35,7 +35,15 @@
         <strong>{{alertMessage}}.</strong> Querés continuar?
       </b-modal>
 
-      <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" centered ok-only>
+      <b-modal v-model="timeoffAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered ok-only>
+        <p>
+          Este empleado está informado como ausente con
+          <strong>{{timeoffMessage}}</strong> para este día.<br/> Si querés cargarle horas tenés que eliminar el ausentismo desde la opción
+          <strong>Ausencias</strong> del menú.
+        </p>
+      </b-modal>
+
+      <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" ok-only>
         <b-table small :items="positionRows" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)" />
         <hr />
         <div>
@@ -65,116 +73,118 @@ export default {
       alertMessage: '',
       showError: false,
       errorMessage: '',
+      timeoffAlert: false,
+      timeoffMessage: '',
       fields: [
         {
           key: 'fullName',
           label: 'Empleado',
-          class: 'p-0 pt-1 m-0'
+          class: 'p-0 py-1'
         },
         {
           key: 'h06',
           label: '06',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h07',
           label: '07',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h08',
           label: '08',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h09',
           label: '09',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h10',
           label: '10',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h11',
           label: '11',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h12',
           label: '12',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h13',
           label: '13',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h14',
           label: '14',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h15',
           label: '15',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h16',
           label: '16',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h17',
           label: '17',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h18',
           label: '18',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h19',
           label: '19',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h20',
           label: '20',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h21',
           label: '21',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h22',
           label: '22',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h23',
           label: '23',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h24',
           label: '24',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'h25',
           label: '01',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         },
         {
           key: 'hours',
           label: 'Horas',
-          class: 'text-center p-0 m-0'
+          class: 'text-center p-0 py-1'
         }
       ],
       scheduleRows: [],
@@ -191,17 +201,17 @@ export default {
         {
           key: 'color',
           label: '&nbsp;',
-          class: 'p-1 m-0'
+          class: 'p-0 py-1'
         },
         {
           key: 'sector_position',
           label: 'Sector / Función',
-          class: 'p-1 m-0'
+          class: 'p-0 py-1'
         },
         {
           key: 'hours',
           label: 'Horas',
-          class: 'text-right p-1 m-0'
+          class: 'text-right p-0 py-1'
         }
       ]
     }
@@ -287,6 +297,7 @@ export default {
           id: 0,
           budget_id: this.record.id,
           position_id: 0,
+          timeoff: '',
           hours: 0,
           position: {
             color: ''
@@ -299,6 +310,7 @@ export default {
         const timeoffs = emp.timeoffs
         if (timeoffs.length) {
           for (let i = 6; i < 26; i++) {
+            record.timeoff = timeoffs[0].absenteeism.name
             record.position.name = timeoffs[0].absenteeism.name
             const hour = i < 10 ? `0${i.toString()}` : `${i.toString()}`
             this.fillCell(Employee, record, hour)
@@ -308,6 +320,7 @@ export default {
         if (data.length) {
           for (let i = 0; i < data.length; i++) {
             const rec = data[i]
+            rec.timeoff = ''
             const hours = (parseInt(rec.to) - parseInt(rec.from))
             Employee.hours += hours
             this.positionRows.map(pos => {
@@ -333,11 +346,16 @@ export default {
       })
     },
     fillCell (Employee, rec, h) {
-      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" style="background-color:${rec.position.color || '#ffffff'};cursor:pointer;min-width:40px;overflow:hidden;">${rec.position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
+      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-timeoff="${rec.timeoff}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" class="my-div" style="background-color:${rec.position.color || '#ffffff'};color:${rec.position.text || '#000000'};cursor:pointer;font-size:9px;padding-top:3px;padding-bottom:3px;overflow:hidden;">${rec.position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
     },
     selectCell (item) {
       const data = item.target.dataset
       if (data.recordId) {
+        if (data.timeoff !== '') {
+          this.timeoffMessage = data.timeoff
+          this.timeoffAlert = true
+          return
+        }
         if (!this.selectedPosition.id) {
           this.showPositions = true
           return
@@ -352,32 +370,34 @@ export default {
         }
         this.recordData = record
         let showAlert = false
-        if (this.selectedPosition.id === -1) {
-          if (record.id !== 0) {
-            Store.dispatch('DELETE_SCHEDULE', record)
-          }
-        } else {
-          this.scheduleRows.map(emp => {
-            if (emp.id === parseInt(data.employeeId)) {
-              if (parseInt(data.recordId) === 0) {
-                if (emp.hours + 1 > hoursLimit) {
-                  this.alertMessage = `Le estás asignando más de 8 horas a ${emp.first_name} ${emp.last_name}`
-                  showAlert = true
-                }
-                if (emp.blockedFrom) {
-                  if (data.hour >= emp.blockedFrom && data.hour <= emp.blockedTo - 1) {
-                    this.alertMessage = `${emp.first_name} ${emp.last_name} tiene bloquedo de ${emp.blockedFrom} hs a ${emp.blockedTo} hs para este día de la semana`
+        switch (this.selectedPosition.id) {
+          case -1:
+            if (record.id !== 0) {
+              Store.dispatch('DELETE_SCHEDULE', record)
+            }
+            break
+          default:
+            this.scheduleRows.map(emp => {
+              if (emp.id === parseInt(data.employeeId)) {
+                if (parseInt(data.recordId) === 0) {
+                  if (emp.hours + 1 > hoursLimit) {
+                    this.alertMessage = `Le estás asignando más de 8 horas a ${emp.first_name} ${emp.last_name}`
                     showAlert = true
+                  }
+                  if (emp.blockedFrom) {
+                    if (data.hour >= emp.blockedFrom && data.hour <= emp.blockedTo - 1) {
+                      this.alertMessage = `${emp.first_name} ${emp.last_name} tiene bloquedo de ${emp.blockedFrom} hs a ${emp.blockedTo} hs para este día de la semana`
+                      showAlert = true
+                    }
                   }
                 }
               }
+            })
+            if (showAlert) {
+              this.showAlert = true
+            } else {
+              this.saveSchedule()
             }
-          })
-          if (showAlert) {
-            this.showAlert = true
-          } else {
-            this.saveSchedule()
-          }
         }
       }
     },
@@ -451,7 +471,7 @@ export default {
 }
 @media print {
   body {
-    background: #fff;
+    background-color: white;
   }
   h4 {
     font-size: 1em;
@@ -459,10 +479,6 @@ export default {
   }
   table {
     font-size: xx-small;
-  }
-  table th {
-    padding: 0;
-    margin: 0;
   }
   .no-print,
   .no-print * {
