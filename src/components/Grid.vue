@@ -21,6 +21,7 @@
         <div class="position-name">{{selectedPosition.name}}</div>
         <div class="pull-right error" :show="showError">{{ errorMessage }}</div>
       </div>
+
       <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields" head-variant="light" class="schedule-table">
         <template slot="fullName" slot-scope="data">
           {{data.item["last_name"]}}, {{data.item["first_name"]}}

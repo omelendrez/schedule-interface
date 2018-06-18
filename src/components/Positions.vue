@@ -93,7 +93,6 @@ export default {
     },
     editItem (item) {
       Store.dispatch('ADD_ITEM', item)
-      console.log(item)
       this.$router.push({ name: 'Position' })
     },
     deleteItem (item, type) {
