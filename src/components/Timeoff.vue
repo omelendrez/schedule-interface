@@ -60,15 +60,18 @@ export default {
       const employees = this.employees.rows
       const options = []
       for (let i = 0; i < employees.length; i++) {
-        options.push({
-          value: employees[i].id,
-          text:
-            employees[i].badge +
-            ' - ' +
-            employees[i].last_name +
-            ', ' +
-            employees[i].first_name
-        })
+        const emp = employees[i]
+        if (emp.status_id === 1) {
+          options.push({
+            value: emp.id,
+            text:
+              emp.badge +
+              ' - ' +
+              emp.last_name +
+              ', ' +
+              emp.first_name
+          })
+        }
       }
       this.employeesOptions = options
     },
