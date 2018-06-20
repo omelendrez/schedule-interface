@@ -238,13 +238,6 @@ export default new Vuex.Store({
       })
     },
 
-    async [types.LOAD_BUDGET_TIMEOFF] ({ commit }, payload) {
-      const timeoffs = await Timeoffs.findByDate(payload)
-      commit(types.SET_BUDGET_TIMEOFF, {
-        payload: timeoffs.data
-      })
-    },
-
     async [types.SAVE_SECTOR] ({ commit }, item) {
       const sector = await Sectors.saveSector(item)
       commit(types.SET_RESULTS, {
@@ -340,6 +333,13 @@ export default new Vuex.Store({
       const position = await Positions.fetchPositionSector()
       commit(types.SET_POSITION_SECTOR, {
         payload: position.data
+      })
+    },
+
+    async [types.LOAD_TIMEOFFS_BY_DATE] ({ commit }, payload) {
+      const timeoffs = await Timeoffs.findByDate(payload)
+      commit(types.SET_TIMEOFFS_BY_DATE, {
+        payload: timeoffs.data
       })
     },
 
@@ -546,7 +546,7 @@ export default new Vuex.Store({
       state.results = payload
     },
 
-    [types.SET_BUDGET_TIMEOFF]: (state, { payload }) => {
+    [types.SET_TIMEOFFS_BY_DATE]: (state, { payload }) => {
       state.budgetTimeoffs = payload
     },
 
