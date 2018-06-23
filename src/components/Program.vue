@@ -10,8 +10,7 @@
 
     <div>
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
-
-      <h5>
+      <h5 class="no-print">
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
       </h5>
 
@@ -22,32 +21,36 @@
         </b-input-group>
       </b-form-group>
 
-      <b-table hover outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" head-variant="light">
-
+      <h4>Asignaciones</h4>
+      <b-table outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" show-empty :empty-text="emptyText" head-variant="light">
         <template slot="sectorPosition" slot-scope="row">
-          {{row.item["sector.name"]}} / {{row.item["position.name"]}}
+          {{row.item["sector"]}} / {{row.item["position"]}}
         </template>
-
         <template slot="fullName" slot-scope="row">
-          {{row.item["employee.badge"]}} {{row.item["employee.last_name"]}}, {{row.item["employee.first_name"]}}
+          {{row.item["badge"]}} {{row.item["last_name"]}}, {{row.item["first_name"]}}
         </template>
-
         <template slot="from" slot-scope="row">
           {{row.item["_from"]}}
         </template>
-
         <template slot="_to" slot-scope="row">
           {{row.item["_to"]}}
         </template>
-
         <template slot="hours" slot-scope="row">
           {{row.item["hours"]}}
         </template>
-
         <template slot="table-caption">
-          {{schedules.count}} registros
+          {{scheduleRows.length}} registros
         </template>
+      </b-table>
 
+      <h4>Ausentes</h4>
+      <b-table outlined small :items="absenteeismRows" show-empty :empty-text="emptyText" :fields="absenteeismFields" head-variant="light">
+        <template slot="fullName" slot-scope="row">
+          {{row.item["badge"]}} {{row.item["last_name"]}}, {{row.item["first_name"]}}
+        </template>
+        <template slot="table-caption">
+          {{absenteeismRows.length}} empleados
+        </template>
       </b-table>
 
     </div>
@@ -63,17 +66,56 @@ export default {
   data () {
     return {
       filter: null,
+      emptyText: 'No se encontraron registros',
       scheduleRows: [],
       scheduleFields: [
+        {
+          key: 'fullName',
+          label: 'Empleado',
+          class: 'px-2',
+          thStyle: {
+            width: '10%'
+          }
+        },
         {
           key: 'sectorPosition',
           label: 'Función',
           variant: 'info',
           class: 'px-3',
           thStyle: {
-            width: '20%'
+            width: '10%'
           }
         },
+        {
+          key: 'from',
+          label: 'De',
+          variant: 'warning',
+          class: 'text-center',
+          thStyle: {
+            width: '10%'
+          }
+        },
+        {
+          key: '_to',
+          label: 'A',
+          variant: 'warning',
+          class: 'text-center',
+          thStyle: {
+            width: '10%'
+          }
+        },
+        {
+          key: 'hours',
+          label: 'Horas',
+          variant: 'danger',
+          class: 'text-center',
+          thStyle: {
+            width: '10%'
+          }
+        }
+      ],
+      absenteeismRows: [],
+      absenteeismFields: [
         {
           key: 'fullName',
           label: 'Empleado',
@@ -83,22 +125,9 @@ export default {
           }
         },
         {
-          key: 'from',
-          label: 'De',
-          variant: 'warning',
-          class: 'text-center'
-        },
-        {
-          key: '_to',
-          label: 'A',
-          variant: 'warning',
-          class: 'text-center'
-        },
-        {
-          key: 'hours',
-          label: 'Horas',
-          variant: 'danger',
-          class: 'text-center'
+          key: 'absenteeism',
+          label: 'Motivo',
+          class: 'px-2'
         }
       ]
     }
@@ -124,6 +153,7 @@ export default {
         branch_id: this.item.branch_id
       }
       Store.dispatch('LOAD_SCHEDULES', data)
+      Store.dispatch('LOAD_TIMEOFFS_BY_DATE', this.item._date)
     }
   },
   watch: {
@@ -137,13 +167,13 @@ export default {
         from = from || sch[i].from
         _from = _from || sch[i]._from
         row = {
-          'employee.badge': sch[i].employee.badge,
-          'employee.first_name': sch[i].employee.first_name,
-          'employee.last_name': sch[i].employee.last_name,
+          'badge': sch[i].employee.badge,
+          'first_name': sch[i].employee.first_name,
+          'last_name': sch[i].employee.last_name,
           from: from,
           _from: _from,
-          'position.name': sch[i].position.name,
-          'sector.name': sch[i].position.sector.name,
+          'position': sch[i].position.name,
+          'sector': sch[i].position.sector.name,
           to: sch[i].to,
           _to: sch[i]._to
         }
@@ -162,9 +192,28 @@ export default {
           _from = null
         }
       }
-      row.hours = row.to - row.from
-      arr.push(row)
-      this.scheduleRows = arr
+      if (arr.length) {
+        row.hours = row.to - row.from
+        arr.push(row)
+        this.scheduleRows = arr
+      }
+    },
+    budgetTimeoffs () {
+      const to = this.budgetTimeoffs.rows
+      const timeoffs = []
+      let row = {}
+      for (let i = 0; i < to.length; i++) {
+        const emp = to[i].employee
+        const abs = to[i].absenteeism
+        row = {
+          badge: emp.badge,
+          first_name: emp.first_name,
+          last_name: emp.last_name,
+          absenteeism: abs.name
+        }
+        timeoffs.push(row)
+      }
+      this.absenteeismRows = timeoffs
     }
   },
   computed: {
@@ -188,6 +237,9 @@ export default {
     },
     branches () {
       return Store.state.branches
+    },
+    budgetTimeoffs () {
+      return Store.state.budgetTimeoffs
     }
   },
   created () {
@@ -235,15 +287,22 @@ table input[type='text'] {
   text-align: center;
 }
 @media print {
+  .program {
+    padding: 30px;
+  }
+  h4 {
+    font-size: 1em;
+  }
   table {
     font-size: smaller;
+    width: auto;
   }
   .no-print,
   .no-print * {
     display: none !important;
   }
   @page {
-    size: landscape;
+    size: portrait;
   }
 }
 </style>

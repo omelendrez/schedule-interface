@@ -238,13 +238,6 @@ export default new Vuex.Store({
       })
     },
 
-    async [types.LOAD_BUDGET_TIMEOFF] ({ commit }, payload) {
-      const timeoffs = await Timeoffs.findByDate(payload)
-      commit(types.SET_BUDGET_TIMEOFF, {
-        payload: timeoffs.data
-      })
-    },
-
     async [types.SAVE_SECTOR] ({ commit }, item) {
       const sector = await Sectors.saveSector(item)
       commit(types.SET_RESULTS, {
@@ -343,6 +336,20 @@ export default new Vuex.Store({
       })
     },
 
+    async [types.LOAD_TIMEOFFS_BY_DATE] ({ commit }, payload) {
+      const timeoffs = await Timeoffs.findByDate(payload)
+      commit(types.SET_TIMEOFFS_BY_DATE, {
+        payload: timeoffs.data
+      })
+    },
+
+    async [types.LOAD_TIMEOFFS_BY_PERIOD] ({ commit }, payload) {
+      const timeoffs = await Timeoffs.findByPeriod(payload)
+      commit(types.SET_TIMEOFFS_BY_PERIOD, {
+        payload: timeoffs.data
+      })
+    },
+
     async [types.LOAD_TIMEOFFS] ({ commit }, payload) {
       const timeoffs = await Timeoffs.fetchTimeoffs()
       commit(types.SET_TIMEOFFS, {
@@ -402,7 +409,7 @@ export default new Vuex.Store({
           created_at: positions[i].created_at,
           name: positions[i].name,
           color: positions[i].color,
-          div: `<div data-position-id='${positions[i].id}' data-position-name='${positions[i]['sector.name']} - ${positions[i].name}' data-position-color='${positions[i].color}' style='background-color:${positions[i].color};width:21px;border-radius:4px;border:1px solid #ccc' class='mx-auto'>&nbsp</div>`,
+          div: `<div data-position-id='${positions[i].id}' data-position-name='${positions[i]['sector.name']} - ${positions[i].name}' data-position-color='${positions[i].color}' style='background-color:${positions[i].color};width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;' class='mx-auto'>&nbsp</div>`,
           text: positions[i].text,
           div2: `<div style='background-color:${positions[i].text};width:21px;border-radius:4px;border:1px solid #ccc' class='mx-auto'>&nbsp</div>`,
           sector_id: positions[i].sector_id,
@@ -546,8 +553,12 @@ export default new Vuex.Store({
       state.results = payload
     },
 
-    [types.SET_BUDGET_TIMEOFF]: (state, { payload }) => {
+    [types.SET_TIMEOFFS_BY_DATE]: (state, { payload }) => {
       state.budgetTimeoffs = payload
+    },
+
+    [types.SET_TIMEOFFS_BY_PERIOD]: (state, { payload }) => {
+      state.timeoffs = payload
     },
 
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {

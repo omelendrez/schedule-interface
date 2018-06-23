@@ -17,6 +17,7 @@ import Sector from '@/components/Sector'
 import Positions from '@/components/Positions'
 import Position from '@/components/Position'
 import Timeoffs from '@/components/Timeoffs'
+import TimeoffReport from '@/components/TimeoffReport'
 import Timeoff from '@/components/Timeoff'
 import Employees from '@/components/Employees'
 import Employee from '@/components/Employee'
@@ -116,6 +117,11 @@ export default new Router({
       path: '/timeoff',
       name: 'Timeoff',
       component: Timeoff
+    },
+    {
+      path: '/timeoff_report',
+      name: 'TimeoffReport',
+      component: TimeoffReport
     },
     {
       path: '/employees',

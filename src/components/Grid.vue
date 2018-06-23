@@ -80,7 +80,10 @@ export default {
         {
           key: 'fullName',
           label: 'Empleado',
-          class: 'p-0 py-1'
+          class: 'p-0 py-1',
+          thStyle: {
+            width: '160px'
+          }
         },
         {
           key: 'h06',
@@ -347,6 +350,9 @@ export default {
       })
     },
     fillCell (Employee, rec, h) {
+      if (rec.position.name && rec.position.name.length > 6) {
+        rec.position.name = rec.position.name.substring(0, 5) + '...'
+      }
       Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-timeoff="${rec.timeoff}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" class="my-div" style="background-color:${rec.position.color || '#ffffff'};color:${rec.position.text || '#000000'};cursor:pointer;font-size:9px;padding-top:3px;padding-bottom:3px;overflow:hidden;">${rec.position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
     },
     selectCell (item) {
