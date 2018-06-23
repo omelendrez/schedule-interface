@@ -6,8 +6,8 @@
         <b-form-input id="name" v-model.trim="form.name" required></b-form-input>
       </b-form-group>
       <div class="buttons">
-        <b-button type="submit" variant="info">Guardar</b-button>
-        <b-button type="reset" class="to-right">Volver</b-button>
+        <b-button type="submit" variant="info" class="to-right">Guardar</b-button>
+        <b-button type="reset">Volver</b-button>
       </div>
     </b-form>
   </b-container>

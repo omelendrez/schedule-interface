@@ -5,6 +5,7 @@
 
     <div class="add-button">
       <b-button @click="addItem" variant="info">Agregar</b-button>
+      <b-btn variant="primary" @click.stop="printReport">Reporte</b-btn>
     </div>
 
     <b-form-group class="filter-form">
@@ -64,7 +65,7 @@ export default {
         },
         {
           key: 'absenteeism.name',
-          label: 'Tipo',
+          label: 'Ausencia',
           class: 'text-center'
         },
         {
@@ -111,6 +112,9 @@ export default {
     },
     handleOk () {
       Store.dispatch('DELETE_TIMEOFF', this.selectedItem)
+    },
+    printReport () {
+      this.$router.push({ name: 'TimeoffReport' })
     }
   },
   watch: {

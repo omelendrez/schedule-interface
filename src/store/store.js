@@ -343,6 +343,13 @@ export default new Vuex.Store({
       })
     },
 
+    async [types.LOAD_TIMEOFFS_BY_PERIOD] ({ commit }, payload) {
+      const timeoffs = await Timeoffs.findByPeriod(payload)
+      commit(types.SET_TIMEOFFS_BY_PERIOD, {
+        payload: timeoffs.data
+      })
+    },
+
     async [types.LOAD_TIMEOFFS] ({ commit }, payload) {
       const timeoffs = await Timeoffs.fetchTimeoffs()
       commit(types.SET_TIMEOFFS, {
@@ -548,6 +555,10 @@ export default new Vuex.Store({
 
     [types.SET_TIMEOFFS_BY_DATE]: (state, { payload }) => {
       state.budgetTimeoffs = payload
+    },
+
+    [types.SET_TIMEOFFS_BY_PERIOD]: (state, { payload }) => {
+      state.timeoffs = payload
     },
 
     [types.CHANGE_PASSWORD_ALERT]: (state, { payload }) => {

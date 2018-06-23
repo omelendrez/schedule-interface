@@ -17,6 +17,9 @@ export default {
   findByDate (payload) {
     return HTTP.get(`timeoff/${payload}/date`)
   },
+  findByPeriod (payload) {
+    return HTTP.get(`timeoff/${payload.fromDate}/${payload.toDate}/${payload.absenteeismId}/period`)
+  },
   deleteTimeoff (payload) {
     return HTTP.delete(`timeoff/${payload}`)
   }

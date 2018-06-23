@@ -16,8 +16,8 @@
       </b-form-group>
 
       <div class="buttons">
-        <b-button type="submit" variant="info">Guardar</b-button>
-        <b-button type="reset" class="to-right">Volver</b-button>
+        <b-button type="submit" variant="info" class="to-right">Guardar</b-button>
+        <b-button type="reset">Volver</b-button>
       </div>
 
       <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
