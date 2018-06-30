@@ -110,7 +110,7 @@ export default {
             badge: item.employee.badge,
             first_name: item.employee.first_name,
             last_name: item.employee.last_name,
-            date: item.date,
+            date: item.week_day + ' ' + item.date,
             absenteeism: item.absenteeism.name
           })
         }
