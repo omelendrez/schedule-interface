@@ -14,6 +14,9 @@
         <b-form-group horizontal label="Fecha hasta" label-for="toDate">
           <b-form-input type="date" id="toDate" v-model="form.toDate" required @change="changedParams" />
         </b-form-group>
+        <b-form-group horizontal id="sortBy" label="Ordenar resultados" label-for="sortBy">
+          <b-form-select v-model="form.sortBy" :options="sortOptions" required @change="changedParams" />
+        </b-form-group>
         <div class="buttons">
           <b-button type="reset">Volver</b-button>
           <b-button type="submit" variant="info" class="to-right">Cargar</b-button>
@@ -49,7 +52,8 @@ export default {
       form: {
         absenteeismId: 0,
         fromDate: '',
-        toDate: ''
+        toDate: '',
+        sortBy: 0
       },
       loaded: false,
       absenteeismsOptions: [],
@@ -106,7 +110,7 @@ export default {
             badge: item.employee.badge,
             first_name: item.employee.first_name,
             last_name: item.employee.last_name,
-            date: item.date,
+            date: item.week_day + ' ' + item.date,
             absenteeism: item.absenteeism.name
           })
         }
@@ -165,6 +169,17 @@ export default {
     }
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
     Store.dispatch('LOAD_ABSENTEEISMS')
+    const sortOptions = [
+      {
+        value: 0,
+        text: 'Por empleado'
+      },
+      {
+        value: 1,
+        text: 'Por fecha'
+      }
+    ]
+    this.sortOptions = sortOptions
   }
 }
 </script>

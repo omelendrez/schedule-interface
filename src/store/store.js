@@ -558,6 +558,33 @@ export default new Vuex.Store({
     },
 
     [types.SET_TIMEOFFS_BY_PERIOD]: (state, { payload }) => {
+      const rows = payload.rows.map(item => {
+        switch (parseInt(item.week_day)) {
+          case 0:
+            item.week_day = 'Lun'
+            break
+          case 1:
+            item.week_day = 'Mar'
+            break
+          case 2:
+            item.week_day = 'Mie'
+            break
+          case 3:
+            item.week_day = 'Jue'
+            break
+          case 4:
+            item.week_day = 'Vie'
+            break
+          case 5:
+            item.week_day = 'Sáb'
+            break
+          case 6:
+            item.week_day = 'Dom'
+            break
+        }
+        return item
+      })
+      payload.rows = rows
       state.timeoffs = payload
     },
 
