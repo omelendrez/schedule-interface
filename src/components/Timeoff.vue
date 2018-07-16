@@ -11,8 +11,12 @@
         <b-form-select v-model="form.absenteeism_id" :options="absenteeismsOptions" class="mb-3" required/>
       </b-form-group>
 
-      <b-form-group horizontal label="Día" label-for="date">
-        <b-form-input id="date" type="date" v-model="form.date" required></b-form-input>
+      <b-form-group horizontal label="Desde Fecha" label-for="dateFrom">
+        <b-form-input id="dateFrom" type="date" v-model="form.dateFrom" :disabled="dateChangeBlocked" required></b-form-input>
+      </b-form-group>
+
+      <b-form-group horizontal label="Hasta Fecha" label-for="dateTo">
+        <b-form-input id="dateTo" type="date" v-model="form.dateTo" :disabled="dateChangeBlocked" required></b-form-input>
       </b-form-group>
 
       <div class="buttons">
@@ -37,8 +41,10 @@ export default {
         id: 0,
         employee_id: 0,
         absenteeism_id: 0,
-        date: ''
+        dateFrom: '',
+        dateTo: ''
       },
+      dateChangeBlocked: true,
       employeesOptions: [],
       absenteeismsOptions: [],
       show: true,
@@ -114,7 +120,8 @@ export default {
       evt.preventDefault()
       /* Reset our form values */
       this.form.employee_id = 0
-      this.form.date = ''
+      this.form.dateFrom = ''
+      this.form.dateTo = ''
       this.form.absenteeism_id = 0
       /* Trick to reset/clear native browser form validation state */
       this.show = false
@@ -135,10 +142,12 @@ export default {
     Store.dispatch('LOAD_EMPLOYEES')
     Store.dispatch('LOAD_ABSENTEEISMS')
     if (this.item) {
+      this.dateChangeBlocked = this.item.id !== 0
       this.form.id = this.item.id
       this.form.employee_id = this.item.employee_id
       this.form.absenteeism_id = this.item.absenteeism_id
-      this.form.date = this.item._date
+      this.form.dateFrom = this.item._date
+      this.form.dateTo = this.item._date
     }
   }
 }

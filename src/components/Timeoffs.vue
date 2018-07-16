@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     addItem () {
-      Store.dispatch('ADD_ITEM', { id: 0, date: '', employee_id: 0, absenteeism_id: 0, color: '' })
+      Store.dispatch('ADD_ITEM', { id: 0, dateFrom: '', dateTo: '', employee_id: 0, absenteeism_id: 0, color: '' })
       this.$router.push({ name: 'Timeoff' })
     },
     editItem (item) {
