@@ -58,9 +58,7 @@ export default {
       if (results.error) {
         this.errorMessage = results.message
         this.errorShow = results.error
-        return
       }
-      this.$router.push({ name: 'Timeoffs' })
     },
     employees () {
       const employees = this.employees.rows
@@ -114,7 +112,76 @@ export default {
   methods: {
     onSubmit (evt) {
       evt.preventDefault()
-      Store.dispatch('SAVE_TIMEOFF', this.form)
+      this.errorMessage = ''
+      this.errorShow = false
+      if (this.form.dateFrom > this.form.dateTo) {
+        this.errorMessage = 'Fecha final no puede ser anterior a fecha inicial'
+        this.errorShow = true
+        return
+      }
+      let initialDate = this.form.dateFrom
+      const finalDate = this.form.dateTo
+      while (initialDate <= finalDate) {
+        const data = {
+          id: this.form.id,
+          employee_id: this.form.employee_id,
+          absenteeism_id: this.form.absenteeism_id,
+          date: initialDate
+        }
+        this.saveTimeoff(data)
+        initialDate = this.increaseDate(initialDate)
+      }
+      if (!this.errorShow) {
+        this.$router.push({ name: 'Timeoffs' })
+      }
+    },
+    increaseDate (date) {
+      const arrayDate = date.split('-')
+      let year = parseInt(arrayDate[0])
+      let month = parseInt(arrayDate[1])
+      let day = parseInt(arrayDate[2])
+      day++
+      switch (month) {
+        case 2:
+          if ((year % 4 === 0) && (year % 100 !== 0)) {
+            if (day > 29) {
+              day = 1
+              month++
+            }
+          } else {
+            if (day > 28) {
+              day = 1
+              month++
+            }
+          }
+          break
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+          if (day > 30) {
+            day = 1
+            month++
+          }
+          break
+        default:
+          if (day > 31) {
+            day = 1
+            month++
+          }
+      }
+      if (month === 13) {
+        month = 1
+        year++
+      }
+      let newDate = ''
+      newDate = `${year.toString()}`
+      newDate += month.toString().length === 1 ? `-0${month.toString()}` : month.toString()
+      newDate += day.toString().length === 1 ? `-0${day.toString()}` : day.toString()
+      return newDate
+    },
+    saveTimeoff (data) {
+      Store.dispatch('SAVE_TIMEOFF', data)
     },
     onReset (evt) {
       evt.preventDefault()
