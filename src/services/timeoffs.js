@@ -4,6 +4,9 @@ export default {
   fetchTimeoffs () {
     return HTTP.get('timeoff')
   },
+  fetchAll () {
+    return HTTP.get('timeoff/all')
+  },
   saveTimeoff (payload) {
     if (payload.id === 0) {
       return HTTP.post('timeoff', payload)

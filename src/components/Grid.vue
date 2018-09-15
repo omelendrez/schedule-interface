@@ -24,7 +24,9 @@
 
       <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields" head-variant="light" class="schedule-table">
         <template slot="fullName" slot-scope="data">
-          {{data.item["last_name"]}}, {{data.item["first_name"]}}
+          <span v-b-popover.hover=data.item.last_timeoff class="last-timeoff">
+            {{data.item["last_name"]}}, {{data.item["first_name"]}}
+          </span>
         </template>
       </b-table>
 
@@ -80,7 +82,7 @@ export default {
         {
           key: 'fullName',
           label: 'Empleado',
-          class: 'p-0 py-1',
+          class: 'p-0 py-1 full-name',
           thStyle: {
             width: '160px'
           }
@@ -245,7 +247,12 @@ export default {
         positionRows.push(position)
       }
       this.positionRows = positionRows
-      this.loadData()
+    },
+    allTimeoffs () {
+      const allTimeoffs = this.allTimeoffs.rows
+      if (allTimeoffs) {
+        this.loadData()
+      }
     }
   },
   computed: {
@@ -273,6 +280,9 @@ export default {
     positions () {
       return Store.state.positions
     },
+    allTimeoffs () {
+      return Store.state.allTimeoffs
+    },
     isLogged () {
       return Store.state.user.id
     }
@@ -294,6 +304,7 @@ export default {
         }
         Employee.id = emp.id
         Employee.badge = emp.badge
+        Employee.last_timeoff = this.getLastTimeoff(emp.id)
         Employee.first_name = emp.first_name
         Employee.last_name = emp.last_name
         Employee.hours = 0
@@ -458,6 +469,10 @@ export default {
       this.$nextTick(() => {
         window.print()
       })
+    },
+    getLastTimeoff (id) {
+      const item = this.allTimeoffs.rows.find(item => item.employee_id === id)
+      return item ? 'Último franco: ' + item.date : ''
     }
   },
   created () {
@@ -466,6 +481,7 @@ export default {
     }
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
     Store.dispatch('LOAD_POSITIONS')
+    Store.dispatch('LOAD_ALL_TIMEOFFS')
     this.selectedPosition.name = this.text
   }
 }
@@ -485,7 +501,7 @@ export default {
     margin: 0;
   }
   table {
-    font-size: xx-small;
+    font-size: x-small;
   }
   .no-print,
   .no-print * {
@@ -552,5 +568,8 @@ export default {
 .error {
   color: red;
   font-weight: bold;
+}
+.last-timeoff {
+  cursor: context-menu;
 }
 </style>

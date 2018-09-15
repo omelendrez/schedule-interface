@@ -38,6 +38,7 @@ const state = {
   schedules: [],
   schedule: [],
   timeoffs: [],
+  allTimeoffs: [],
   budgetTimeoffs: [],
   absenteeisms: [],
   status: [],
@@ -235,6 +236,13 @@ export default new Vuex.Store({
       const timeoff = await Schedule.fetchTimeoff(payload)
       commit(types.SET_TIMEOFF, {
         payload: timeoff.data
+      })
+    },
+
+    async [types.LOAD_ALL_TIMEOFFS] ({ commit }, payload) {
+      const allTimeoffs = await Timeoffs.fetchAll()
+      commit(types.SET_ALL_TIMEOFFS, {
+        payload: allTimeoffs.data
       })
     },
 
@@ -594,6 +602,10 @@ export default new Vuex.Store({
 
     [types.SET_TIMEOFF]: (state, { payload }) => {
       state.timeoffs = payload
+    },
+
+    [types.SET_ALL_TIMEOFFS]: (state, { payload }) => {
+      state.allTimeoffs = payload
     },
 
     [types.SET_TIMEOFFS]: (state, { payload }) => {
