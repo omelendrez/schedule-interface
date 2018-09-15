@@ -11,8 +11,12 @@
         <b-form-select v-model="form.absenteeism_id" :options="absenteeismsOptions" class="mb-3" required/>
       </b-form-group>
 
-      <b-form-group horizontal label="Día" label-for="date">
-        <b-form-input id="date" type="date" v-model="form.date" required></b-form-input>
+      <b-form-group horizontal label="Desde Fecha" label-for="dateFrom">
+        <b-form-input id="dateFrom" type="date" v-model="form.dateFrom" :disabled="dateChangeBlocked" required></b-form-input>
+      </b-form-group>
+
+      <b-form-group horizontal label="Hasta Fecha" label-for="dateTo">
+        <b-form-input id="dateTo" type="date" v-model="form.dateTo" :disabled="dateChangeBlocked" required></b-form-input>
       </b-form-group>
 
       <div class="buttons">
@@ -37,8 +41,10 @@ export default {
         id: 0,
         employee_id: 0,
         absenteeism_id: 0,
-        date: ''
+        dateFrom: '',
+        dateTo: ''
       },
+      dateChangeBlocked: true,
       employeesOptions: [],
       absenteeismsOptions: [],
       show: true,
@@ -52,9 +58,7 @@ export default {
       if (results.error) {
         this.errorMessage = results.message
         this.errorShow = results.error
-        return
       }
-      this.$router.push({ name: 'Timeoffs' })
     },
     employees () {
       const employees = this.employees.rows
@@ -108,13 +112,83 @@ export default {
   methods: {
     onSubmit (evt) {
       evt.preventDefault()
-      Store.dispatch('SAVE_TIMEOFF', this.form)
+      this.errorMessage = ''
+      this.errorShow = false
+      if (this.form.dateFrom > this.form.dateTo) {
+        this.errorMessage = 'Fecha final no puede ser anterior a fecha inicial'
+        this.errorShow = true
+        return
+      }
+      let initialDate = this.form.dateFrom
+      const finalDate = this.form.dateTo
+      while (initialDate <= finalDate) {
+        const data = {
+          id: this.form.id,
+          employee_id: this.form.employee_id,
+          absenteeism_id: this.form.absenteeism_id,
+          date: initialDate
+        }
+        this.saveTimeoff(data)
+        initialDate = this.increaseDate(initialDate)
+      }
+      if (!this.errorShow) {
+        this.$router.push({ name: 'Timeoffs' })
+      }
+    },
+    increaseDate (date) {
+      const arrayDate = date.split('-')
+      let year = parseInt(arrayDate[0])
+      let month = parseInt(arrayDate[1])
+      let day = parseInt(arrayDate[2])
+      day++
+      switch (month) {
+        case 2:
+          if ((year % 4 === 0) && (year % 100 !== 0)) {
+            if (day > 29) {
+              day = 1
+              month++
+            }
+          } else {
+            if (day > 28) {
+              day = 1
+              month++
+            }
+          }
+          break
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+          if (day > 30) {
+            day = 1
+            month++
+          }
+          break
+        default:
+          if (day > 31) {
+            day = 1
+            month++
+          }
+      }
+      if (month === 13) {
+        month = 1
+        year++
+      }
+      let newDate = ''
+      newDate = `${year.toString()}`
+      newDate += month.toString().length === 1 ? `-0${month.toString()}` : month.toString()
+      newDate += day.toString().length === 1 ? `-0${day.toString()}` : day.toString()
+      return newDate
+    },
+    saveTimeoff (data) {
+      Store.dispatch('SAVE_TIMEOFF', data)
     },
     onReset (evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.employee_id = 0
-      this.form.date = ''
+      this.form.dateFrom = ''
+      this.form.dateTo = ''
       this.form.absenteeism_id = 0
       /* Trick to reset/clear native browser form validation state */
       this.show = false
@@ -135,10 +209,12 @@ export default {
     Store.dispatch('LOAD_EMPLOYEES')
     Store.dispatch('LOAD_ABSENTEEISMS')
     if (this.item) {
+      this.dateChangeBlocked = this.item.id !== 0
       this.form.id = this.item.id
       this.form.employee_id = this.item.employee_id
       this.form.absenteeism_id = this.item.absenteeism_id
-      this.form.date = this.item._date
+      this.form.dateFrom = this.item._date
+      this.form.dateTo = this.item._date
     }
   }
 }
