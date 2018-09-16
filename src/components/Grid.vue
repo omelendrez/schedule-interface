@@ -472,7 +472,7 @@ export default {
     },
     getLastTimeoff (id) {
       const item = this.allTimeoffs.rows.find(item => item.employee_id === id)
-      return item ? 'Último franco: ' + item.date : ''
+      return item ? 'Último franco cargado: ' + item.date : ''
     }
   },
   created () {
@@ -501,7 +501,7 @@ export default {
     margin: 0;
   }
   table {
-    font-size: x-small;
+    font-size: small;
   }
   .no-print,
   .no-print * {
@@ -570,6 +570,6 @@ export default {
   font-weight: bold;
 }
 .last-timeoff {
-  cursor: context-menu;
+  cursor: help;
 }
 </style>

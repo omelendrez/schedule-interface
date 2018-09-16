@@ -170,14 +170,14 @@ export default {
             month++
           }
       }
-      if (month === 13) {
+      if (month > 12) {
         month = 1
         year++
       }
       let newDate = ''
       newDate = `${year.toString()}`
-      newDate += month.toString().length === 1 ? `-0${month.toString()}` : month.toString()
-      newDate += day.toString().length === 1 ? `-0${day.toString()}` : day.toString()
+      newDate += month.toString().length === 1 ? '-0' + month.toString() : '-' + month.toString()
+      newDate += day.toString().length === 1 ? '-0' + day.toString() : '-' + day.toString()
       return newDate
     },
     saveTimeoff (data) {
