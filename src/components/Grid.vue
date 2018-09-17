@@ -247,6 +247,7 @@ export default {
         positionRows.push(position)
       }
       this.positionRows = positionRows
+      this.loadData()
     },
     allTimeoffs () {
       const allTimeoffs = this.allTimeoffs.rows
