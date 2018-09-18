@@ -27,6 +27,11 @@
       <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
 
     </b-form>
+
+    <b-modal v-model="warningShow" header-bg-variant="info" title="Aviso" header-text-variant="light" centered @ok="handleOk" ok-title="Si. Continuar" cancel-title="No. Dejar como está" cancel-variant="danger">
+      <strong>{{warningMessage}}.</strong> Querés continuar?
+    </b-modal>
+
   </b-container>
 </template>
 
@@ -48,6 +53,9 @@ export default {
       employeesOptions: [],
       absenteeismsOptions: [],
       show: true,
+      forced: false,
+      warningShow: false,
+      warningMessage: '',
       errorShow: false,
       errorMessage: ''
     }
@@ -58,11 +66,17 @@ export default {
       if (results.error) {
         this.errorMessage = results.message
         this.errorShow = true
-      } else {
-        this.errorMessage = ''
-        this.errorShow = false
-        this.$router.push({ name: 'Timeoffs' })
+        return
       }
+      if (results.warning) {
+        this.warningMessage = results.message
+        this.warningShow = true
+        return
+      }
+      this.forced = false
+      this.errorMessage = ''
+      this.errorShow = false
+      this.$router.push({ name: 'Timeoffs' })
     },
     employees () {
       const employees = this.employees.rows
@@ -123,18 +137,7 @@ export default {
         this.errorShow = true
         return
       }
-      let initialDate = this.form.dateFrom
-      const finalDate = this.form.dateTo
-      while (initialDate <= finalDate) {
-        const data = {
-          id: this.form.id,
-          employee_id: this.form.employee_id,
-          absenteeism_id: this.form.absenteeism_id,
-          date: initialDate
-        }
-        this.saveTimeoff(data)
-        initialDate = this.increaseDate(initialDate)
-      }
+      this.saveData()
     },
     increaseDate (date) {
       const arrayDate = date.split('-')
@@ -200,6 +203,25 @@ export default {
     cleanError () {
       this.errorShow = false
       this.errorMsg = ''
+    },
+    saveData () {
+      let initialDate = this.form.dateFrom
+      const finalDate = this.form.dateTo
+      while (initialDate <= finalDate) {
+        const data = {
+          id: this.form.id,
+          employee_id: this.form.employee_id,
+          absenteeism_id: this.form.absenteeism_id,
+          date: initialDate,
+          forced: this.forced
+        }
+        this.saveTimeoff(data)
+        initialDate = this.increaseDate(initialDate)
+      }
+    },
+    handleOk () {
+      this.forced = true
+      this.saveData()
     }
   },
   created () {
