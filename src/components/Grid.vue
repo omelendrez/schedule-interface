@@ -46,6 +46,12 @@
         </p>
       </b-modal>
 
+      <b-modal v-model="warningShow" header-bg-variant="info" title="Aviso" header-text-variant="light" ok-only>
+        <p>
+          <strong>{{warningMessage}}</strong>
+        </p>
+      </b-modal>
+
       <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" ok-only>
         <b-table small :items="positionRows" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)" />
         <hr />
@@ -198,6 +204,8 @@ export default {
       recordData: {},
       showAlert: false,
       showPositions: false,
+      warningMessage: '',
+      warningShow: false,
       weekday: null,
       selectedPosition: {
         name: ''
@@ -232,6 +240,10 @@ export default {
         this.errorMessage = results.message
         this.showError = true
         return
+      }
+      if (results.warnings && results.warnings.warning) {
+        this.warningMessage = results.warnings.message
+        this.warningShow = true
       }
       Store.dispatch('LOAD_POSITIONS')
     },
@@ -406,13 +418,13 @@ export default {
               if (emp.id === parseInt(data.employeeId)) {
                 if (parseInt(data.recordId) === 0) {
                   if (emp.hours + 1 > hoursLimit) {
-                    this.alertMessage = `Le estás asignando más de 8 horas a ${emp.first_name} ${emp.last_name}`
-                    showAlert = true
+                    this.warningMessage = `Le estás asignando más de 8 horas a ${emp.first_name} ${emp.last_name}`
+                    this.warningShow = true
                   }
                   if (emp.blockedFrom) {
                     if (data.hour >= emp.blockedFrom && data.hour <= emp.blockedTo - 1) {
-                      this.alertMessage = `${emp.first_name} ${emp.last_name} tiene bloquedo de ${emp.blockedFrom} hs a ${emp.blockedTo} hs para este día de la semana`
-                      showAlert = true
+                      this.warningMessage = `${emp.first_name} ${emp.last_name} tiene bloquedo de ${emp.blockedFrom} hs a ${emp.blockedTo} hs para este día de la semana`
+                      this.warningShow = true
                     }
                   }
                 }
@@ -441,6 +453,7 @@ export default {
           color: data.positionColor
         }
         this.selectedPosition = pos
+        this.showPositions = false
       }
     },
     deleteSector () {
