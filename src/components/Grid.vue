@@ -227,6 +227,12 @@ export default {
   },
   watch: {
     results () {
+      const results = Store.state.results
+      if (results.error) {
+        this.errorMessage = results.message
+        this.showError = true
+        return
+      }
       Store.dispatch('LOAD_POSITIONS')
     },
     schedule () {
