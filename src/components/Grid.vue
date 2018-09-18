@@ -430,9 +430,7 @@ export default {
                 }
               }
             })
-            if (showAlert) {
-              this.showAlert = true
-            } else {
+            if (!this.warningShow) {
               this.saveSchedule()
             }
         }
