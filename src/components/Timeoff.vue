@@ -57,7 +57,11 @@ export default {
       const results = Store.state.results
       if (results.error) {
         this.errorMessage = results.message
-        this.errorShow = results.error
+        this.errorShow = true
+      } else {
+        this.errorMessage = ''
+        this.errorShow = false
+        this.$router.push({ name: 'Timeoffs' })
       }
     },
     employees () {
@@ -130,9 +134,6 @@ export default {
         }
         this.saveTimeoff(data)
         initialDate = this.increaseDate(initialDate)
-      }
-      if (!this.errorShow) {
-        this.$router.push({ name: 'Timeoffs' })
       }
     },
     increaseDate (date) {
