@@ -406,7 +406,6 @@ export default {
           to: parseInt(data.hour) + 1
         }
         this.recordData = record
-        let showAlert = false
         switch (this.selectedPosition.id) {
           case -1:
             if (record.id !== 0) {
