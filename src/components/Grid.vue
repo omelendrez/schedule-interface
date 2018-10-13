@@ -41,7 +41,7 @@
       <b-modal v-model="timeoffAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered ok-only>
         <p>
           Este empleado está informado como ausente con
-          <strong>{{timeoffMessage}}</strong> para este día.<br/> Si querés cargarle horas tenés que eliminar el ausentismo desde la opción
+          <strong>{{timeoffMessage}}</strong> para este día.<br /> Si querés cargarle horas tenés que eliminar el ausentismo desde la opción
           <strong>Ausencias</strong> del menú.
         </p>
       </b-modal>
@@ -242,8 +242,8 @@ export default {
         return
       }
       if (results.warnings && results.warnings.warning) {
-        this.warningMessage = results.warnings.message
-        this.warningShow = true
+        this.alertMessage = results.warnings.message
+        this.showAlert = true
       }
       Store.dispatch('LOAD_POSITIONS')
     },
@@ -406,7 +406,6 @@ export default {
           to: parseInt(data.hour) + 1
         }
         this.recordData = record
-        let showAlert = false
         switch (this.selectedPosition.id) {
           case -1:
             if (record.id !== 0) {
@@ -430,13 +429,14 @@ export default {
                 }
               }
             })
-            if (!this.warningShow) {
-              this.saveSchedule()
-            }
+            this.saveSchedule()
         }
       }
     },
     handleOk () {
+      this.alertMessage = ''
+      this.showAlert = false
+      Object.assign(this.recordData, { forced: true })
       this.saveSchedule()
     },
     saveSchedule () {
