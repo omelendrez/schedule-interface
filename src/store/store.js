@@ -380,8 +380,15 @@ export default new Vuex.Store({
       })
     },
 
-    async [types.LAUNCH_REPORT] ({ commit }, payload) {
-      const results = await Schedule.getReportData(payload)
+    async [types.LAUNCH_CONSUMED_BY_SECTOR_REPORT] ({ commit }, payload) {
+      const results = await Schedule.getConsumedBySector(payload)
+      commit(types.SET_RESULTS, {
+        payload: results.data
+      })
+    },
+
+    async [types.LAUNCH_BUDGET_VS_CONSUMED] ({ commit }) {
+      const results = await Schedule.getBudgetVsConsumed()
       commit(types.SET_RESULTS, {
         payload: results.data
       })
