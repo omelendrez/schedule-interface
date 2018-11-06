@@ -1,21 +1,19 @@
 <template>
   <b-container class="reports" fluid>
     <Header />
-    <b-card no-body>
-      <b-tabs card>
-        <b-tab title="Total horas por sector" active>
-          <HoursPerSector />
-        </b-tab>
-      </b-tabs>
-    </b-card>
-
+        <b-card-group deck>
+        <b-card class="card">
+            <b-button class="card-text" variant="info" size="lg" href="#/consumed-hours">
+              Reporte de horas consumidas
+            </b-button>
+        </b-card>
+    </b-card-group>
   </b-container>
 </template>
 
 <script>
 import Store from '../store/store'
 import Header from './Header'
-import HoursPerSector from '@/components/HoursPerSector'
 
 export default {
   name: 'Reportes',
@@ -25,8 +23,7 @@ export default {
   },
   Store,
   components: {
-    Header,
-    HoursPerSector
+    Header
   },
   computed: {
     isLogged () {
@@ -44,6 +41,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.reports {
-}
 </style>

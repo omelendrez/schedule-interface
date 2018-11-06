@@ -1,8 +1,14 @@
 <template>
-  <b-container class="reports" fluid>
+  <b-container class="consumed-hours" fluid>
+    <Header />
+    <div class="float-right back-button">
+      <b-button href="#/reports" variant="info" class="no-print" size="sm">Volver</b-button>
+    </div>
+    <h3 class="no-print">Reporte de horas consumidas</h3>
+
     <b-container class="reportForm">
       <b-form @submit.stop="onSubmit" @reset="onReset" v-if="!reportResults">
-        <b-form-group horizontal id="dateFrom" label="Desde">
+        <b-form-group horizontal id="dateFrom" label="Fecha desde">
           <b-form-input type="date" v-model.trim="form.dateFrom" required></b-form-input>
         </b-form-group>
         <b-form-group horizontal id="dateTo" label="Hasta">
@@ -22,18 +28,22 @@
         <b-button type="button" @click="print" variant="success" class="float-right no-print">Imprimir</b-button>
       </div>
       <h4>Agrupadas porSector</h4>
-      <b-table striped outlined :items="reportResults.sector"></b-table>
+      <b-table striped :items="reportResults.sector"></b-table>
       <h4>Agrupadas por Función</h4>
-      <b-table striped outlined :items="reportResults.all"></b-table>
+      <b-table striped :items="reportResults.all"></b-table>
     </b-container>
   </b-container>
 </template>
 
 <script>
 import Store from '../store/store'
+import Header from './Header'
 
 export default {
-  name: 'Reportes',
+  name: 'ConsumedHours',
+  components: {
+    Header
+  },
   data () {
     return {
       form: {
@@ -91,29 +101,29 @@ export default {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
     }
-    Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    Store.dispatch('SET_MENU_OPTION', '/reports')
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.reports {
-}
 .reportForm {
   margin: 0 auto;
   padding: 10px;
-  max-width: 300px;
+  max-width: 600px;
   text-align: center;
 }
 .buttons {
   margin-bottom: 20px;
 }
-.reportData {
+.back-button {
+  margin: 14px;
 }
+
 @media print {
   h3 {
-    font-size: 1.6em;
+    font-size: 1.5em;
   }
   h4 {
     font-size: 1.2em;

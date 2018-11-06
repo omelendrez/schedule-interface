@@ -24,6 +24,7 @@ import Employee from '@/components/Employee'
 import Users from '@/components/Users'
 import User from '@/components/User'
 import Reports from '@/components/Reports'
+import ConsumedHours from '@/components/ConsumedHours'
 
 Vue.use(Router)
 
@@ -148,6 +149,11 @@ export default new Router({
       path: '/reports',
       name: 'Reports',
       component: Reports
+    },
+    {
+      path: '/consumed-hours',
+      name: 'ConsumedHours',
+      component: ConsumedHours
     }
   ]
 })

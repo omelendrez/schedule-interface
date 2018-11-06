@@ -6,7 +6,7 @@
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
       <b-navbar-brand href="#/">
-        <i class="fas fa-home text-primary"></i>
+        <i class="fas fa-home"></i>
         Turnos Big Six
       </b-navbar-brand>
 
