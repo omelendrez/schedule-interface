@@ -27,7 +27,7 @@
         <b-button type="button" @click="back" variant="primary" class="no-print">Cambiar fechas</b-button>
         <b-button type="button" @click="print" variant="success" class="float-right no-print">Imprimir</b-button>
       </div>
-      <h4>Agrupadas porSector</h4>
+      <h4>Agrupadas por Sector</h4>
       <b-table striped :items="reportResults.sector"></b-table>
       <h4>Agrupadas por Función</h4>
       <b-table striped :items="reportResults.all"></b-table>
