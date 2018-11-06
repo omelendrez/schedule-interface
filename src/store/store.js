@@ -51,7 +51,8 @@ const state = {
   record: [],
   results: [],
   selectedEmployee: [],
-  selectedPosition: []
+  selectedPosition: [],
+  reportResults: []
 }
 
 export default new Vuex.Store({
@@ -376,6 +377,13 @@ export default new Vuex.Store({
       const timeoff = await Timeoffs.deleteTimeoff(item.id)
       commit(types.SET_RESULTS, {
         payload: timeoff.data
+      })
+    },
+
+    async [types.LAUNCH_REPORT] ({ commit }, payload) {
+      const results = await Schedule.getReportData(payload)
+      commit(types.SET_RESULTS, {
+        payload: results.data
       })
     }
   },

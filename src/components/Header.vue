@@ -6,7 +6,7 @@
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
       <b-navbar-brand href="#/">
-        <i class="fas fa-home text-primary"></i>
+        <i class="fas fa-home"></i>
         Turnos Big Six
       </b-navbar-brand>
 
@@ -25,6 +25,7 @@
           <b-navbar-nav v-if="isLogged">
             <b-nav-item v-bind:active="menuOption === '/budgets'" href="#/budgets">Presupuestos</b-nav-item>
             <b-nav-item v-bind:active="menuOption === '/timeoffs'" href="#/timeoffs">Ausencias</b-nav-item>
+            <b-nav-item v-bind:active="menuOption === '/reports'" href="#/reports">Reportes</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
