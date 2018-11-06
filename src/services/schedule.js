@@ -23,7 +23,10 @@ export default {
   deleteSchedule (payload) {
     return HTTP.delete(`schedule/${payload}`)
   },
-  getReportData (payload) {
-    return HTTP.get(`schedule/report/${payload.dateFrom}/${payload.dateTo}`)
+  getConsumedBySector (payload) {
+    return HTTP.get(`schedule/report1/${payload.dateFrom}/${payload.dateTo}`)
+  },
+  getBudgetVsConsumed () {
+    return HTTP.get('schedule/report2')
   }
 }
