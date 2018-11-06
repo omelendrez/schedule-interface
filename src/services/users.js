@@ -5,7 +5,7 @@ export default {
     return HTTP.get('user')
   },
   login (payload) {
-    return HTTP.get('login', { params: payload })
+    return HTTP.post('login', payload)
   },
   saveUser (payload) {
     if (payload.id === 0) {

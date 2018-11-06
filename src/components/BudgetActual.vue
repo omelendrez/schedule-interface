@@ -26,10 +26,7 @@ export default {
   },
   data () {
     return {
-      reportResults: [
-        {name: 'Workout', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}},
-        {name: 'Call parents', data: {'2017-01-01 00:00:00 -0800': 5, '2017-01-02 00:00:00 -0800': 3}}
-      ]
+      reportResults: []
     }
   },
   Store,
@@ -101,7 +98,7 @@ export default {
         name: 'Horas Presupuestadas',
         data: data
       }
-      this.reportResults = [actual, budget]
+      this.reportResults = [budget, actual]
     }
   },
   computed: {
