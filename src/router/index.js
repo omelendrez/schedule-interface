@@ -23,6 +23,7 @@ import Employees from '@/components/Employees'
 import Employee from '@/components/Employee'
 import Users from '@/components/Users'
 import User from '@/components/User'
+import Reports from '@/components/Reports'
 
 Vue.use(Router)
 
@@ -142,6 +143,11 @@ export default new Router({
       path: '/user',
       name: 'User',
       component: User
+    },
+    {
+      path: '/reports',
+      name: 'Reports',
+      component: Reports
     }
   ]
 })

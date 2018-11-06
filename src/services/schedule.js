@@ -22,5 +22,8 @@ export default {
   },
   deleteSchedule (payload) {
     return HTTP.delete(`schedule/${payload}`)
+  },
+  getReportData (payload) {
+    return HTTP.get(`schedule/report/${payload.dateFrom}/${payload.dateTo}`)
   }
 }
