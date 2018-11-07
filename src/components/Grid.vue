@@ -9,7 +9,6 @@
     </div>
 
     <div>
-
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
       <h5 class="no-print">
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
@@ -27,6 +26,66 @@
           <span v-b-popover.hover=data.item.last_timeoff class="last-timeoff">
             {{data.item["last_name"]}}, {{data.item["first_name"]}}
           </span>
+        </template>
+        <template slot="h06" slot-scope="data">
+          <div v-html='data.item["h06"]'></div>
+        </template>
+        <template slot="h07" slot-scope="data">
+          <div v-html='data.item["h07"]'></div>
+        </template>
+        <template slot="h08" slot-scope="data">
+          <div v-html='data.item["h08"]'></div>
+        </template>
+        <template slot="h09" slot-scope="data">
+          <div v-html='data.item["h09"]'></div>
+        </template>
+        <template slot="h10" slot-scope="data">
+          <div v-html='data.item["h10"]'></div>
+        </template>
+        <template slot="h11" slot-scope="data">
+          <div v-html='data.item["h11"]'></div>
+        </template>
+        <template slot="h12" slot-scope="data">
+          <div v-html='data.item["h12"]'></div>
+        </template>
+        <template slot="h13" slot-scope="data">
+          <div v-html='data.item["h13"]'></div>
+        </template>
+        <template slot="h14" slot-scope="data">
+          <div v-html='data.item["h14"]'></div>
+        </template>
+        <template slot="h15" slot-scope="data">
+          <div v-html='data.item["h15"]'></div>
+        </template>
+        <template slot="h16" slot-scope="data">
+          <div v-html='data.item["h16"]'></div>
+        </template>
+        <template slot="h17" slot-scope="data">
+          <div v-html='data.item["h17"]'></div>
+        </template>
+        <template slot="h18" slot-scope="data">
+          <div v-html='data.item["h18"]'></div>
+        </template>
+        <template slot="h19" slot-scope="data">
+          <div v-html='data.item["h19"]'></div>
+        </template>
+        <template slot="h20" slot-scope="data">
+          <div v-html='data.item["h20"]'></div>
+        </template>
+        <template slot="h21" slot-scope="data">
+          <div v-html='data.item["h21"]'></div>
+        </template>
+        <template slot="h22" slot-scope="data">
+          <div v-html='data.item["h22"]'></div>
+        </template>
+        <template slot="h23" slot-scope="data">
+          <div v-html='data.item["h23"]'></div>
+        </template>
+        <template slot="h24" slot-scope="data">
+          <div v-html='data.item["h24"]'></div>
+        </template>
+        <template slot="h25" slot-scope="data">
+          <div v-html='data.item["h25"]'></div>
         </template>
       </b-table>
 
@@ -54,6 +113,16 @@
 
       <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" ok-only>
         <b-table small :items="positionRows" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)" />
+        <template slot="positionColor" slot-scope="data">
+          <div v-html='data.item.position_color'></div>
+        </template>
+        <template slot="sector_position" slot-scope="data">
+          <div v-html='data.item.sector_position'></div>
+        </template>
+        <template slot="hours" slot-scope="data">
+          <div v-html='data.item.hours'></div>
+        </template>
+
         <hr />
         <div>
           <div class="delete-sector" @click="deleteSector"></div>
@@ -213,7 +282,7 @@ export default {
       text: 'Haga click aquí para seleccionar un Sector',
       colorFields: [
         {
-          key: 'color',
+          key: 'positionColor',
           label: '&nbsp;',
           class: 'p-0 py-1'
         },
@@ -255,15 +324,14 @@ export default {
     positions () {
       const positionRows = []
       const positions = this.positions.rows
-      for (let i = 0; i < positions.length; i++) {
-        const pos = positions[i]
-        let position = {}
-        position.color = pos.div
+      positions.map(pos => {
+        const position = {}
+        position.position_color = pos.div
         position.hours = 0
         position.id = pos.id
-        position.sector_position = `${pos['sector.name']} - ${pos['name']}`
+        position.sector_position = `${pos['sector.name']} - ${pos.name}`
         positionRows.push(position)
-      }
+      })
       this.positionRows = positionRows
       this.loadData()
     },

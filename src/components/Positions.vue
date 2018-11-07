@@ -15,6 +15,13 @@
     </b-form-group>
 
     <b-table hover outlined :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage" :current-page="currentPage" head-variant="light">
+        <template slot="div" slot-scope="data">
+          <div v-html='data.item.div'></div>
+        </template>
+        <template slot="div2" slot-scope="data">
+          <div v-html='data.item.div2'></div>
+        </template>
+
       <template slot="acciones" slot-scope="cell" v-if="isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" variant="danger" @click.stop="deleteItem(cell.item, 1)">Eliminar</b-btn>
