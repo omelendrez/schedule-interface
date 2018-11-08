@@ -425,22 +425,21 @@ export default new Vuex.Store({
     [types.SET_POSITIONS]: (state, { payload }) => {
       const positions = payload.rows
       const records = []
-      let record = {}
-      for (let i = 0; i < positions.length; i++) {
-        record = {
-          id: positions[i].id,
-          created_at: positions[i].created_at,
-          name: positions[i].name,
-          color: positions[i].color,
-          div: `<div data-position-id="${positions[i].id}" data-position-name="${positions[i]['sector.name']} - ${positions[i].name}" data-position-color="${positions[i].color}" style="background-color:${positions[i].color};width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
-          text: positions[i].text,
-          div2: `<div style="background-color:${positions[i].text};width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
-          sector_id: positions[i].sector_id,
-          updated_at: positions[i].updated_at,
-          'sector.name': positions[i]['sector.name']
+      positions.map(pos => {
+        const record = {
+          id: pos.id,
+          created_at: pos.created_at,
+          name: pos.name,
+          color: pos.color,
+          div: `<div data-position-id="${pos.id}" data-position-name="${pos['sector.name']} - ${pos.name}" data-position-color="${pos.color}" style="background-color:${pos.color};width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
+          text: pos.text,
+          div2: `<div style="background-color:${pos.text};width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
+          sector_id: pos.sector_id,
+          updated_at: pos.updated_at,
+          'sector.name': pos['sector.name']
         }
         records.push(record)
-      }
+      })
       state.positions = {
         rows: records,
         count: payload.count
