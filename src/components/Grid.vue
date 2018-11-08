@@ -167,6 +167,7 @@ export default {
         this.alertMessage = results.warnings.message
         this.showAlert = true
       }
+      this.loadData()
     },
     schedule () {
       const rows = this.schedule.rows
