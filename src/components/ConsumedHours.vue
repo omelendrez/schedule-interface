@@ -68,7 +68,7 @@ export default {
         this.errorShow = true
         return
       }
-      Store.dispatch('LAUNCH_REPORT', this.form)
+      Store.dispatch('LAUNCH_CONSUMED_BY_SECTOR_REPORT', this.form)
     },
     onReset () {
 

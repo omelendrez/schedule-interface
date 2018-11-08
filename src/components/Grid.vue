@@ -9,7 +9,6 @@
     </div>
 
     <div>
-
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
       <h5 class="no-print">
         Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
@@ -27,6 +26,66 @@
           <span v-b-popover.hover=data.item.last_timeoff class="last-timeoff">
             {{data.item["last_name"]}}, {{data.item["first_name"]}}
           </span>
+        </template>
+        <template slot="h06" slot-scope="data">
+          <div v-html='data.item["h06"]'></div>
+        </template>
+        <template slot="h07" slot-scope="data">
+          <div v-html='data.item["h07"]'></div>
+        </template>
+        <template slot="h08" slot-scope="data">
+          <div v-html='data.item["h08"]'></div>
+        </template>
+        <template slot="h09" slot-scope="data">
+          <div v-html='data.item["h09"]'></div>
+        </template>
+        <template slot="h10" slot-scope="data">
+          <div v-html='data.item["h10"]'></div>
+        </template>
+        <template slot="h11" slot-scope="data">
+          <div v-html='data.item["h11"]'></div>
+        </template>
+        <template slot="h12" slot-scope="data">
+          <div v-html='data.item["h12"]'></div>
+        </template>
+        <template slot="h13" slot-scope="data">
+          <div v-html='data.item["h13"]'></div>
+        </template>
+        <template slot="h14" slot-scope="data">
+          <div v-html='data.item["h14"]'></div>
+        </template>
+        <template slot="h15" slot-scope="data">
+          <div v-html='data.item["h15"]'></div>
+        </template>
+        <template slot="h16" slot-scope="data">
+          <div v-html='data.item["h16"]'></div>
+        </template>
+        <template slot="h17" slot-scope="data">
+          <div v-html='data.item["h17"]'></div>
+        </template>
+        <template slot="h18" slot-scope="data">
+          <div v-html='data.item["h18"]'></div>
+        </template>
+        <template slot="h19" slot-scope="data">
+          <div v-html='data.item["h19"]'></div>
+        </template>
+        <template slot="h20" slot-scope="data">
+          <div v-html='data.item["h20"]'></div>
+        </template>
+        <template slot="h21" slot-scope="data">
+          <div v-html='data.item["h21"]'></div>
+        </template>
+        <template slot="h22" slot-scope="data">
+          <div v-html='data.item["h22"]'></div>
+        </template>
+        <template slot="h23" slot-scope="data">
+          <div v-html='data.item["h23"]'></div>
+        </template>
+        <template slot="h24" slot-scope="data">
+          <div v-html='data.item["h24"]'></div>
+        </template>
+        <template slot="h25" slot-scope="data">
+          <div v-html='data.item["h25"]'></div>
         </template>
       </b-table>
 
@@ -53,16 +112,7 @@
       </b-modal>
 
       <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" ok-only>
-        <b-table small :items="positionRows" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)" />
-        <hr />
-        <div>
-          <div class="delete-sector" @click="deleteSector"></div>
-          <div class="in-line">Borrar actividad</div>
-        </div>
-        <div>
-          <div class="de-activate" @click="deActivate"></div>
-          <div class="in-line">Desactivar click</div>
-        </div>
+        <Positions :selectPosition="selectPosition" :deleteSector="deleteSector" :deActivate="deActivate" :positionRows="positionRows" />
       </b-modal>
 
     </div>
@@ -73,6 +123,7 @@
 <script>
 import Store from '../store/store'
 import Header from './Header'
+import Positions from './lib/Positions'
 import { hoursLimit } from './../store/constants'
 
 export default {
@@ -210,28 +261,12 @@ export default {
       selectedPosition: {
         name: ''
       },
-      text: 'Haga click aquí para seleccionar un Sector',
-      colorFields: [
-        {
-          key: 'color',
-          label: '&nbsp;',
-          class: 'p-0 py-1'
-        },
-        {
-          key: 'sector_position',
-          label: 'Sector / Función',
-          class: 'p-0 py-1'
-        },
-        {
-          key: 'hours',
-          label: 'Horas',
-          class: 'text-right p-0 py-1'
-        }
-      ]
+      text: 'Haga click aquí para seleccionar un Sector'
     }
   },
   components: {
-    Header
+    Header,
+    Positions
   },
   watch: {
     results () {
@@ -245,33 +280,28 @@ export default {
         this.alertMessage = results.warnings.message
         this.showAlert = true
       }
-      Store.dispatch('LOAD_POSITIONS')
     },
     schedule () {
       const rows = this.schedule.rows
       this.weekday = this.budget._weekday
       this.loadGrid(rows)
     },
-    positions () {
-      const positionRows = []
-      const positions = this.positions.rows
-      for (let i = 0; i < positions.length; i++) {
-        const pos = positions[i]
-        let position = {}
-        position.color = pos.div
-        position.hours = 0
-        position.id = pos.id
-        position.sector_position = `${pos['sector.name']} - ${pos['name']}`
-        positionRows.push(position)
-      }
-      this.positionRows = positionRows
-      this.loadData()
-    },
     allTimeoffs () {
       const allTimeoffs = this.allTimeoffs.rows
       if (allTimeoffs) {
         this.loadData()
       }
+    },
+    positions () {
+      const positions = this.positions.rows
+      positions.map(pos => {
+        const position = {}
+        position.color = pos.div
+        position.hours = 0
+        position.id = pos.id
+        position.sector_position = `${pos['sector.name']} - ${pos.name}`
+        this.positionRows.push(position)
+      })
     }
   },
   computed: {
@@ -296,14 +326,14 @@ export default {
     footer () {
       return Store.state.budget.rows.footer
     },
-    positions () {
-      return Store.state.positions
-    },
     allTimeoffs () {
       return Store.state.allTimeoffs
     },
     isLogged () {
       return Store.state.user.id
+    },
+    positions () {
+      return Store.state.positions
     }
   },
   methods: {
@@ -442,6 +472,28 @@ export default {
     saveSchedule () {
       Store.dispatch('SAVE_SCHEDULE', this.recordData)
     },
+    loadData () {
+      const data = {
+        date: this.record._date,
+        branch_id: this.record.branch_id
+      }
+      Store.dispatch('LOAD_SCHEDULE', data)
+    },
+    goProgram () {
+      this.$router.push({ name: 'Program' })
+    },
+    goBack () {
+      this.$router.push({ name: 'Budgets' })
+    },
+    printGrid () {
+      this.$nextTick(() => {
+        window.print()
+      })
+    },
+    getLastTimeoff (id) {
+      const item = this.allTimeoffs.rows.find(item => item.employee_id === id)
+      return item ? 'Último franco cargado: ' + item.date : ''
+    },
     selectPosition (item) {
       const data = item.target.dataset
       if (data.positionId) {
@@ -469,36 +521,14 @@ export default {
         color: '#ccc'
       }
       this.selectedPosition = pos
-    },
-    loadData () {
-      const data = {
-        date: this.record._date,
-        branch_id: this.record.branch_id
-      }
-      Store.dispatch('LOAD_SCHEDULE', data)
-    },
-    goProgram () {
-      this.$router.push({ name: 'Program' })
-    },
-    goBack () {
-      this.$router.push({ name: 'Budgets' })
-    },
-    printGrid () {
-      this.$nextTick(() => {
-        window.print()
-      })
-    },
-    getLastTimeoff (id) {
-      const item = this.allTimeoffs.rows.find(item => item.employee_id === id)
-      return item ? 'Último franco cargado: ' + item.date : ''
     }
   },
   created () {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
     }
-    Store.dispatch('SET_MENU_OPTION', this.$route.path)
     Store.dispatch('LOAD_POSITIONS')
+    Store.dispatch('SET_MENU_OPTION', this.$route.path)
     Store.dispatch('LOAD_ALL_TIMEOFFS')
     this.selectedPosition.name = this.text
   }
@@ -548,40 +578,8 @@ export default {
   font-weight: bold;
   font-size: 1.2em;
 }
-.position-color {
-  width: 21px;
-  border-radius: 4px;
-  display: inline-block;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  background-color: #ccc;
-}
 .position-group {
   cursor: pointer;
-}
-.in-line {
-  height: 30px;
-  display: inline-block;
-  margin-left: 14px;
-  vertical-align: middle;
-}
-.delete-sector {
-  display: inline-block;
-  width: 21px;
-  height: 21px;
-  border-radius: 4px;
-  margin-left: 14px;
-  cursor: pointer;
-  border: 1px solid red;
-}
-.de-activate {
-  display: inline-block;
-  width: 21px;
-  height: 21px;
-  border-radius: 4px;
-  margin-left: 14px;
-  cursor: pointer;
-  border: 1px solid #ccc;
 }
 .error {
   color: red;
