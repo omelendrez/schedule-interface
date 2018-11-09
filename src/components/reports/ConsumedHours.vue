@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import Store from '../store/store'
-import Header from './Header'
+import Store from '@/store/store'
+import Header from '@/components/Header'
 
 export default {
   name: 'ConsumedHours',

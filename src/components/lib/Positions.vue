@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-table :items="positionRows" :fields="colorFields" head-variant="light" hover @click.native="selectPosition($event)">
+    <b-table :items="positionRows" :fields="fields" head-variant="light" hover @click.native="selectPosition($event)">
       <template slot="color" slot-scope="data">
         <div v-html="data.item.color"></div>
       </template>
@@ -10,21 +10,23 @@
       <template slot="hours" slot-scope="data">
         {{data.item.hours}}
       </template>
-      <hr />
-      <div>
-        <div class="delete-sector" @click="deleteSector"></div>
-        <div class="in-line">Borrar actividad</div>
-      </div>
-      <div>
-        <div class="de-activate" @click="deActivate"></div>
-        <div class="in-line">Desactivar click</div>
-      </div>
     </b-table>
+    <hr />
+    <div>
+      <div class="delete-sector" @click="deleteSector"></div>
+      <div class="in-line">Borrar actividad</div>
+    </div>
+    <div>
+      <div class="de-activate" @click="deActivate"></div>
+      <div class="in-line">Desactivar click</div>
+    </div>
   </div>
 </template>
 
 <script>
-import Store from './../../store/store'
+import Store from '@/store/store'
+const fields = require('@/utils/fields.json').positions
+
 export default {
   name: 'Positions',
   Store,
@@ -48,23 +50,7 @@ export default {
   },
   data () {
     return {
-      colorFields: [
-        {
-          key: 'color',
-          label: '&nbsp;',
-          class: 'p-0 py-1'
-        },
-        {
-          key: 'sector_position',
-          label: 'Sector / Función',
-          class: 'p-0 py-1'
-        },
-        {
-          key: 'hours',
-          label: 'Horas',
-          class: 'text-right p-0 py-1'
-        }
-      ]
+      fields: fields
     }
   }
 }

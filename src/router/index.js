@@ -24,8 +24,8 @@ import Employee from '@/components/Employee'
 import Users from '@/components/Users'
 import User from '@/components/User'
 import Reports from '@/components/Reports'
-import ConsumedHours from '@/components/ConsumedHours'
-import BudgetActual from '@/components/BudgetActual'
+import ConsumedHours from '@/components/reports/ConsumedHours'
+import BudgetActual from '@/components/reports/BudgetActual'
 
 Vue.use(Router)
 
