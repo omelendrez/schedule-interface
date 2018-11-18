@@ -94,7 +94,7 @@
       </b-card>
 
       <b-modal v-model="showAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered @ok="handleOk" ok-title="Si. Continuar" cancel-title="No. Dejar como está" cancel-variant="danger">
-        <strong>{{alertMessage}}.</strong> Querés continuar?
+        <strong>{{alertMessage}}</strong> <p>Querés continuar?</p>
       </b-modal>
 
       <b-modal v-model="timeoffAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered ok-only>
@@ -124,12 +124,11 @@
 import Store from '@/store/store'
 import Header from './Header'
 import Positions from './lib/Positions'
-import { hoursLimit } from '@/store/constants'
 const fields = require('@/utils/fields.json').grid
 
 export default {
   name: 'Grid',
-  data () {
+  data() {
     return {
       alertMessage: '',
       showError: false,
@@ -156,7 +155,7 @@ export default {
     Positions
   },
   watch: {
-    results () {
+    results() {
       const results = Store.state.results
       if (results.error) {
         this.errorMessage = results.message
@@ -169,18 +168,18 @@ export default {
       }
       this.loadData()
     },
-    schedule () {
+    schedule() {
       const rows = this.schedule.rows
       this.weekday = this.budget._weekday
       this.loadGrid(rows)
     },
-    allTimeoffs () {
+    allTimeoffs() {
       const allTimeoffs = this.allTimeoffs.rows
       if (allTimeoffs) {
         this.loadData()
       }
     },
-    positions () {
+    positions() {
       const positions = this.positions.rows
       positions.map(pos => {
         const position = {}
@@ -193,39 +192,39 @@ export default {
     }
   },
   computed: {
-    results () {
+    results() {
       return Store.state.results
     },
-    record () {
+    record() {
       return Store.state.record
     },
-    budget () {
+    budget() {
       return Store.state.budget.rows
     },
-    schedule () {
+    schedule() {
       return Store.state.schedule
     },
-    totalHoursBudget () {
+    totalHoursBudget() {
       return Store.state.budget.rows.hours
     },
-    totalScheduledHours () {
+    totalScheduledHours() {
       return Store.state.schedule.scheduled
     },
-    footer () {
+    footer() {
       return Store.state.budget.rows.footer
     },
-    allTimeoffs () {
+    allTimeoffs() {
       return Store.state.allTimeoffs
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    positions () {
+    positions() {
       return Store.state.positions
     }
   },
   methods: {
-    loadGrid (rows) {
+    loadGrid(rows) {
       this.scheduleRows = []
       rows.map(emp => {
         let Employee = {}
@@ -273,7 +272,7 @@ export default {
           for (let i = 0; i < data.length; i++) {
             const rec = data[i]
             rec.timeoff = ''
-            const hours = (parseInt(rec.to) - parseInt(rec.from))
+            const hours = parseInt(rec.to) - parseInt(rec.from)
             Employee.hours += hours
             this.positionRows.map(pos => {
               if (pos.id === rec.position_id) {
@@ -287,7 +286,8 @@ export default {
             }
           }
           if (Employee.hours < 4) {
-            this.errorMessage = 'ATENCIÓN! Tenés empleados con menos de 4 horas asignadas'
+            this.errorMessage =
+              'ATENCIÓN! Tenés empleados con menos de 4 horas asignadas'
             this.showError = true
           } else {
             this.errorMessage = ''
@@ -297,13 +297,22 @@ export default {
         this.scheduleRows.push(Employee)
       })
     },
-    fillCell (Employee, rec, h) {
+    fillCell(Employee, rec, h) {
       if (rec.position.name && rec.position.name.length > 6) {
         rec.position.name = rec.position.name.substring(0, 5) + '...'
       }
-      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-timeoff="${rec.timeoff}" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id}" data-employee-id="${Employee.id}" data-hour="${h}" class="my-div" style="background-color:${rec.position.color || '#ffffff'};color:${rec.position.text || '#000000'};cursor:pointer;font-size:9px;padding-top:3px;padding-bottom:3px;overflow:hidden;">${rec.position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
+      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-timeoff="${
+        rec.timeoff
+      }" data-budget-id="${rec.budget_id}" data-position-id="${
+        rec.position_id
+      }" data-employee-id="${
+        Employee.id
+      }" data-hour="${h}" class="my-div" style="background-color:${rec.position
+        .color || '#ffffff'};color:${rec.position.text ||
+        '#000000'};cursor:pointer;font-size:9px;padding-top:3px;padding-bottom:3px;overflow:hidden;">${rec
+        .position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
     },
-    selectCell (item) {
+    selectCell(item) {
       const data = item.target.dataset
       if (data.recordId) {
         if (data.timeoff !== '') {
@@ -331,58 +340,42 @@ export default {
             }
             break
           default:
-            this.scheduleRows.map(emp => {
-              if (emp.id === parseInt(data.employeeId)) {
-                if (parseInt(data.recordId) === 0) {
-                  if (emp.hours + 1 > hoursLimit) {
-                    this.warningMessage = `Le estás asignando más de 8 horas a ${emp.first_name} ${emp.last_name}`
-                    this.warningShow = true
-                  }
-                  if (emp.blockedFrom) {
-                    if (data.hour >= emp.blockedFrom && data.hour <= emp.blockedTo - 1) {
-                      this.warningMessage = `${emp.first_name} ${emp.last_name} tiene bloquedo de ${emp.blockedFrom} hs a ${emp.blockedTo} hs para este día de la semana`
-                      this.warningShow = true
-                    }
-                  }
-                }
-              }
-            })
             this.saveSchedule()
         }
       }
     },
-    handleOk () {
+    handleOk() {
       this.alertMessage = ''
       this.showAlert = false
       Object.assign(this.recordData, { forced: true })
       this.saveSchedule()
     },
-    saveSchedule () {
+    saveSchedule() {
       Store.dispatch('SAVE_SCHEDULE', this.recordData)
     },
-    loadData () {
+    loadData() {
       const data = {
         date: this.record._date,
         branch_id: this.record.branch_id
       }
       Store.dispatch('LOAD_SCHEDULE', data)
     },
-    goProgram () {
+    goProgram() {
       this.$router.push({ name: 'Program' })
     },
-    goBack () {
+    goBack() {
       this.$router.push({ name: 'Budgets' })
     },
-    printGrid () {
+    printGrid() {
       this.$nextTick(() => {
         window.print()
       })
     },
-    getLastTimeoff (id) {
+    getLastTimeoff(id) {
       const item = this.allTimeoffs.rows.find(item => item.employee_id === id)
       return item ? 'Último franco cargado: ' + item.date : ''
     },
-    selectPosition (item) {
+    selectPosition(item) {
       const data = item.target.dataset
       if (data.positionId) {
         const pos = {
@@ -394,7 +387,7 @@ export default {
         this.showPositions = false
       }
     },
-    deleteSector () {
+    deleteSector() {
       const pos = {
         id: -1,
         name: 'Borrar actividad',
@@ -402,7 +395,7 @@ export default {
       }
       this.selectedPosition = pos
     },
-    deActivate () {
+    deActivate() {
       const pos = {
         id: 0,
         name: this.text,
@@ -411,7 +404,7 @@ export default {
       this.selectedPosition = pos
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
     }
