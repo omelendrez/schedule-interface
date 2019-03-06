@@ -1,6 +1,6 @@
 {
   "name": "schedule-interface",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "User Interface for Schedule",
   "author": "omelendrez <omar.melendrez@gmail.com>",
   "scripts": {
