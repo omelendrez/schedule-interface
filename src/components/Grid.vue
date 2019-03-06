@@ -1,6 +1,6 @@
 <template>
   <b-container class="grid" fluid>
-    <Header />
+    <Header/>
 
     <div class="pull-right no-print">
       <b-btn variant="info" @click.stop="goProgram">Programa</b-btn>
@@ -10,9 +10,9 @@
 
     <div>
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
-      <h5 class="no-print">
-        Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}
-      </h5>
+      <h5
+        class="no-print"
+      >Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}</h5>
 
       <div @click="showPositions = true" class="position-group no-print">
         <div class="position">Sector seleccionado:</div>
@@ -21,106 +21,150 @@
         <div class="pull-right error" :show="showError">{{ errorMessage }}</div>
       </div>
 
-      <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields" head-variant="light" class="schedule-table">
+      <b-table
+        small
+        bordered
+        :items="scheduleRows"
+        @click.native="selectCell($event)"
+        :fields="fields"
+        head-variant="light"
+        class="schedule-table"
+      >
         <template slot="fullName" slot-scope="data">
-          <span v-b-popover.hover=data.item.last_timeoff class="last-timeoff">
-            {{data.item["last_name"]}}, {{data.item["first_name"]}}
-          </span>
+          <span
+            v-b-popover.hover="data.item.last_timeoff"
+            class="last-timeoff"
+          >{{data.item["last_name"]}}, {{data.item["first_name"]}}</span>
         </template>
         <template slot="h06" slot-scope="data">
-          <div v-html='data.item["h06"]'></div>
+          <div v-html="data.item['h06']"></div>
         </template>
         <template slot="h07" slot-scope="data">
-          <div v-html='data.item["h07"]'></div>
+          <div v-html="data.item['h07']"></div>
         </template>
         <template slot="h08" slot-scope="data">
-          <div v-html='data.item["h08"]'></div>
+          <div v-html="data.item['h08']"></div>
         </template>
         <template slot="h09" slot-scope="data">
-          <div v-html='data.item["h09"]'></div>
+          <div v-html="data.item['h09']"></div>
         </template>
         <template slot="h10" slot-scope="data">
-          <div v-html='data.item["h10"]'></div>
+          <div v-html="data.item['h10']"></div>
         </template>
         <template slot="h11" slot-scope="data">
-          <div v-html='data.item["h11"]'></div>
+          <div v-html="data.item['h11']"></div>
         </template>
         <template slot="h12" slot-scope="data">
-          <div v-html='data.item["h12"]'></div>
+          <div v-html="data.item['h12']"></div>
         </template>
         <template slot="h13" slot-scope="data">
-          <div v-html='data.item["h13"]'></div>
+          <div v-html="data.item['h13']"></div>
         </template>
         <template slot="h14" slot-scope="data">
-          <div v-html='data.item["h14"]'></div>
+          <div v-html="data.item['h14']"></div>
         </template>
         <template slot="h15" slot-scope="data">
-          <div v-html='data.item["h15"]'></div>
+          <div v-html="data.item['h15']"></div>
         </template>
         <template slot="h16" slot-scope="data">
-          <div v-html='data.item["h16"]'></div>
+          <div v-html="data.item['h16']"></div>
         </template>
         <template slot="h17" slot-scope="data">
-          <div v-html='data.item["h17"]'></div>
+          <div v-html="data.item['h17']"></div>
         </template>
         <template slot="h18" slot-scope="data">
-          <div v-html='data.item["h18"]'></div>
+          <div v-html="data.item['h18']"></div>
         </template>
         <template slot="h19" slot-scope="data">
-          <div v-html='data.item["h19"]'></div>
+          <div v-html="data.item['h19']"></div>
         </template>
         <template slot="h20" slot-scope="data">
-          <div v-html='data.item["h20"]'></div>
+          <div v-html="data.item['h20']"></div>
         </template>
         <template slot="h21" slot-scope="data">
-          <div v-html='data.item["h21"]'></div>
+          <div v-html="data.item['h21']"></div>
         </template>
         <template slot="h22" slot-scope="data">
-          <div v-html='data.item["h22"]'></div>
+          <div v-html="data.item['h22']"></div>
         </template>
         <template slot="h23" slot-scope="data">
-          <div v-html='data.item["h23"]'></div>
+          <div v-html="data.item['h23']"></div>
         </template>
         <template slot="h24" slot-scope="data">
-          <div v-html='data.item["h24"]'></div>
+          <div v-html="data.item['h24']"></div>
         </template>
         <template slot="h25" slot-scope="data">
-          <div v-html='data.item["h25"]'></div>
+          <div v-html="data.item['h25']"></div>
         </template>
       </b-table>
 
       <b-card title="Mensaje" class="mb-2" v-show="footer">
-        <p class="card-text"> {{ footer }} </p>
+        <p class="card-text">{{ footer }}</p>
       </b-card>
 
-      <b-modal v-model="showAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered @ok="handleOk" ok-title="Si. Continuar" cancel-title="No. Dejar como está" cancel-variant="danger">
-        <strong>{{alertMessage}}</strong> <p>Querés continuar?</p>
+      <b-modal
+        v-model="showAlert"
+        header-bg-variant="info"
+        title="Aviso"
+        header-text-variant="light"
+        centered
+        @ok="handleOk"
+        ok-title="Si. Continuar"
+        cancel-title="No. Dejar como está"
+        cancel-variant="danger"
+      >
+        <strong>{{alertMessage}}</strong>
+        <p>Querés continuar?</p>
       </b-modal>
 
-      <b-modal v-model="timeoffAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered ok-only>
+      <b-modal
+        v-model="timeoffAlert"
+        header-bg-variant="info"
+        title="Aviso"
+        header-text-variant="light"
+        centered
+        ok-only
+      >
         <p>
           Este empleado está informado como ausente con
-          <strong>{{timeoffMessage}}</strong> para este día.<br /> Si querés cargarle horas tenés que eliminar el ausentismo desde la opción
+          <strong>{{timeoffMessage}}</strong> para este día.
+          <br>Si querés cargarle horas tenés que eliminar el ausentismo desde la opción
           <strong>Ausencias</strong> del menú.
         </p>
       </b-modal>
 
-      <b-modal v-model="warningShow" header-bg-variant="info" title="Aviso" header-text-variant="light" ok-only>
+      <b-modal
+        v-model="warningShow"
+        header-bg-variant="info"
+        title="Aviso"
+        header-text-variant="light"
+        ok-only
+      >
         <p>
           <strong>{{warningMessage}}</strong>
         </p>
       </b-modal>
 
-      <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" ok-only>
-        <Positions :selectPosition="selectPosition" :deleteSector="deleteSector" :deActivate="deActivate" :positionRows="positionRows" />
+      <b-modal
+        v-model="showPositions"
+        header-bg-variant="info"
+        title="Sectores"
+        header-text-variant="light"
+        ok-only
+      >
+        <Positions
+          :selectPosition="selectPosition"
+          :deleteSector="deleteSector"
+          :deActivate="deActivate"
+          :positionRows="positionRows"
+        />
       </b-modal>
-
     </div>
-
   </b-container>
 </template>
 
 <script>
+/* eslint-disable */
 import Store from '@/store/store'
 import Header from './Header'
 import Positions from './lib/Positions'
