@@ -8,6 +8,4 @@ const HTTP = axios.create({
   }
 })
 
-export {
-  HTTP as default
-}
+export { HTTP as default }
