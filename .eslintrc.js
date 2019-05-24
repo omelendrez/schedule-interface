@@ -20,7 +20,6 @@ module.exports = {
   // add your custom rules here
   rules: {
     // allow async-await
-    'linebreak-style': ['error', 'windows'],
     'generator-star-spacing': 'off',
     indent: ['error', 2, { SwitchCase: 1 }],
     semi: ['error', 'never'],
