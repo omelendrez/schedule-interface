@@ -25,12 +25,17 @@
       <h3>Total de horas consumidas desde el {{dateFrom}} al {{dateTo}}</h3>
       <div class="buttons">
         <b-button type="button" @click="back" variant="primary" class="no-print">Cambiar fechas</b-button>
-        <b-button type="button" @click="print" variant="success" class="float-right no-print">Imprimir</b-button>
+        <b-button
+          type="button"
+          @click="print"
+          variant="success"
+          class="float-right no-print"
+        >Imprimir</b-button>
       </div>
       <h4>Agrupadas por Sector</h4>
-      <b-table striped :items="reportResults.sector"></b-table>
+      <b-table striped :items="reportResults.sector" :fields="reportResultsSectorFields"></b-table>
       <h4>Agrupadas por Función</h4>
-      <b-table striped :items="reportResults.all"></b-table>
+      <b-table striped :items="reportResults.all" :fields="reportResultsAllFields"></b-table>
     </b-container>
   </b-container>
 </template>
@@ -38,14 +43,18 @@
 <script>
 import Store from '@/store/store'
 import Header from '@/components/Header'
+const reportResultsSector = require('@/utils/fields.json').reportResultsSector
+const reportResultsAll = require('@/utils/fields.json').reportResultsAll
 
 export default {
   name: 'ConsumedHours',
   components: {
     Header
   },
-  data () {
+  data() {
     return {
+      reportResultsSectorFields: reportResultsSector,
+      reportResultsAllFields: reportResultsAll,
       form: {
         dateFrom: null,
         dateTo: null
@@ -59,45 +68,50 @@ export default {
   },
   Store,
   methods: {
-    onSubmit (e) {
+    onSubmit(e) {
       this.errorMessage = ''
       this.errorShow = false
       e.preventDefault()
       if (this.form.dateFrom > this.form.dateTo) {
-        this.errorMessage = 'La fecha "desde" no puede ser posterior a le fecha "hasta"'
+        this.errorMessage =
+          'La fecha "desde" no puede ser posterior a le fecha "hasta"'
         this.errorShow = true
         return
       }
       Store.dispatch('LAUNCH_CONSUMED_BY_SECTOR_REPORT', this.form)
     },
-    onReset () {
-
-    },
-    back () {
+    onReset() {},
+    back() {
       this.reportResults = null
     },
-    print () {
+    print() {
       this.$nextTick(() => {
         window.print()
       })
     }
   },
   watch: {
-    results () {
+    results() {
       this.reportResults = this.results
-      this.dateFrom = this.form.dateFrom.split('-').reverse().join('/')
-      this.dateTo = this.form.dateTo.split('-').reverse().join('/')
+      this.dateFrom = this.form.dateFrom
+        .split('-')
+        .reverse()
+        .join('/')
+      this.dateTo = this.form.dateTo
+        .split('-')
+        .reverse()
+        .join('/')
     }
   },
   computed: {
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    results () {
+    results() {
       return Store.state.results
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
     }
