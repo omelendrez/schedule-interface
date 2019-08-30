@@ -7,7 +7,7 @@
     </div>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-        <b-form-select v-model="form.branch_id" :options="branches" required/>
+        <b-form-select v-model="form.branch_id" :options="branches" required />
       </b-form-group>
       <b-form-group horizontal id="date" label="Día" label-for="date">
         <b-form-input id="date" type="date" v-model.trim="form.date" required></b-form-input>
@@ -16,8 +16,13 @@
         <b-form-input id="hours" v-model.trim="form.hours" required></b-form-input>
       </b-form-group>
       <b-form-group horizontal id="footer" label="Mensaje" label-for="footer">
-        <b-form-textarea id="footer" v-model="form.footer" placeholder="Escriba el mensaje que quiere mostrar al pie de la Grilla de programación" :rows="3" :max-rows="6">
-        </b-form-textarea>
+        <b-form-textarea
+          id="footer"
+          v-model="form.footer"
+          placeholder="Escriba el mensaje que quiere mostrar al pie de la Grilla de programación"
+          :rows="3"
+          :max-rows="6"
+        ></b-form-textarea>
       </b-form-group>
       <div class="buttons">
         <b-button type="submit" variant="primary">Guardar</b-button>
@@ -33,7 +38,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Budget',
-  data () {
+  data() {
     return {
       form: {
         id: 0,
@@ -49,7 +54,7 @@ export default {
     }
   },
   watch: {
-    results () {
+    results() {
       const results = Store.state.results
       if (results.error) {
         this.errorMessage = results.message
@@ -60,16 +65,16 @@ export default {
     }
   },
   computed: {
-    results () {
+    results() {
       return Store.state.results
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    item () {
+    item() {
       return Store.state.record
     },
-    branches () {
+    branches() {
       const branches = Store.state.branches.rows
       const options = []
       for (let i = 0; i < branches.length; i++) {
@@ -82,18 +87,18 @@ export default {
     }
   },
   methods: {
-    goProgram () {
+    goProgram() {
       this.$router.push({ name: 'Program' })
     },
-    goGrid () {
+    goGrid() {
       this.$router.push({ name: 'Grid' })
     },
-    onSubmit (evt) {
+    onSubmit(evt) {
       evt.preventDefault()
       this.form.footer = this.form.footer ? this.form.footer : ''
       Store.dispatch('SAVE_BUDGET', this.form)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
       this.show = false
@@ -102,7 +107,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

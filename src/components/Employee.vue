@@ -1,14 +1,12 @@
 <template>
   <b-container class="employee">
-
     <h1>Empleado</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-card no-body>
         <b-tabs card v-model="tabIndex">
           <b-tab title="Info del empleado" active>
-
             <b-form-group horizontal id="badge" label="Legajo" label-for="badge">
-              <b-form-input id="badge" v-model.trim="form.badge" required autofocus="true"></b-form-input>
+              <b-form-input id="badge" v-model.trim="form.badge" required autofocus></b-form-input>
             </b-form-group>
 
             <b-form-group horizontal id="first_name" label="Nombre" label-for="first_name">
@@ -19,12 +17,17 @@
               <b-form-input id="last_name" v-model.trim="form.last_name" required></b-form-input>
             </b-form-group>
 
-            <b-form-group horizontal id="joining_date" label="Fecha de ingreso" label-for="joining_date">
+            <b-form-group
+              horizontal
+              id="joining_date"
+              label="Fecha de ingreso"
+              label-for="joining_date"
+            >
               <b-form-input id="joining_date" v-model="form.joining_date" type="date" required></b-form-input>
             </b-form-group>
 
             <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
-              <b-form-select v-model="form.branch_id" :options="branches" class="mb-3" required/>
+              <b-form-select v-model="form.branch_id" :options="branches" class="mb-3" required />
             </b-form-group>
           </b-tab>
 
@@ -39,12 +42,8 @@
               <b-col cols="2">
                 <label>Día</label>
               </b-col>
-              <b-col cols="2" class="center">
-                De
-              </b-col>
-              <b-col cols="2" class="center">
-                A
-              </b-col>
+              <b-col cols="2" class="center">De</b-col>
+              <b-col cols="2" class="center">A</b-col>
             </b-row>
             <b-row class="m-1">
               <b-col cols="2">
@@ -133,9 +132,7 @@
       </div>
 
       <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
-
     </b-form>
-
   </b-container>
 </template>
 
@@ -144,7 +141,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Employee',
-  data () {
+  data() {
     return {
       form: {
         id: 0,
@@ -183,7 +180,7 @@ export default {
     }
   },
   watch: {
-    employee () {
+    employee() {
       const avail = Store.state.employee.availabilities
       for (let i = 0; i < avail.length; i++) {
         const item = avail[i]
@@ -197,19 +194,19 @@ export default {
         this.form.selectedPositions.push(pos[i].position_id)
       }
     },
-    results () {
+    results() {
       // this.$router.push({ name: 'Employees' })
       this.$router.go(-1)
     }
   },
   computed: {
-    employee () {
+    employee() {
       return Store.state.employee
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    branches () {
+    branches() {
       const branches = Store.state.branches.rows
       const options = []
       for (let i = 0; i < branches.length; i++) {
@@ -220,18 +217,18 @@ export default {
       }
       return options
     },
-    item () {
+    item() {
       return Store.state.record
     },
-    positions () {
+    positions() {
       return Store.state.positionSector
     },
-    results () {
+    results() {
       return Store.state.results
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
       evt.preventDefault()
       this.errorMessage = ''
       this.errorShow = false
@@ -253,7 +250,7 @@ export default {
       }
       Store.dispatch('SAVE_EMPLOYEE', formData)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
       this.form.show = false
@@ -263,7 +260,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return

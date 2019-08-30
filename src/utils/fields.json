@@ -130,5 +130,31 @@
       "label": "Horas",
       "class": "text-right p-1 pr-2"
     }
+  ],
+  "reportResultsSector": [
+    {
+      "key": "sector",
+      "label": "Sector"
+    },
+    {
+      "key": "total",
+      "label": "Total",
+      "class": "text-right p-1 pr-2"
+    }
+  ],
+  "reportResultsAll": [
+    {
+      "key": "sector",
+      "label": "Sector"
+    },
+    {
+      "key": "position",
+      "label": "Función"
+    },
+    {
+      "key": "total",
+      "label": "Total",
+      "class": "text-right p-1 pr-2"
+    }
   ]
 }
