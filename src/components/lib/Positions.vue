@@ -25,7 +25,7 @@
 
 <script>
 import Store from '@/store/store'
-const fields = require('@/utils/fields.json').positions
+import fields from '@/utils/fields'
 
 export default {
   name: 'Positions',
@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      fields: fields
+      fields: fields.positions
     }
   }
 }

@@ -168,7 +168,7 @@
 import Store from '@/store/store'
 import Header from './Header'
 import Positions from './lib/Positions'
-const fields = require('@/utils/fields.json').grid
+import fields from '@/utils/fields'
 
 export default {
   name: 'Grid',
@@ -179,7 +179,7 @@ export default {
       errorMessage: '',
       timeoffAlert: false,
       timeoffMessage: '',
-      fields: fields,
+      fields: fields.grid,
       scheduleRows: [],
       positionRows: [],
       recordData: {},

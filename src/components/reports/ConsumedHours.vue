@@ -43,8 +43,7 @@
 <script>
 import Store from '@/store/store'
 import Header from '@/components/Header'
-const reportResultsSector = require('@/utils/fields.json').reportResultsSector
-const reportResultsAll = require('@/utils/fields.json').reportResultsAll
+import fields from '@/utils/fields'
 
 export default {
   name: 'ConsumedHours',
@@ -53,8 +52,8 @@ export default {
   },
   data() {
     return {
-      reportResultsSectorFields: reportResultsSector,
-      reportResultsAllFields: reportResultsAll,
+      reportResultsSectorFields: fields.reportResultsSector,
+      reportResultsAllFields: fields.reportResultsAll,
       form: {
         dateFrom: null,
         dateTo: null

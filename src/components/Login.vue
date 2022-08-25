@@ -4,7 +4,7 @@
     <b-card no-block id="loginCard">
       <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="loginForm">
         <b-form-group>
-          <b-form-input id="user_name" type="text" v-model="form.user_name" required autofocus="true" autocomplete="username" placeholder="Usuario">
+          <b-form-input id="user_name" type="text" v-model="form.user_name" required autoFocus="true" autocomplete="username" placeholder="Usuario">
           </b-form-input>
         </b-form-group>
 
