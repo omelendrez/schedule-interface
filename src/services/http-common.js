@@ -1,9 +1,9 @@
 import axios from 'axios'
 // http://localhost:3010/
-// https://escng-schedule.herokuapp.com/
-// TODO - Changes only for iPage
+
+console.log(process.env)
 const HTTP = axios.create({
-  baseURL: 'http://localhost:3010/',
+  baseURL: process.env.VUE_APP_ENDPOINT,
   headers: {
     // Authorization: 'Bearer {token}'
   }

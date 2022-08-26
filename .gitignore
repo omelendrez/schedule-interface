@@ -1,4 +1,4 @@
 node_modules/
 /dist/
 npm-debug.log*
-src/components/http-common.js
+DB/
