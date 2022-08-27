@@ -94,7 +94,10 @@ export default new Vuex.Store({
 
     async [types.LOGIN]({ commit }, payload) {
       const user = await Users.login(payload)
-      persistValue(LOCAL_STORAGE_VARS.USER, JSON.stringify(user.data))
+      // eslint-disable-next-line no-console
+      persistValue(LOCAL_STORAGE_VARS.TOKEN, user.data.token)
+      delete user.data.token
+      persistValue(LOCAL_STORAGE_VARS.USER, user.data)
       commit(types.SET_USER, {
         payload: user.data
       })
@@ -445,17 +448,9 @@ export default new Vuex.Store({
           created_at: pos.created_at,
           name: pos.name,
           color: pos.color,
-          div: `<div data-position-id="${pos.id}" data-position-name="${
-            pos['sector.name']
-          } - ${pos.name}" data-position-color="${
-            pos.color
-          }" style="background-color:${
-            pos.color
-          };width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
+          div: `<div data-position-id="${pos.id}" data-position-name="${pos['sector.name']} - ${pos.name}" data-position-color="${pos.color}" style="background-color:${pos.color};width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
           text: pos.text,
-          div2: `<div style="background-color:${
-            pos.text
-          };width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
+          div2: `<div style="background-color:${pos.text};width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
           sector_id: pos.sector_id,
           updated_at: pos.updated_at,
           'sector.name': pos['sector.name']

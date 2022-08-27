@@ -10,7 +10,7 @@ import { LOCAL_STORAGE_VARS, getPersistedValue } from './utils'
 export default {
   name: 'App',
   created() {
-    const user = JSON.parse(getPersistedValue(LOCAL_STORAGE_VARS.USER)) || {}
+    const user = getPersistedValue(LOCAL_STORAGE_VARS.USER) || {}
     if (user.id) {
       Store.dispatch('SET_USER', user)
     }
