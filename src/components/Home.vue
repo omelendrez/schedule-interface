@@ -15,18 +15,18 @@ import Store from '../store/store'
 
 export default {
   name: 'Home',
-  data () {
+  data() {
     return {}
   },
   components: {
     Header
   },
   computed: {
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return false
@@ -39,5 +39,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

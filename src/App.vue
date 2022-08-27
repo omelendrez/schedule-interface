@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
+import Store from './store/store'
+import { LOCAL_STORAGE_VARS, getPersistedValue } from './utils'
 export default {
-  name: 'App'
+  name: 'App',
+  created() {
+    const user = JSON.parse(getPersistedValue(LOCAL_STORAGE_VARS.USER)) || {}
+    if (user.id) {
+      Store.dispatch('SET_USER', user)
+    }
+  }
 }
 </script>
 
@@ -17,9 +25,11 @@ body {
     'Segoe UI Symbol' !important;
   font-size: 14px;
 }
+
 .table-inactive {
   color: red;
 }
+
 .table-selected {
   background-color: #f5f3ee;
 }

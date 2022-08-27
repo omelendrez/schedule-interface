@@ -18,7 +18,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Absenteeism',
-  data () {
+  data() {
     return {
       show: true,
       form: {
@@ -28,7 +28,7 @@ export default {
     }
   },
   watch: {
-    results () {
+    results() {
       const results = Store.state.results
       if (results.error) {
         return
@@ -37,22 +37,22 @@ export default {
     }
   },
   computed: {
-    results () {
+    results() {
       return Store.state.results
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    item () {
+    item() {
       return Store.state.record
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
       evt.preventDefault()
       Store.dispatch('SAVE_ABSENTEEISM', this.form)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
       this.show = false
@@ -61,7 +61,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return
@@ -80,14 +80,17 @@ export default {
   background-color: white;
   padding: 60px;
 }
+
 #addForm {
   margin: 0 auto;
   max-width: 800px;
   padding-top: 40px;
 }
+
 .to-right {
   float: right;
 }
+
 .buttons {
   margin: 0 auto;
 }

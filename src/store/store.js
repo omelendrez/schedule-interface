@@ -16,6 +16,12 @@ import Timeoffs from './../services/timeoffs'
 import * as types from '../store/mutation-types'
 import * as constants from './constants'
 
+import {
+  LOCAL_STORAGE_VARS,
+  persistValue,
+  removePersistedValues
+} from '../utils'
+
 Vue.use(Vuex)
 
 const state = {
@@ -58,336 +64,344 @@ const state = {
 export default new Vuex.Store({
   state,
   actions: {
-    [types.SET_MENU_OPTION] ({ commit }, option) {
+    [types.SET_USER]({ commit }, user) {
+      commit(types.SET_USER, {
+        payload: user
+      })
+    },
+
+    [types.SET_MENU_OPTION]({ commit }, option) {
       commit(types.ASSIGN_MENU_OPTION, {
         payload: option
       })
     },
 
-    [types.ADD_ITEM] ({ commit }, item) {
+    [types.ADD_ITEM]({ commit }, item) {
       commit(types.SET_RECORD, {
         payload: item
       })
     },
 
-    [types.SET_VALUE] ({ commit }, payload) {
+    [types.SET_VALUE]({ commit }, payload) {
       commit(types.SET_AUTOCOMPLETE_VALUE, {
         payload: payload
       })
     },
 
-    [types.RESET_AUTOCOMPLETE] ({ commit }) {
+    [types.RESET_AUTOCOMPLETE]({ commit }) {
       commit(types.RESET_SELECTED)
     },
 
-    async [types.LOGIN] ({ commit }, payload) {
+    async [types.LOGIN]({ commit }, payload) {
       const user = await Users.login(payload)
+      persistValue(LOCAL_STORAGE_VARS.USER, JSON.stringify(user.data))
       commit(types.SET_USER, {
         payload: user.data
       })
     },
 
-    [types.LOGOUT_USER] ({ commit }) {
+    [types.LOGOUT_USER]({ commit }) {
+      removePersistedValues()
       commit(types.SET_USER, {
         payload: { id: null }
       })
     },
 
-    async [types.CHANGE_PASSWORD] ({ commit }, item) {
+    async [types.CHANGE_PASSWORD]({ commit }, item) {
       const user = await Users.changePassword(item)
       commit(types.CHANGE_PASSWORD_ALERT, {
         payload: user.data
       })
     },
 
-    async [types.LOAD_BRANCHES] ({ commit }) {
+    async [types.LOAD_BRANCHES]({ commit }) {
       const branches = await Branches.fetchBranches()
       commit(types.SET_BRANCHES, {
         payload: branches.data
       })
     },
 
-    async [types.SAVE_BRANCH] ({ commit }, item) {
+    async [types.SAVE_BRANCH]({ commit }, item) {
       const branch = await Branches.saveBranch(item)
       commit(types.SET_RESULTS, {
         payload: branch.data
       })
     },
 
-    async [types.DELETE_BRANCH] ({ commit }, item) {
+    async [types.DELETE_BRANCH]({ commit }, item) {
       const branch = await Branches.deleteBranch(item.id)
       commit(types.SET_RESULTS, {
         payload: branch.data
       })
     },
 
-    async [types.LOAD_ABSENTEEISMS] ({ commit }) {
+    async [types.LOAD_ABSENTEEISMS]({ commit }) {
       const absenteeisms = await Absenteeisms.fetchAbsenteeisms()
       commit(types.SET_ABSENTEEISMS, {
         payload: absenteeisms.data
       })
     },
 
-    async [types.SAVE_ABSENTEEISM] ({ commit }, item) {
+    async [types.SAVE_ABSENTEEISM]({ commit }, item) {
       const absenteeism = await Absenteeisms.saveAbsenteeism(item)
       commit(types.SET_RESULTS, {
         payload: absenteeism.data
       })
     },
 
-    async [types.DELETE_ABSENTEEISM] ({ commit }, item) {
+    async [types.DELETE_ABSENTEEISM]({ commit }, item) {
       const absenteeism = await Absenteeisms.deleteAbsenteeism(item.id)
       commit(types.SET_RESULTS, {
         payload: absenteeism.data
       })
     },
 
-    async [types.LOAD_SECTORS] ({ commit }) {
+    async [types.LOAD_SECTORS]({ commit }) {
       const sectors = await Sectors.fetchSectors()
       commit(types.SET_SECTORS, {
         payload: sectors.data
       })
     },
 
-    async [types.LOAD_POSITIONS] ({ commit }) {
+    async [types.LOAD_POSITIONS]({ commit }) {
       const positions = await Positions.fetchPositions()
       commit(types.SET_POSITIONS, {
         payload: positions.data
       })
     },
 
-    async [types.LOAD_SECTOR_POSITIONS] ({ commit }, item) {
+    async [types.LOAD_SECTOR_POSITIONS]({ commit }, item) {
       const positions = await Positions.fetchSectorPositions(item)
       commit(types.SET_SECTOR_POSITIONS, {
         payload: positions.data
       })
     },
 
-    async [types.LOAD_PROFILES] ({ commit }) {
+    async [types.LOAD_PROFILES]({ commit }) {
       const profiles = await Profiles.fetchProfiles()
       commit(types.SET_PROFILES, {
         payload: profiles.data
       })
     },
 
-    async [types.LOAD_STATUS] ({ commit }) {
+    async [types.LOAD_STATUS]({ commit }) {
       const status = await Status.fetchStatus()
       commit(types.SET_STATUS, {
         payload: status.data
       })
     },
 
-    async [types.LOAD_EMPLOYEES] ({ commit }) {
+    async [types.LOAD_EMPLOYEES]({ commit }) {
       const employees = await Employees.fetchEmployees()
       commit(types.SET_EMPLOYEES, {
         payload: employees.data
       })
     },
 
-    async [types.LOAD_EMPLOYEE] ({ commit }, item) {
+    async [types.LOAD_EMPLOYEE]({ commit }, item) {
       const employee = await Employees.fetchEmployee(item)
       commit(types.SET_EMPLOYEE, {
         payload: employee.data
       })
     },
 
-    async [types.LOAD_BRANCH_EMPLOYEES] ({ commit }, item) {
+    async [types.LOAD_BRANCH_EMPLOYEES]({ commit }, item) {
       const employees = await Employees.fetchBranchEmployees(item)
       commit(types.SET_EMPLOYEES, {
         payload: employees.data
       })
     },
 
-    async [types.LOAD_EMPLOYEES_BY_POSITION] ({ commit }, item) {
+    async [types.LOAD_EMPLOYEES_BY_POSITION]({ commit }, item) {
       const employees = await Employees.fetchEmployeesByPosition(item)
       commit(types.SET_EMPLOYEES_BY_POSITION, {
         payload: employees.data
       })
     },
 
-    async [types.LOAD_USERS] ({ commit }) {
+    async [types.LOAD_USERS]({ commit }) {
       const users = await Users.fetchUsers()
       commit(types.SET_USERS, {
         payload: users.data
       })
     },
 
-    async [types.LOAD_BUDGETS] ({ commit }) {
+    async [types.LOAD_BUDGETS]({ commit }) {
       const budgets = await Budgets.fetchBudgets()
       commit(types.SET_BUDGETS, {
         payload: budgets.data
       })
     },
 
-    async [types.LOAD_SCHEDULES] ({ commit }, payload) {
+    async [types.LOAD_SCHEDULES]({ commit }, payload) {
       const schedules = await Schedule.fetchBudgetSchedules(payload)
       commit(types.SET_SCHEDULES, {
         payload: schedules.data
       })
     },
 
-    async [types.LOAD_SCHEDULE] ({ commit }, payload) {
+    async [types.LOAD_SCHEDULE]({ commit }, payload) {
       const schedule = await Schedule.fetchSchedule(payload)
       commit(types.SET_SCHEDULE, {
         payload: schedule.data
       })
     },
 
-    async [types.LOAD_TIMEOFF] ({ commit }, payload) {
+    async [types.LOAD_TIMEOFF]({ commit }, payload) {
       const timeoff = await Schedule.fetchTimeoff(payload)
       commit(types.SET_TIMEOFF, {
         payload: timeoff.data
       })
     },
 
-    async [types.LOAD_ALL_TIMEOFFS] ({ commit }, payload) {
+    async [types.LOAD_ALL_TIMEOFFS]({ commit }, payload) {
       const allTimeoffs = await Timeoffs.fetchAll()
       commit(types.SET_ALL_TIMEOFFS, {
         payload: allTimeoffs.data
       })
     },
 
-    async [types.SAVE_SECTOR] ({ commit }, item) {
+    async [types.SAVE_SECTOR]({ commit }, item) {
       const sector = await Sectors.saveSector(item)
       commit(types.SET_RESULTS, {
         payload: sector.data
       })
     },
 
-    async [types.DELETE_SECTOR] ({ commit }, item) {
+    async [types.DELETE_SECTOR]({ commit }, item) {
       const sector = await Sectors.deleteSector(item.id)
       commit(types.SET_RESULTS, {
         payload: sector.data
       })
     },
 
-    async [types.SAVE_POSITION] ({ commit }, item) {
+    async [types.SAVE_POSITION]({ commit }, item) {
       const position = await Positions.savePosition(item)
       commit(types.SET_RESULTS, {
         payload: position.data
       })
     },
 
-    async [types.DELETE_POSITION] ({ commit }, item) {
+    async [types.DELETE_POSITION]({ commit }, item) {
       const position = await Positions.deletePosition(item.id)
       commit(types.SET_RESULTS, {
         payload: position.data
       })
     },
 
-    async [types.SAVE_USER] ({ commit }, item) {
+    async [types.SAVE_USER]({ commit }, item) {
       const user = await Users.saveUser(item)
       commit(types.SET_RESULTS, {
         payload: user.data
       })
     },
 
-    async [types.DELETE_USER] ({ commit }, item) {
+    async [types.DELETE_USER]({ commit }, item) {
       const user = await Users.deleteUser(item.id)
       commit(types.SET_RESULTS, {
         payload: user.data
       })
     },
 
-    async [types.SAVE_EMPLOYEE] ({ commit }, item) {
+    async [types.SAVE_EMPLOYEE]({ commit }, item) {
       const employee = await Employees.saveEmployee(item)
       commit(types.SET_RESULTS, {
         payload: employee.data
       })
     },
 
-    async [types.DELETE_EMPLOYEE] ({ commit }, item) {
+    async [types.DELETE_EMPLOYEE]({ commit }, item) {
       const employee = await Employees.deleteEmployee(item.id)
       commit(types.SET_RESULTS, {
         payload: employee.data
       })
     },
 
-    async [types.SAVE_BUDGET] ({ commit }, item) {
+    async [types.SAVE_BUDGET]({ commit }, item) {
       const budget = await Budgets.saveBudget(item)
       commit(types.SET_RESULTS, {
         payload: budget.data
       })
     },
 
-    async [types.DELETE_BUDGET] ({ commit }, item) {
+    async [types.DELETE_BUDGET]({ commit }, item) {
       const budget = await Budgets.deleteBudget(item.id)
       commit(types.SET_RESULTS, {
         payload: budget.data
       })
     },
 
-    async [types.SAVE_SCHEDULE] ({ commit }, payload) {
+    async [types.SAVE_SCHEDULE]({ commit }, payload) {
       const schedule = await Schedule.saveSchedule(payload)
       commit(types.SET_RESULTS, {
         payload: schedule.data
       })
     },
 
-    async [types.SCHEDULE_VERIFY_INPUT] ({ commit }, payload) {
+    async [types.SCHEDULE_VERIFY_INPUT]({ commit }, payload) {
       const schedule = await Schedule.verifySchedule(payload)
       commit(types.SET_RESULTS, {
         payload: schedule.data
       })
     },
 
-    async [types.DELETE_SCHEDULE] ({ commit }, item) {
+    async [types.DELETE_SCHEDULE]({ commit }, item) {
       const schedule = await Schedule.deleteSchedule(item.id)
       commit(types.SET_RESULTS, {
         payload: schedule.data
       })
     },
 
-    async [types.LOAD_POSITION_SECTOR] ({ commit }, payload) {
+    async [types.LOAD_POSITION_SECTOR]({ commit }, payload) {
       const position = await Positions.fetchPositionSector()
       commit(types.SET_POSITION_SECTOR, {
         payload: position.data
       })
     },
 
-    async [types.LOAD_TIMEOFFS_BY_DATE] ({ commit }, payload) {
+    async [types.LOAD_TIMEOFFS_BY_DATE]({ commit }, payload) {
       const timeoffs = await Timeoffs.findByDate(payload)
       commit(types.SET_TIMEOFFS_BY_DATE, {
         payload: timeoffs.data
       })
     },
 
-    async [types.LOAD_TIMEOFFS_BY_PERIOD] ({ commit }, payload) {
+    async [types.LOAD_TIMEOFFS_BY_PERIOD]({ commit }, payload) {
       const timeoffs = await Timeoffs.findByPeriod(payload)
       commit(types.SET_TIMEOFFS_BY_PERIOD, {
         payload: timeoffs.data
       })
     },
 
-    async [types.LOAD_TIMEOFFS] ({ commit }, payload) {
+    async [types.LOAD_TIMEOFFS]({ commit }, payload) {
       const timeoffs = await Timeoffs.fetchTimeoffs()
       commit(types.SET_TIMEOFFS, {
         payload: timeoffs.data
       })
     },
 
-    async [types.SAVE_TIMEOFF] ({ commit }, item) {
+    async [types.SAVE_TIMEOFF]({ commit }, item) {
       const timeoff = await Timeoffs.saveTimeoff(item)
       commit(types.SET_RESULTS, {
         payload: timeoff.data
       })
     },
 
-    async [types.DELETE_TIMEOFF] ({ commit }, item) {
+    async [types.DELETE_TIMEOFF]({ commit }, item) {
       const timeoff = await Timeoffs.deleteTimeoff(item.id)
       commit(types.SET_RESULTS, {
         payload: timeoff.data
       })
     },
 
-    async [types.LAUNCH_CONSUMED_BY_SECTOR_REPORT] ({ commit }, payload) {
+    async [types.LAUNCH_CONSUMED_BY_SECTOR_REPORT]({ commit }, payload) {
       const results = await Schedule.getConsumedBySector(payload)
       commit(types.SET_RESULTS, {
         payload: results.data
       })
     },
 
-    async [types.LAUNCH_BUDGET_VS_CONSUMED] ({ commit }) {
+    async [types.LAUNCH_BUDGET_VS_CONSUMED]({ commit }) {
       const results = await Schedule.getBudgetVsConsumed()
       commit(types.SET_RESULTS, {
         payload: results.data
@@ -431,9 +445,17 @@ export default new Vuex.Store({
           created_at: pos.created_at,
           name: pos.name,
           color: pos.color,
-          div: `<div data-position-id="${pos.id}" data-position-name="${pos['sector.name']} - ${pos.name}" data-position-color="${pos.color}" style="background-color:${pos.color};width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
+          div: `<div data-position-id="${pos.id}" data-position-name="${
+            pos['sector.name']
+          } - ${pos.name}" data-position-color="${
+            pos.color
+          }" style="background-color:${
+            pos.color
+          };width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
           text: pos.text,
-          div2: `<div style="background-color:${pos.text};width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
+          div2: `<div style="background-color:${
+            pos.text
+          };width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
           sector_id: pos.sector_id,
           updated_at: pos.updated_at,
           'sector.name': pos['sector.name']
@@ -643,7 +665,7 @@ export default new Vuex.Store({
       }
     },
 
-    [types.RESET_SELECTED]: (state) => {
+    [types.RESET_SELECTED]: state => {
       state.selectedEmployee = []
       state.selectedPosition = []
     },
