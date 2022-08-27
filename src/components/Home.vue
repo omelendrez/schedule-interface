@@ -2,9 +2,8 @@
   <b-container class="home" fluid>
     <Header />
     <b-jumbotron header="Turnos" lead="Administrador de programación de turnos" border-variant="dark">
-      <div>
-        <b-img thumbnail fluid alt="Turnos" src="../static/img/work-schedule.jpg" />
-      </div>
+      <div class="info">Hola {{ user.full_name.split(' ')[0] }}!</div>
+      <b-img thumbnail fluid alt="Turnos" src="../static/img/work-schedule.jpg" />
     </b-jumbotron>
   </b-container>
 </template>
@@ -24,6 +23,9 @@ export default {
   computed: {
     isLogged() {
       return Store.state.user.id
+    },
+    user() {
+      return Store.state.user
     }
   },
   created() {
@@ -39,4 +41,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.info {
+  margin-bottom: 16px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  width: 200px;
+  background-color: red;
+  text-align: center;
+  color: #fff;
+  padding: 6px;
+  border-radius: 6px;
+  box-shadow: 5px 5px 5px #aaaaaa;
+}
 </style>
