@@ -440,25 +440,16 @@ export default new Vuex.Store({
     },
 
     [types.SET_POSITIONS]: (state, { payload }) => {
-      const positions = payload.rows
-      const records = []
-      positions.map(pos => {
-        const record = {
-          id: pos.id,
-          created_at: pos.created_at,
-          name: pos.name,
-          color: pos.color,
-          div: `<div data-position-id="${pos.id}" data-position-name="${pos['sector.name']} - ${pos.name}" data-position-color="${pos.color}" style="background-color:${pos.color};width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
-          text: pos.text,
-          div2: `<div style="background-color:${pos.text};width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
-          sector_id: pos.sector_id,
-          updated_at: pos.updated_at,
-          'sector.name': pos['sector.name']
+      const formattedRecords = payload.rows.map((p) => (
+        {
+          ...p,
+          div: `<div data-position-id="${p.id}" data-position-name="${p['sector.name']} - ${p.name}" data-position-color="${p.color}" style="background-color:${p.color};width:21px;border-radius:4px;border:1px solid #ccc;cursor:pointer;" class="mx-auto">&nbsp</div>`,
+          div2: `<div style="background-color:${p.text};width:21px;border-radius:4px;border:1px solid #ccc" class="mx-auto">&nbsp</div>`,
+          'sector.name': p['sector.name']
         }
-        records.push(record)
-      })
+      ))
       state.positions = {
-        rows: records,
+        rows: formattedRecords,
         count: payload.count
       }
     },
