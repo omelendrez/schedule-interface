@@ -5,9 +5,11 @@
       <b-button href="#/reports" variant="info" class="no-print" size="sm">Volver</b-button>
     </div>
     <h3 class="no-print">Reporte de horas consumidas</h3>
-
     <b-container class="reportForm">
       <b-form @submit.stop="onSubmit" @reset="onReset" v-if="!reportResults">
+        <b-form-group horizontal id="branchId" label="Local" label-for="branchId">
+          <b-form-select v-model="form.branchId" :options="branches" required />
+        </b-form-group>
         <b-form-group horizontal id="dateFrom" label="Fecha desde">
           <b-form-input type="date" v-model.trim="form.dateFrom" required></b-form-input>
         </b-form-group>
@@ -20,17 +22,12 @@
         <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
       </b-form>
     </b-container>
-
     <b-container class="reportData" v-if="reportResults">
-      <h3>Total de horas consumidas desde el {{dateFrom}} al {{dateTo}}</h3>
+      <h2>Local: {{ branches.find((b) => b.value === form.branchId).text }}</h2>
+      <h3>Total de horas consumidas desde el {{ dateFrom }} al {{ dateTo }}</h3>
       <div class="buttons">
         <b-button type="button" @click="back" variant="primary" class="no-print">Cambiar fechas</b-button>
-        <b-button
-          type="button"
-          @click="print"
-          variant="success"
-          class="float-right no-print"
-        >Imprimir</b-button>
+        <b-button type="button" @click="print" variant="success" class="float-right no-print">Imprimir</b-button>
       </div>
       <h4>Agrupadas por Sector</h4>
       <b-table striped :items="reportResults.sector" :fields="reportResultsSectorFields"></b-table>
@@ -56,7 +53,8 @@ export default {
       reportResultsAllFields: fields.reportResultsAll,
       form: {
         dateFrom: null,
-        dateTo: null
+        dateTo: null,
+        branchId: null
       },
       dateFrom: null,
       dateTo: null,
@@ -108,6 +106,17 @@ export default {
     },
     results() {
       return Store.state.results
+    },
+    branches() {
+      const branches = Store.state.branches.rows
+      const options = []
+      for (let i = 0; i < branches.length; i++) {
+        options.push({
+          value: branches[i].id,
+          text: branches[i].name
+        })
+      }
+      return options
     }
   },
   created() {
@@ -127,9 +136,11 @@ export default {
   max-width: 600px;
   text-align: center;
 }
+
 .buttons {
   margin-bottom: 20px;
 }
+
 .back-button {
   margin: 14px;
 }
@@ -138,13 +149,16 @@ export default {
   h3 {
     font-size: 1.5em;
   }
+
   h4 {
     font-size: 1.2em;
   }
+
   .no-print,
   .no-print * {
     display: none !important;
   }
+
   @page {
     size: portrait;
   }

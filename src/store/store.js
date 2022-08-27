@@ -422,12 +422,6 @@ export default new Vuex.Store({
     },
 
     [types.SET_BRANCHES]: (state, { payload }) => {
-      if (state.user.profile_id !== 1) {
-        payload.rows = payload.rows.filter(item => {
-          return item.id === state.user.branch_id
-        })
-        payload.count = payload.rows.length
-      }
       state.branches = payload
     },
 
@@ -448,6 +442,7 @@ export default new Vuex.Store({
           'sector.name': p['sector.name']
         }
       ))
+
       state.positions = {
         rows: formattedRecords,
         count: payload.count
@@ -463,13 +458,6 @@ export default new Vuex.Store({
     },
 
     [types.SET_EMPLOYEES]: (state, { payload }) => {
-      if (state.user.profile_id !== 1) {
-        payload.rows = payload.rows.filter(item => {
-          return item.branch_id === state.user.branch_id
-        })
-        payload.count = payload.rows.length
-      }
-
       payload.rows.map(item => {
         item._rowVariant =
           item.status_id !== constants.activeStatus
@@ -488,23 +476,10 @@ export default new Vuex.Store({
     },
 
     [types.SET_EMPLOYEES_BY_POSITION]: (state, { payload }) => {
-      const rows = payload.rows.filter(item => {
-        return item['employee.branch_id'] === state.budget.rows.branch_id
-      })
-      const result = {
-        count: rows.length,
-        rows: rows
-      }
-      state.employeesByPosition = result
+      state.employeesByPosition = payload
     },
 
     [types.SET_USERS]: (state, { payload }) => {
-      if (state.user.profile_id !== 1) {
-        payload.rows = payload.rows.filter(item => {
-          return item.branch_id === state.user.branch_id
-        })
-        payload.count = payload.rows.length
-      }
       state.users = payload
     },
 
@@ -513,13 +488,6 @@ export default new Vuex.Store({
     },
 
     [types.SET_BUDGETS]: (state, { payload }) => {
-      if (state.user.profile_id !== 1) {
-        payload.rows = payload.rows.filter(item => {
-          return item.branch_id === state.user.branch_id
-        })
-        payload.count = payload.rows.length
-      }
-
       const bud = payload.rows
       const weekdays = Budgets.weekdays
       for (let i = 0; i < bud.length; i++) {
@@ -631,12 +599,6 @@ export default new Vuex.Store({
     },
 
     [types.SET_TIMEOFFS]: (state, { payload }) => {
-      if (state.user.profile_id !== 1) {
-        payload.rows = payload.rows.filter(item => {
-          return item['employee.branch_id'] === state.user.branch_id
-        })
-        payload.count = payload.rows.length
-      }
       state.timeoffs = payload
     },
 
