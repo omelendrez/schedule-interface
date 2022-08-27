@@ -16,13 +16,9 @@
         <b-form-input id="hours" v-model.trim="form.hours" required></b-form-input>
       </b-form-group>
       <b-form-group horizontal id="footer" label="Mensaje" label-for="footer">
-        <b-form-textarea
-          id="footer"
-          v-model="form.footer"
-          placeholder="Escriba el mensaje que quiere mostrar al pie de la Grilla de programación"
-          :rows="3"
-          :max-rows="6"
-        ></b-form-textarea>
+        <b-form-textarea id="footer" v-model="form.footer"
+          placeholder="Escriba el mensaje que quiere mostrar al pie de la Grilla de programación" :rows="3"
+          :max-rows="6"></b-form-textarea>
       </b-form-group>
       <div class="buttons">
         <b-button type="submit" variant="primary">Guardar</b-button>
@@ -131,14 +127,17 @@ export default {
   background-color: white;
   padding: 60px;
 }
+
 #addForm {
   margin: 0 auto;
   max-width: 800px;
   padding-top: 40px;
 }
+
 .to-right {
   float: right;
 }
+
 .buttons {
   margin: 0 auto;
   margin-bottom: 18px;

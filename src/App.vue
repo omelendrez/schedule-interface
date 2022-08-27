@@ -33,4 +33,9 @@ body {
 .table-selected {
   background-color: #f5f3ee;
 }
+
+.btn {
+  border-radius: 6px;
+  padding: 8px 16px;
+}
 </style>
