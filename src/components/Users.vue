@@ -21,7 +21,7 @@
       <template slot="table-caption"> {{ users.count }} registros </template>
     </b-table>
     <b-pagination :total-rows="users.count" :per-page="perPage" v-model="currentPage" />
-    <b-modal id="modal-center" title="Inactivar Usuario" v-model="show" @ok="handleOk" ok-title="Si. Inactivar"
+    <b-modal id="modal-center" centered title="Inactivar Usuario" v-model="show" @ok="handleOk" ok-title="Si. Inactivar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea inactivar al usuario <strong>{{ selectedItem.user_name }} ({{
           selectedItem.full_name

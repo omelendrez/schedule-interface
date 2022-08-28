@@ -67,6 +67,12 @@ body {
   background-color: rgba(0, 0, 0, .05);
 }
 
+@media print {
+  body {
+    background-color: white;
+  }
+}
+
 .table-inactive {
   background-color: rgba(255, 0, 0, .1);
 }

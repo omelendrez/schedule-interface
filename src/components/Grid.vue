@@ -8,8 +8,9 @@
     </div>
     <div>
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
-      <h5 class="no-print">Total horas presupuesto: {{ totalHoursBudget }} / Total horas asignadas:
-        {{ totalScheduledHours }}</h5>
+      <h5 class="no-print">Total horas presupuesto: {{ totalHoursBudget }} / Total horas asignadas: {{
+          totalScheduledHours
+      }}</h5>
       <div @click="showPositions = true" class="position-group no-print">
         <div class="position">Sector seleccionado:</div>
         <div class="position-color" v-bind:style="{ background: selectedPosition.color }">&nbsp;</div>
@@ -19,8 +20,9 @@
       <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields"
         head-variant="light" class="schedule-table">
         <template slot="fullName" slot-scope="data">
-          <span v-b-popover.hover="data.item.last_timeoff" class="last-timeoff">{{ data.item["last_name"] }},
-            {{ data.item["first_name"] }}</span>
+          <span v-b-popover.hover="data.item.last_timeoff" class="last-timeoff">{{ data.item["last_name"] }}, {{
+              data.item["first_name"]
+          }}</span>
         </template>
         <template slot="h06" slot-scope="data">
           <div v-html="data.item['h06']"></div>
@@ -97,7 +99,8 @@
           querés cargarle horas tenés que eliminar el ausentismo desde la opción <strong>Ausencias</strong> del menú.
         </p>
       </b-modal>
-      <b-modal v-model="warningShow" header-bg-variant="info" title="Aviso" header-text-variant="light" ok-only>
+      <b-modal v-model="warningShow" centered header-bg-variant="info" title="Aviso" header-text-variant="light"
+        ok-only>
         <p>
           <strong>{{ warningMessage }}</strong>
         </p>

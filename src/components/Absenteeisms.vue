@@ -22,7 +22,7 @@
       <template slot="table-caption"> {{ absenteeisms.count }} registros </template>
     </b-table>
     <b-pagination :total-rows="absenteeisms.count" :per-page="perPage" v-model="currentPage" />
-    <b-modal id="modal-center" title="Inactivar local" v-model="show" @ok="handleOk" ok-title="Si. Inactivar"
+    <b-modal id="modal-center" centered title="Inactivar local" v-model="show" @ok="handleOk" ok-title="Si. Inactivar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea inactivar el ausentismo <strong>{{ selectedItem.name }} </strong>?</p>
     </b-modal>

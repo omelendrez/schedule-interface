@@ -30,7 +30,7 @@
     }})</b>
     </b-form-checkbox>
     <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
-    <b-modal id="modal-center" title="Eliminar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Eliminar"
+    <b-modal id="modal-center" centered title="Eliminar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Eliminar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea eliminar al empleado <strong>{{ selectedItem.badge }} - {{
           selectedItem.first_name

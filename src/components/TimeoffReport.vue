@@ -2,7 +2,6 @@
   <b-container class="timeoff-report" fluid>
     <Header />
     <h1 class="no-print">Reporte Ausencias</h1>
-
     <b-card class="printForm no-print">
       <b-form @submit="onSubmit" @reset="onReset">
         <b-form-group horizontal id="absenteeismId" label="Type de Ausentismo" label-for="absenteeismId">
@@ -22,16 +21,17 @@
           <b-button type="submit" variant="info" class="to-right">Cargar</b-button>
         </div>
       </b-form>
+      <b-alert variant="info" :show="isLoading">Cargando...</b-alert>
       <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
     </b-card>
-
     <div class="report-table" v-show="TimeoffRows.length">
-      <b-button type="button" variant="primary" @click="printReport" class="no-print print-button to-right">Imprimir</b-button>
-      <h4>Reporte de ausentimo del {{dateFrom}} al {{dateTo}}</h4>
-      <b-table v-if="TimeoffRows" hover outlined :items="TimeoffRows" :fields="fields" head-variant="light">
-        <template slot="fullName" slot-scope="cell">
-          {{cell.item["badge"]}} - {{cell.item["last_name"]}}, {{cell.item["first_name"]}}
-        </template>
+      <b-button type="button" variant="primary" @click="printReport" class="no-print print-button to-right">Imprimir
+      </b-button>
+      <h4>Reporte de ausentimo del {{ dateFrom }} al {{ dateTo }}</h4>
+      <b-table v-if="TimeoffRows" :items="TimeoffRows" :fields="fields" head-variant="light">
+        <template slot="fullName" slot-scope="cell"> {{ cell.item["badge"] }} - {{ cell.item["last_name"] }}, {{
+            cell.item["first_name"]
+        }} </template>
       </b-table>
     </div>
   </b-container>
@@ -43,12 +43,13 @@ import Header from './Header'
 
 export default {
   name: 'TimeoffReport',
-  data () {
+  data() {
     return {
       dateFrom: '',
       dateTo: '',
       errorShow: false,
       errorMessage: '',
+      isLoading: false,
       form: {
         absenteeismId: 0,
         fromDate: '',
@@ -80,7 +81,7 @@ export default {
     Header
   },
   watch: {
-    absenteeisms () {
+    absenteeisms() {
       const absenteeisms = this.absenteeisms.rows
       const options = [
         {
@@ -97,7 +98,8 @@ export default {
       }
       this.absenteeismsOptions = options
     },
-    timeoffs () {
+    timeoffs() {
+      this.isLoading = false
       const to = this.timeoffs.rows
       if (!to) {
         return
@@ -118,21 +120,27 @@ export default {
       this.TimeoffRows = timeoffRows
       this.dateFrom = this.form.fromDate.split('-').reverse().join('-')
       this.dateTo = this.form.toDate.split('-').reverse().join('-')
+      if (!timeoffRows.length) {
+        this.errorMessage = 'No se econtraron registros para el período especificado'
+        this.errorShow = true
+      }
     }
   },
   computed: {
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    absenteeisms () {
+    absenteeisms() {
       return Store.state.absenteeisms
     },
-    timeoffs () {
+    timeoffs() {
       return Store.state.timeoffs
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
+      this.isLoading = true
+      this.showError = false
       evt.preventDefault()
       this.errorShow = false
       if (this.form.fromDate > this.form.toDate) {
@@ -142,7 +150,7 @@ export default {
       }
       Store.dispatch('LOAD_TIMEOFFS_BY_PERIOD', this.form)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       this.form.fromDate = ''
       this.form.toDate = ''
@@ -150,19 +158,19 @@ export default {
         this.$router.push({ name: 'Timeoffs' })
       })
     },
-    printReport () {
+    printReport() {
       this.$nextTick(() => {
         window.print()
       })
     },
-    goBack () {
+    goBack() {
       this.$router.push({ name: 'Timeoffs' })
     },
-    changedParams () {
+    changedParams() {
       this.TimeoffRows = []
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return
@@ -190,43 +198,51 @@ export default {
   max-width: 600px;
   margin: 0 auto;
 }
+
 .to-right {
   float: right;
 }
+
 .report-table {
   margin: 0 auto;
   margin-top: 40px;
   max-width: 800px;
+  background-color: white;
+  padding: 2rem;
 }
+
 input {
   text-align: center;
 }
+
 .buttons {
   margin: 0 auto;
   margin-top: 18px;
   margin-bottom: 18px;
 }
+
 .print-button {
   margin-bottom: 10px;
 }
+
 .filter-form {
   max-width: 30%;
 }
+
 @media print {
   .program {
-    padding: 30px;
+    padding: 1rem;
   }
+
   h4 {
     font-size: 1em;
   }
-  table {
-    font-size: smaller;
-    width: auto;
-  }
+
   .no-print,
   .no-print * {
     display: none !important;
   }
+
   @page {
     size: portrait;
   }

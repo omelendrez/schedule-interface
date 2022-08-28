@@ -122,7 +122,7 @@ export default new Router({
       component: Timeoff
     },
     {
-      path: '/timeoff_report',
+      path: '/timeoff-report',
       name: 'TimeoffReport',
       component: TimeoffReport
     },
