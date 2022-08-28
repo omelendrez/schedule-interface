@@ -18,7 +18,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Sector',
-  data () {
+  data() {
     return {
       show: true,
       form: {
@@ -28,7 +28,7 @@ export default {
     }
   },
   watch: {
-    results () {
+    results() {
       const results = Store.state.results
       if (results.error) {
         return
@@ -37,19 +37,19 @@ export default {
     }
   },
   computed: {
-    results () {
+    results() {
       return Store.state.results
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    item () {
+    item() {
       return Store.state.record
     },
-    state () {
+    state() {
       return this.form.name.length >= 4
     },
-    invalidFeedback () {
+    invalidFeedback() {
       if (this.form.name.length > 4) {
         return ''
       }
@@ -57,16 +57,16 @@ export default {
         return 'Ingrese al menos 4 caracteres'
       }
     },
-    validFeedback () {
+    validFeedback() {
       return this.state ? 'Válido' : ''
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
       evt.preventDefault()
       Store.dispatch('SAVE_SECTOR', this.form)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.name = ''
@@ -77,7 +77,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return
@@ -92,19 +92,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.sector {
-  background-color: white;
-  padding: 60px;
-}
-#addForm {
-  margin: 0 auto;
-  max-width: 800px;
-  padding-top: 40px;
-}
-.to-right {
-  float: right;
-}
-.buttons {
-  margin: 0 auto;
-}
 </style>

@@ -76,22 +76,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.absenteeism {
-  background-color: white;
-  padding: 60px;
-}
-
-#addForm {
-  margin: 0 auto;
-  max-width: 800px;
-  padding-top: 40px;
-}
-
-.to-right {
-  float: right;
-}
-
-.buttons {
-  margin: 0 auto;
-}
 </style>

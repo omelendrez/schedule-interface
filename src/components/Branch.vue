@@ -3,11 +3,12 @@
     <h1>Local</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
       <b-form-group horizontal id="name" label="Nombre" label-for="name">
-        <b-form-input id="name" v-model.trim="form.name" required></b-form-input>
+        <b-form-input id="name" v-model.trim="form.name" required placeholder="Ingrese el nombre del local">
+        </b-form-input>
       </b-form-group>
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
-        <b-button type="reset" class="to-right">Volver</b-button>
+        <b-button type="reset">Volver</b-button>
       </div>
     </b-form>
   </b-container>
@@ -18,7 +19,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Branch',
-  data () {
+  data() {
     return {
       show: true,
       form: {
@@ -28,7 +29,7 @@ export default {
     }
   },
   watch: {
-    results () {
+    results() {
       const results = Store.state.results
       if (results.error) {
         return
@@ -37,22 +38,22 @@ export default {
     }
   },
   computed: {
-    results () {
+    results() {
       return Store.state.results
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    item () {
+    item() {
       return Store.state.record
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
       evt.preventDefault()
       Store.dispatch('SAVE_BRANCH', this.form)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Trick to reset/clear native browser form validation state */
       this.show = false
@@ -61,7 +62,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return
@@ -76,19 +77,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.branch {
-  background-color: white;
-  padding: 60px;
-}
-#addForm {
-  margin: 0 auto;
-  max-width: 800px;
-  padding-top: 40px;
-}
-.to-right {
-  float: right;
-}
-.buttons {
-  margin: 0 auto;
-}
 </style>

@@ -224,6 +224,7 @@ export default new Vuex.Store({
 
     async [types.LOAD_USERS]({ commit }) {
       const users = await Users.fetchUsers()
+
       commit(types.SET_USERS, {
         payload: users.data
       })
@@ -430,18 +431,46 @@ export default new Vuex.Store({
     },
 
     [types.SET_BRANCHES]: (state, { payload }) => {
+      payload.rows.map(item => {
+        item._rowVariant =
+          item.status_id !== constants.activeStatus
+            ? constants.inactiveColor
+            : ''
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
       state.branches = payload
     },
 
     [types.SET_ABSENTEEISMS]: (state, { payload }) => {
+      payload.rows.map(item => {
+        item._rowVariant =
+          item.status_id !== constants.activeStatus
+            ? constants.inactiveColor
+            : ''
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
       state.absenteeisms = payload
     },
 
     [types.SET_SECTORS]: (state, { payload }) => {
+      payload.rows.map(item => {
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
       state.sectors = payload
     },
 
     [types.SET_POSITIONS]: (state, { payload }) => {
+      payload.rows.map(item => {
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
       const formattedRecords = payload.rows.map((p) => (
         {
           ...p,
@@ -488,6 +517,15 @@ export default new Vuex.Store({
     },
 
     [types.SET_USERS]: (state, { payload }) => {
+      payload.rows.map(item => {
+        item._rowVariant =
+          item.status_id !== constants.activeStatus
+            ? constants.inactiveColor
+            : ''
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
       state.users = payload
     },
 
@@ -607,6 +645,11 @@ export default new Vuex.Store({
     },
 
     [types.SET_TIMEOFFS]: (state, { payload }) => {
+      payload.rows.map(item => {
+        if (item.id === state.record.id) {
+          item._rowVariant = constants.selectedRecordColor
+        }
+      })
       state.timeoffs = payload
     },
 

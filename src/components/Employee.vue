@@ -8,35 +8,24 @@
             <b-form-group horizontal id="badge" label="Legajo" label-for="badge">
               <b-form-input id="badge" v-model.trim="form.badge" required autofocus></b-form-input>
             </b-form-group>
-
             <b-form-group horizontal id="first_name" label="Nombre" label-for="first_name">
               <b-form-input id="first_name" v-model.trim="form.first_name" required></b-form-input>
             </b-form-group>
-
             <b-form-group horizontal id="last_name" label="Apellido" label-for="last_name">
               <b-form-input id="last_name" v-model.trim="form.last_name" required></b-form-input>
             </b-form-group>
-
-            <b-form-group
-              horizontal
-              id="joining_date"
-              label="Fecha de ingreso"
-              label-for="joining_date"
-            >
+            <b-form-group horizontal id="joining_date" label="Fecha de ingreso" label-for="joining_date">
               <b-form-input id="joining_date" v-model="form.joining_date" type="date" required></b-form-input>
             </b-form-group>
-
             <b-form-group horizontal id="branch_id" label="Local" label-for="branch_id">
               <b-form-select v-model="form.branch_id" :options="branches" class="mb-3" required />
             </b-form-group>
           </b-tab>
-
           <b-tab title="Asignaciones">
             <b-form-group class="assignations">
               <b-form-checkbox-group stacked v-model="form.selectedPositions" :options="positions" />
             </b-form-group>
           </b-tab>
-
           <b-tab title="Bloqueo de días y horas" class="hours-tab">
             <b-row class="header m-1">
               <b-col cols="2">
@@ -125,12 +114,10 @@
           </b-tab>
         </b-tabs>
       </b-card>
-
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
-
       <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
     </b-form>
   </b-container>
@@ -279,32 +266,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.employee {
-  background-color: white;
-  padding: 60px;
-}
-#addForm {
-  margin: 0 auto;
-  max-width: 800px;
-  padding-top: 40px;
-}
-.to-right {
-  float: right;
-}
-.buttons {
-  margin: 0 auto;
-  margin-top: 18px;
-  margin-bottom: 18px;
-}
 .assignations {
   padding: 10px;
 }
+
 .hours-tab .header {
   font-weight: bold;
 }
+
 .hours-tab .header .center {
   text-align: center;
 }
+
 .hours-tab input {
   text-align: center;
 }

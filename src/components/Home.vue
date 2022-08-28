@@ -1,7 +1,7 @@
 <template>
   <b-container class="home" fluid>
     <Header />
-    <b-jumbotron header="Turnos" lead="Administrador de programación de turnos" border-variant="dark">
+    <b-jumbotron header="Turnera" lead="Administrador de programación de turnos" border-variant="dark">
       <div class="info">Hola {{ user.user_name }}!</div>
       <b-img thumbnail fluid alt="Turnos" src="../static/img/work-schedule.jpg" />
     </b-jumbotron>

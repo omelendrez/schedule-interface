@@ -2,30 +2,25 @@
   <b-container class="position">
     <h1>Función</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
-
       <b-form-group horizontal id="sector_id" label="Sector" label-for="sector_id">
-        <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" required/>
+        <b-form-select v-model="form.sector_id" :options="sectors" class="mb-3" required />
       </b-form-group>
-
       <b-form-group horizontal id="name" label="Nombre" label-for="name">
         <b-form-input id="name" v-model.trim="form.name" required></b-form-input>
       </b-form-group>
-
       <b-form-group horizontal id="color" label="Color" label-for="color">
-        <b-form-input id="color" type="color" v-model.trim="form.color" @change="cleanError" required class="color-selector"></b-form-input>
+        <b-form-input id="color" type="color" v-model.trim="form.color" @change="cleanError" required
+          class="color-selector"></b-form-input>
       </b-form-group>
-
       <b-form-group horizontal id="text" label="Texto" label-for="text">
-        <b-form-input id="text" type="color" v-model.trim="form.text" @change="cleanError" required class="color-selector"></b-form-input>
+        <b-form-input id="text" type="color" v-model.trim="form.text" @change="cleanError" required
+          class="color-selector"></b-form-input>
       </b-form-group>
-
       <div class="buttons">
         <b-button type="submit" variant="info">Guardar</b-button>
         <b-button type="reset" class="to-right">Volver</b-button>
       </div>
-
       <b-alert variant="danger" :show="errorShow">{{ errorMsg }}</b-alert>
-
     </b-form>
   </b-container>
 </template>
@@ -35,7 +30,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Position',
-  data () {
+  data() {
     return {
       form: {
         id: 0,
@@ -50,7 +45,7 @@ export default {
     }
   },
   watch: {
-    results () {
+    results() {
       const results = Store.state.results
       if (results.error) {
         return
@@ -59,13 +54,13 @@ export default {
     }
   },
   computed: {
-    results () {
+    results() {
       return Store.state.results
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    sectors () {
+    sectors() {
       const sectors = Store.state.sectors.rows
       const options = []
       for (let i = 0; i < sectors.length; i++) {
@@ -76,16 +71,16 @@ export default {
       }
       return options
     },
-    item () {
+    item() {
       return Store.state.record
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
       evt.preventDefault()
       Store.dispatch('SAVE_POSITION', this.form)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.name = ''
@@ -96,12 +91,12 @@ export default {
         this.$router.push({ name: 'Positions' })
       })
     },
-    cleanError () {
+    cleanError() {
       this.errorShow = false
       this.errorMsg = ''
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return
@@ -119,22 +114,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.position {
-  background-color: white;
-  padding: 60px;
-}
-#addForm {
-  margin: 0 auto;
-  max-width: 800px;
-  padding-top: 40px;
-}
-.to-right {
-  float: right;
-}
-.buttons {
-  margin: 0 auto;
-  margin-bottom: 18px;
-}
 .color-selector {
   max-width: 40px;
 }

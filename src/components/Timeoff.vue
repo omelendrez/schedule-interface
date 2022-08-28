@@ -2,36 +2,30 @@
   <b-container class="timeoff">
     <h1>Ausencia</h1>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="addForm">
-
       <b-form-group horizontal id="employee_id" label="Empleado" label-for="employee_id">
-        <b-form-select v-model="form.employee_id" :options="employeesOptions" class="mb-3" required/>
+        <b-form-select v-model="form.employee_id" :options="employeesOptions" class="mb-3" required />
       </b-form-group>
-
       <b-form-group horizontal id="absenteeism_id" label="Type de Ausentismo" label-for="absenteeism_id">
-        <b-form-select v-model="form.absenteeism_id" :options="absenteeismsOptions" class="mb-3" required/>
+        <b-form-select v-model="form.absenteeism_id" :options="absenteeismsOptions" class="mb-3" required />
       </b-form-group>
-
       <b-form-group horizontal label="Desde Fecha" label-for="dateFrom">
-        <b-form-input id="dateFrom" type="date" v-model="form.dateFrom" :disabled="dateChangeBlocked" required></b-form-input>
+        <b-form-input id="dateFrom" type="date" v-model="form.dateFrom" :disabled="dateChangeBlocked" required>
+        </b-form-input>
       </b-form-group>
-
       <b-form-group horizontal label="Hasta Fecha" label-for="dateTo">
-        <b-form-input id="dateTo" type="date" v-model="form.dateTo" :disabled="dateChangeBlocked" required></b-form-input>
+        <b-form-input id="dateTo" type="date" v-model="form.dateTo" :disabled="dateChangeBlocked" required>
+        </b-form-input>
       </b-form-group>
-
       <div class="buttons">
         <b-button type="submit" variant="info" class="to-right">Guardar</b-button>
         <b-button type="reset">Volver</b-button>
       </div>
-
       <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
-
     </b-form>
-
-    <b-modal v-model="warningShow" header-bg-variant="info" title="Aviso" header-text-variant="light" centered @ok="handleOk" ok-title="Si. Continuar" cancel-title="No. Dejar como está" cancel-variant="danger">
-      <strong>{{warningMessage}}.</strong> Querés continuar?
+    <b-modal v-model="warningShow" header-bg-variant="info" title="Aviso" header-text-variant="light" centered
+      @ok="handleOk" ok-title="Si. Continuar" cancel-title="No. Dejar como está" cancel-variant="danger">
+      <strong>{{ warningMessage }}.</strong> Querés continuar?
     </b-modal>
-
   </b-container>
 </template>
 
@@ -40,7 +34,7 @@ import Store from '../store/store'
 
 export default {
   name: 'Timeoff',
-  data () {
+  data() {
     return {
       form: {
         id: 0,
@@ -61,7 +55,7 @@ export default {
     }
   },
   watch: {
-    results () {
+    results() {
       const results = Store.state.results
       if (results.error) {
         this.errorMessage = results.message
@@ -78,7 +72,7 @@ export default {
       this.errorShow = false
       this.$router.push({ name: 'Timeoffs' })
     },
-    employees () {
+    employees() {
       const employees = this.employees.rows
       const options = []
       for (let i = 0; i < employees.length; i++) {
@@ -97,7 +91,7 @@ export default {
       }
       this.employeesOptions = options
     },
-    absenteeisms () {
+    absenteeisms() {
       const absenteeisms = this.absenteeisms.rows
       const options = []
       for (let i = 0; i < absenteeisms.length; i++) {
@@ -111,24 +105,24 @@ export default {
     }
   },
   computed: {
-    results () {
+    results() {
       return Store.state.results
     },
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     },
-    employees () {
+    employees() {
       return Store.state.employees
     },
-    absenteeisms () {
+    absenteeisms() {
       return Store.state.absenteeisms
     },
-    item () {
+    item() {
       return Store.state.record
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
       evt.preventDefault()
       this.errorMessage = ''
       this.errorShow = false
@@ -139,7 +133,7 @@ export default {
       }
       this.saveData()
     },
-    increaseDate (date) {
+    increaseDate(date) {
       const arrayDate = date.split('-')
       let year = parseInt(arrayDate[0])
       let month = parseInt(arrayDate[1])
@@ -184,10 +178,10 @@ export default {
       newDate += day.toString().length === 1 ? '-0' + day.toString() : '-' + day.toString()
       return newDate
     },
-    saveTimeoff (data) {
+    saveTimeoff(data) {
       Store.dispatch('SAVE_TIMEOFF', data)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.employee_id = 0
@@ -200,11 +194,11 @@ export default {
         this.$router.push({ name: 'Timeoffs' })
       })
     },
-    cleanError () {
+    cleanError() {
       this.errorShow = false
       this.errorMsg = ''
     },
-    saveData () {
+    saveData() {
       let initialDate = this.form.dateFrom
       const finalDate = this.form.dateTo
       while (initialDate <= finalDate) {
@@ -219,12 +213,12 @@ export default {
         initialDate = this.increaseDate(initialDate)
       }
     },
-    handleOk () {
+    handleOk() {
       this.forced = true
       this.saveData()
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
       return
@@ -245,20 +239,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.timeoff {
-  background-color: white;
-  padding: 60px;
-}
-#addForm {
-  margin: 0 auto;
-  max-width: 800px;
-  padding-top: 40px;
-}
-.to-right {
-  float: right;
-}
-.buttons {
-  margin: 0 auto;
-  margin-bottom: 18px;
-}
 </style>

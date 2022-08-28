@@ -1,18 +1,18 @@
 <template>
-  <b-container class="login" fluid>
+  <b-container class="login">
     <Header />
     <b-card no-block id="loginCard">
       <b-form @submit="onSubmit" @reset="onReset" v-if="show" id="loginForm">
         <b-form-group>
-          <b-form-input id="user_name" type="text" v-model="form.user_name" required autoFocus="true" autocomplete="username" placeholder="Usuario">
+          <b-form-input id="user_name" type="text" v-model="form.user_name" required autoFocus="true"
+            autocomplete="username" placeholder="Usuario">
           </b-form-input>
         </b-form-group>
-
         <b-form-group>
-          <b-form-input id="password" type="password" v-model="form.password" required autocomplete="current-password" placeholder="Password">
+          <b-form-input id="password" type="password" v-model="form.password" required autocomplete="current-password"
+            placeholder="Password">
           </b-form-input>
         </b-form-group>
-
         <b-button type="submit" variant="info">Login</b-button>
         <b-button type="reset">Reset</b-button>
       </b-form>
@@ -28,7 +28,7 @@ import Header from './Header'
 
 export default {
   name: 'Login',
-  data () {
+  data() {
     return {
       form: {
         user_name: '',
@@ -57,12 +57,12 @@ export default {
     }
   },
   computed: {
-    user () {
+    user() {
       return Store.state.user
     }
   },
   methods: {
-    onSubmit (evt) {
+    onSubmit(evt) {
       this.isLoginError = false
       evt.preventDefault()
       const payload = {
@@ -71,7 +71,7 @@ export default {
       }
       Store.dispatch('LOGIN', payload)
     },
-    onReset (evt) {
+    onReset(evt) {
       evt.preventDefault()
       /* Reset our form values */
       this.form.user_name = ''
@@ -83,10 +83,10 @@ export default {
       })
     }
   },
-  isLogged () {
+  isLogged() {
     return Store.state.user.id
   },
-  created () {
+  created() {
     Store.dispatch('LOGOUT_USER')
   }
 }
@@ -94,12 +94,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#loginCard {
-  top: 100px;
-  margin: 0 auto;
+.container {
   max-width: 400px;
-}
-#loginForm {
-  padding: 10px;
 }
 </style>

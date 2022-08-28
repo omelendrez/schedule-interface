@@ -1,17 +1,15 @@
 <template>
   <b-container class="reports" fluid>
     <Header />
-      <b-card-group deck class="cards">
-        <b-card class="card">
-            <b-button class="card-text" variant="info" size="lg" href="#/consumed-hours">
-              Reporte de horas consumidas
-            </b-button>
-        </b-card>
-        <b-card class="card">
-            <b-button class="card-text" variant="info" size="lg" href="#/budget-actual">
-              Comparativa Presupuestado vs. Consumido
-            </b-button>
-        </b-card>
+    <b-card-group deck class="cards">
+      <b-card class="card">
+        <b-button class="card-text" variant="info" size="lg" href="#/consumed-hours"> Reporte de horas consumidas
+        </b-button>
+      </b-card>
+      <b-card class="card">
+        <b-button class="card-text" variant="info" size="lg" href="#/budget-actual"> Comparativa Presupuestado vs.
+          Consumido </b-button>
+      </b-card>
     </b-card-group>
   </b-container>
 </template>
@@ -22,7 +20,7 @@ import Header from './Header'
 
 export default {
   name: 'Reportes',
-  data () {
+  data() {
     return {
     }
   },
@@ -31,11 +29,11 @@ export default {
     Header
   },
   computed: {
-    isLogged () {
+    isLogged() {
       return Store.state.user.id
     }
   },
-  created () {
+  created() {
     if (!this.isLogged) {
       this.$router.push({ name: 'Login' })
     }
@@ -49,6 +47,7 @@ export default {
 .cards {
   margin-top: 32px;
 }
+
 .card {
   text-align: center;
 }
