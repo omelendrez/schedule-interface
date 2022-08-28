@@ -110,11 +110,13 @@ export default {
     branches() {
       const branches = Store.state.branches.rows
       const options = []
-      for (let i = 0; i < branches.length; i++) {
-        options.push({
-          value: branches[i].id,
-          text: branches[i].name
-        })
+      if (branches && branches.length) {
+        for (let i = 0; i < branches.length; i++) {
+          options.push({
+            value: branches[i].id,
+            text: branches[i].name
+          })
+        }
       }
       return options
     }
@@ -124,6 +126,7 @@ export default {
       this.$router.push({ name: 'Login' })
     }
     Store.dispatch('SET_MENU_OPTION', '/reports')
+    Store.dispatch('LOAD_BRANCHES')
   }
 }
 </script>

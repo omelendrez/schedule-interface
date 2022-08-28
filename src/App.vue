@@ -13,6 +13,10 @@ export default {
     const user = getPersistedValue(LOCAL_STORAGE_VARS.USER) || {}
     if (user.id) {
       Store.dispatch('SET_USER', user)
+      Store.dispatch('SET_MENU_OPTION', this.$route.path)
+    } else {
+      this.$router.push({ name: 'Login' })
+      return false
     }
   }
 }

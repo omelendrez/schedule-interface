@@ -1,40 +1,26 @@
 <template>
   <b-container class="grid" fluid>
-    <Header/>
-
+    <Header />
     <div class="pull-right no-print">
       <b-btn variant="info" @click.stop="goProgram">Programa</b-btn>
       <b-btn variant="primary" @click.stop="printGrid">Imprimir</b-btn>
       <b-btn variant="success" @click.stop="goBack">Volver</b-btn>
     </div>
-
     <div>
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
-      <h5
-        class="no-print"
-      >Total horas presupuesto: {{totalHoursBudget}} / Total horas asignadas: {{totalScheduledHours}}</h5>
-
+      <h5 class="no-print">Total horas presupuesto: {{ totalHoursBudget }} / Total horas asignadas:
+        {{ totalScheduledHours }}</h5>
       <div @click="showPositions = true" class="position-group no-print">
         <div class="position">Sector seleccionado:</div>
-        <div class="position-color" v-bind:style="{background:selectedPosition.color}">&nbsp;</div>
-        <div class="position-name">{{selectedPosition.name}}</div>
+        <div class="position-color" v-bind:style="{ background: selectedPosition.color }">&nbsp;</div>
+        <div class="position-name">{{ selectedPosition.name }}</div>
         <div class="pull-right error" :show="showError">{{ errorMessage }}</div>
       </div>
-
-      <b-table
-        small
-        bordered
-        :items="scheduleRows"
-        @click.native="selectCell($event)"
-        :fields="fields"
-        head-variant="light"
-        class="schedule-table"
-      >
+      <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields"
+        head-variant="light" class="schedule-table">
         <template slot="fullName" slot-scope="data">
-          <span
-            v-b-popover.hover="data.item.last_timeoff"
-            class="last-timeoff"
-          >{{data.item["last_name"]}}, {{data.item["first_name"]}}</span>
+          <span v-b-popover.hover="data.item.last_timeoff" class="last-timeoff">{{ data.item["last_name"] }},
+            {{ data.item["first_name"] }}</span>
         </template>
         <template slot="h06" slot-scope="data">
           <div v-html="data.item['h06']"></div>
@@ -97,67 +83,28 @@
           <div v-html="data.item['h25']"></div>
         </template>
       </b-table>
-
       <b-card title="Mensaje" class="mb-2" v-show="footer">
         <p class="card-text">{{ footer }}</p>
       </b-card>
-
-      <b-modal
-        v-model="showAlert"
-        header-bg-variant="info"
-        title="Aviso"
-        header-text-variant="light"
-        centered
-        @ok="handleOk"
-        ok-title="Si. Continuar"
-        cancel-title="No. Dejar como está"
-        cancel-variant="danger"
-      >
-        <strong>{{alertMessage}}</strong>
+      <b-modal v-model="showAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered
+        @ok="handleOk" ok-title="Si. Continuar" cancel-title="No. Dejar como está" cancel-variant="danger">
+        <strong>{{ alertMessage }}</strong>
         <p>Querés continuar?</p>
       </b-modal>
-
-      <b-modal
-        v-model="timeoffAlert"
-        header-bg-variant="info"
-        title="Aviso"
-        header-text-variant="light"
-        centered
-        ok-only
-      >
-        <p>
-          Este empleado está informado como ausente con
-          <strong>{{timeoffMessage}}</strong> para este día.
-          <br>Si querés cargarle horas tenés que eliminar el ausentismo desde la opción
-          <strong>Ausencias</strong> del menú.
+      <b-modal v-model="timeoffAlert" header-bg-variant="info" title="Aviso" header-text-variant="light" centered
+        ok-only>
+        <p> Este empleado está informado como ausente con <strong>{{ timeoffMessage }}</strong> para este día. <br>Si
+          querés cargarle horas tenés que eliminar el ausentismo desde la opción <strong>Ausencias</strong> del menú.
         </p>
       </b-modal>
-
-      <b-modal
-        v-model="warningShow"
-        header-bg-variant="info"
-        title="Aviso"
-        header-text-variant="light"
-        ok-only
-      >
+      <b-modal v-model="warningShow" header-bg-variant="info" title="Aviso" header-text-variant="light" ok-only>
         <p>
-          <strong>{{warningMessage}}</strong>
+          <strong>{{ warningMessage }}</strong>
         </p>
       </b-modal>
-
-      <b-modal
-        v-model="showPositions"
-        header-bg-variant="info"
-        title="Sectores"
-        header-text-variant="light"
-        ok-only
-      >
-        <Positions
-          :selectPosition="selectPosition"
-          :deleteSector="deleteSector"
-          :deActivate="deActivate"
-          :positionRows="positionRows"
-        />
+      <b-modal v-model="showPositions" header-bg-variant="info" title="Sectores" header-text-variant="light" ok-only>
+        <Positions :selectPosition="selectPosition" :deleteSector="deleteSector" :deActivate="deActivate"
+          :positionRows="positionRows" />
       </b-modal>
     </div>
   </b-container>
@@ -169,6 +116,7 @@ import Store from '@/store/store'
 import Header from './Header'
 import Positions from './lib/Positions'
 import fields from '@/utils/fields'
+import { getPersistedValue, LOCAL_STORAGE_VARS, persistValue } from '../utils'
 
 export default {
   name: 'Grid',
@@ -345,16 +293,13 @@ export default {
       if (rec.position.name && rec.position.name.length > 6) {
         rec.position.name = rec.position.name.substring(0, 5) + '...'
       }
-      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-timeoff="${
-        rec.timeoff
-      }" data-budget-id="${rec.budget_id}" data-position-id="${
-        rec.position_id
-      }" data-employee-id="${
-        Employee.id
-      }" data-hour="${h}" class="my-div" style="background-color:${rec.position
-        .color || '#ffffff'};color:${rec.position.text ||
-        '#000000'};cursor:pointer;font-size:9px;padding-top:3px;padding-bottom:3px;overflow:hidden;">${rec
-        .position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
+      Employee[`h${h}`] = `<div data-record-id="${rec.id}" data-timeoff="${rec.timeoff
+        }" data-budget-id="${rec.budget_id}" data-position-id="${rec.position_id
+        }" data-employee-id="${Employee.id
+        }" data-hour="${h}" class="my-div" style="background-color:${rec.position
+          .color || '#ffffff'};color:${rec.position.text ||
+          '#000000'};cursor:pointer;font-size:9px;padding-top:3px;padding-bottom:3px;overflow:hidden;">${rec
+            .position.name || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>`
     },
     selectCell(item) {
       const data = item.target.dataset
@@ -398,10 +343,12 @@ export default {
       Store.dispatch('SAVE_SCHEDULE', this.recordData)
     },
     loadData() {
+      const prevData = getPersistedValue(LOCAL_STORAGE_VARS.GRID)
       const data = {
-        date: this.record._date,
-        branch_id: this.record.branch_id
+        date: this.record._date || prevData.date,
+        branch_id: this.record.branch_id || prevData.branch_id
       }
+      persistValue(LOCAL_STORAGE_VARS.GRID, data)
       Store.dispatch('LOAD_SCHEDULE', data)
     },
     goProgram() {
@@ -465,51 +412,64 @@ export default {
 .grid {
   background-color: white;
 }
+
 @media print {
   body {
     background-color: white;
   }
+
   h4 {
     font-size: 1em;
     margin: 0;
   }
+
   table {
     font-size: small;
   }
+
   .no-print,
   .no-print * {
     display: none !important;
   }
+
   @page {
     size: landscape;
   }
 }
+
 .pull-right {
   margin-top: 18px;
   float: right;
 }
+
 .pull-left {
   margin-top: 18px;
   float: left;
 }
+
 .compact {
   width: auto;
 }
+
 .position {
   display: inline-block;
 }
+
 .position-name {
   display: inline-block;
   font-weight: bold;
   font-size: 1.2em;
 }
+
 .position-group {
   cursor: pointer;
 }
+
 .error {
   color: red;
   font-weight: bold;
 }
+
 .last-timeoff {
   cursor: help;
 }

@@ -1,6 +1,7 @@
 export const LOCAL_STORAGE_VARS = {
   USER: 'user',
-  TOKEN: 'token'
+  TOKEN: 'token',
+  GRID: 'grid'
 }
 
 export const persistValue = (key, value) => window.localStorage.setItem(key, JSON.stringify(value))
