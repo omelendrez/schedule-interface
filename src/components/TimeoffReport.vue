@@ -104,19 +104,15 @@ export default {
       if (!to) {
         return
       }
-      const timeoffRows = []
-      for (let i = 0; i < to.length; i++) {
-        const item = to[i]
-        if (this.form.absenteeismId === 0 || item.absenteeism_id === this.form.absenteeismId) {
-          timeoffRows.push({
-            badge: item.employee.badge,
-            first_name: item.employee.first_name,
-            last_name: item.employee.last_name,
-            date: item.week_day + ' ' + item.date,
-            absenteeism: item.absenteeism.name
-          })
-        }
-      }
+      const timeoffRows = to
+        .filter((item) => this.form.absenteeismId === 0 || item.absenteeism_id === this.form.absenteeismId)
+        .map((i) => ({
+          badge: i.employee.badge,
+          first_name: i.employee.first_name,
+          last_name: i.employee.last_name,
+          date: i.week_day + ' ' + i.date,
+          absenteeism: i.absenteeism.name
+        }))
       this.TimeoffRows = timeoffRows
       this.dateFrom = this.form.fromDate.split('-').reverse().join('-')
       this.dateTo = this.form.toDate.split('-').reverse().join('-')
