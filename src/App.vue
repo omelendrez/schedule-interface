@@ -1,6 +1,14 @@
 <template>
   <div id="app">
     <router-view />
+    <b-modal id="error-modal" hide-footer>
+      <template #modal-title>Error #{{ errorData.code }}</template>
+      <div class="d-block text-center">
+        <h3>{{ errorData.message }}</h3>
+        <p class="my-4">{{ errorData.detail }}</p>
+      </div>
+      <b-button class="mt-3" variant="danger" block @click="handleOk">Cerrar</b-button>
+    </b-modal>
   </div>
 </template>
 
@@ -9,6 +17,25 @@ import Store from './store/store'
 import { LOCAL_STORAGE_VARS, getPersistedValue } from './utils'
 export default {
   name: 'App',
+  data() {
+    return {
+      errorData: {}
+    }
+  },
+  watch: {
+    error() {
+      const error = Store.state.error
+      if (error) {
+        this.$bvModal.show('error-modal')
+        this.errorData = error
+      }
+    }
+  },
+  computed: {
+    error() {
+      return Store.state.error
+    }
+  },
   created() {
     const user = getPersistedValue(LOCAL_STORAGE_VARS.USER) || {}
     if (user.id) {
@@ -17,6 +44,12 @@ export default {
     } else {
       this.$router.push({ name: 'Login' })
       return false
+    }
+  },
+  methods: {
+    handleOk() {
+      this.$bvModal.hide('error-modal')
+      Store.dispatch('RESET_ERROR')
     }
   }
 }

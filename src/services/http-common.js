@@ -1,4 +1,6 @@
 import axios from 'axios'
+import Store from '../store/store'
+
 import { LOCAL_STORAGE_VARS, getPersistedValue, removePersistedValues } from '../utils'
 
 const HTTP = axios.create({
@@ -6,12 +8,14 @@ const HTTP = axios.create({
 })
 
 HTTP.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    Store.dispatch('RESET_ERROR')
+    return response
+  },
   (error) => {
+    Store.dispatch('SET_ERROR', { ...error.response.data, code: error.response.status })
     if (error.response.status === 401) {
-      // eslint-disable-next-line no-console
-      console.log(error.response.status)
-      removePersistedValues()
+      return removePersistedValues()
     }
   }
 )

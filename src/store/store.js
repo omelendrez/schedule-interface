@@ -25,40 +25,41 @@ import {
 Vue.use(Vuex)
 
 const state = {
-  option: false,
   branches: [],
   budgets: [],
+  option: false,
   budget: {
+    count: 1,
     rows: {
       id: 0,
       date: '',
-      hours: 0,
-      footer: ''
-    },
-    count: 1
+      footer: '',
+      hours: 0
+    }
   },
-  sectors: [{ rows: [] }],
+  absenteeisms: [],
+  allTimeoffs: [],
+  budgetTimeoffs: [],
+  employee: [],
+  employees: [],
+  employeesByPosition: [],
+  error: {},
+  password: [],
   positions: [{ rows: [] }],
   positionSector: [],
   profiles: [],
-  schedules: [],
-  schedule: [],
-  timeoffs: [],
-  allTimeoffs: [],
-  budgetTimeoffs: [],
-  absenteeisms: [],
-  status: [],
-  employees: [],
-  employee: [],
-  employeesByPosition: [],
-  users: [],
-  user: [],
-  password: [],
   record: [],
+  reportResults: [],
   results: [],
+  schedule: [],
+  schedules: [],
+  sectors: [{ rows: [] }],
   selectedEmployee: [],
   selectedPosition: [],
-  reportResults: []
+  status: [],
+  timeoffs: [],
+  user: [],
+  users: []
 }
 
 export default new Vuex.Store({
@@ -94,7 +95,6 @@ export default new Vuex.Store({
 
     async [types.LOGIN]({ commit }, payload) {
       const user = await Users.login(payload)
-      // eslint-disable-next-line no-console
       persistValue(LOCAL_STORAGE_VARS.TOKEN, user.data.token)
       delete user.data.token
       persistValue(LOCAL_STORAGE_VARS.USER, user.data)
@@ -409,6 +409,14 @@ export default new Vuex.Store({
       commit(types.SET_RESULTS, {
         payload: results.data
       })
+    },
+    [types.SET_ERROR]({ commit }, payload) {
+      commit(types.SET_ERROR, {
+        payload: payload
+      })
+    },
+    [types.RESET_ERROR]({ commit }) {
+      commit(types.RESET_ERROR)
     }
   },
 
@@ -630,6 +638,12 @@ export default new Vuex.Store({
         formatted.push(record)
       }
       state.positionSector = formatted
+    },
+    [types.SET_ERROR]: (state, { payload }) => {
+      state.error = payload
+    },
+    [types.RESET_ERROR]: (state) => {
+      state.error = null
     }
   }
 })
