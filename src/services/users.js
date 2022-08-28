@@ -2,7 +2,7 @@ import HTTP from './http-common'
 
 export default {
   fetchUsers() {
-    return HTTP.get('userx')
+    return HTTP.get('user')
   },
   login(payload) {
     return HTTP.post('login', payload)
