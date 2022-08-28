@@ -35,7 +35,7 @@ body {
 }
 
 .btn {
-  border-radius: 6px;
+  border-radius: .3rem;
   padding: 8px 16px;
 }
 </style>
