@@ -74,5 +74,6 @@ body {
 .btn {
   border-radius: .3rem;
   padding: 8px 16px;
+  margin: 0 6px;
 }
 </style>
