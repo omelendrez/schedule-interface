@@ -14,7 +14,7 @@ HTTP.interceptors.response.use(
   },
   (error) => {
     Store.dispatch('SET_ERROR', { ...error.response.data, code: error.response.status })
-    if (error.response.status === 401) {
+    if (error.response.data.message === 'Token expirada') {
       return removePersistedValues()
     }
   }

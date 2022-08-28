@@ -43,13 +43,16 @@ export default {
       Store.dispatch('SET_MENU_OPTION', this.$route.path)
     } else {
       this.$router.push({ name: 'Login' })
-      return false
     }
   },
   methods: {
     handleOk() {
       this.$bvModal.hide('error-modal')
       Store.dispatch('RESET_ERROR')
+      const user = getPersistedValue(LOCAL_STORAGE_VARS.USER) || {}
+      if (!user.id) {
+        this.$router.push({ name: 'Login' })
+      }
     }
   }
 }
