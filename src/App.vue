@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view />
-    <b-modal id="error-modal" hide-footer>
+    <b-modal id="error-modal" hide-footer conent-class="danger">
       <template #modal-title>Error #{{ errorData.code }}</template>
       <div class="d-block text-center">
         <h3>{{ errorData.message }}</h3>
@@ -75,5 +75,9 @@ body {
   border-radius: .3rem;
   padding: 8px 16px;
   margin: 0 6px;
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, .5);
 }
 </style>
