@@ -11,8 +11,7 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-form-checkbox v-model="onlyActive" name="check-button" class="to-right"> Sólo registros activos
-    </b-form-checkbox>
+    <b-checkbox v-model="onlyActive" name="check-button" class="m-2"> Sólo registros activos </b-checkbox>
     <b-table hover outlined small :items="records.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
       <template slot="fullName" slot-scope="cell"> {{  cell.item["badge"]  }} - {{  cell.item["last_name"]  }}, {{
@@ -138,7 +137,7 @@ export default {
     onlyActive() {
       this.applyFilter(Store.state.employees)
     },
-    employees(prev, curr) {
+    employees(_, curr) {
       const { rows } = curr
       this.records.rows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
       this.records.count = this.onlyActive ? this.records.rows.length : rows.length

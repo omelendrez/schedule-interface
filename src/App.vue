@@ -66,6 +66,7 @@ body {
     'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol' !important;
   font-size: 14px;
+  font-weight: 400;
   background-color: rgba(0, 0, 0, .05);
 }
 
@@ -76,7 +77,7 @@ body {
 }
 
 .table-inactive {
-  background-color: rgba(255, 0, 0, .1);
+  color: rgba(0, 0, 0, .4);
 }
 
 .table-selected {
@@ -87,6 +88,7 @@ body {
   border-radius: .3rem;
   padding: 8px 16px;
   margin: 0 6px;
+  min-width: 90px;
 }
 
 .modal-backdrop {
@@ -97,14 +99,13 @@ body {
   border: 1px solid #ccc;
   border-radius: 6px;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-  margin-top: 2rem;
   padding: 2rem;
   max-width: 50vw;
   background-color: white;
+  margin-top: 60px;
 }
 
 .buttons {
-  margin-top: 2rem;
   border-top: 1px solid rgba(0, 0, 0, .1);
   padding-top: 1rem;
 }

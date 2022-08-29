@@ -22,16 +22,15 @@
         </div>
       </b-form>
       <b-alert variant="info" :show="isLoading">Cargando...</b-alert>
-      <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
+      <b-alert variant="danger" :show="errorShow">{{  errorMessage  }}</b-alert>
     </b-card>
     <div class="report-table" v-show="TimeoffRows.length">
       <b-button type="button" variant="primary" @click="printReport" class="no-print print-button to-right">Imprimir
       </b-button>
-      <h4>Reporte de ausentimo del {{ dateFrom }} al {{ dateTo }}</h4>
+      <h4>Reporte de ausentimo del {{  dateFrom  }} al {{  dateTo  }}</h4>
       <b-table v-if="TimeoffRows" :items="TimeoffRows" :fields="fields" head-variant="light">
-        <template slot="fullName" slot-scope="cell"> {{ cell.item["badge"] }} - {{ cell.item["last_name"] }}, {{
-            cell.item["first_name"]
-        }} </template>
+        <template slot="fullName" slot-scope="cell"> {{  cell.item["badge"]  }} - {{  cell.item["last_name"]  }}, {{
+           cell.item["first_name"]  }} </template>
       </b-table>
     </div>
   </b-container>
