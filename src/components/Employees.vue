@@ -11,30 +11,26 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-table hover outlined small :items="employees.rows" :fields="fields" :filter="filter" :per-page="perPage"
+    <b-form-checkbox v-model="onlyActive" name="check-button" class="to-right"> Sólo registros activos
+    </b-form-checkbox>
+    <b-table hover outlined small :items="records.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
-      <template slot="fullName" slot-scope="cell"> {{ cell.item["badge"] }} - {{ cell.item["last_name"] }}, {{
-          cell.item["first_name"]
-      }} </template>
+      <template slot="fullName" slot-scope="cell"> {{  cell.item["badge"]  }} - {{  cell.item["last_name"]  }}, {{
+         cell.item["first_name"]  }} </template>
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">
           Eliminar</b-btn>
         <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
       </template>
-      <template slot="table-caption"> {{ employees.count }} registros </template>
+      <template slot="table-caption"> {{  records.count  }} registros </template>
     </b-table>
-    <b-pagination :total-rows="employees.count" :per-page="perPage" v-model="currentPage" />
-    <b-form-checkbox v-model="checked" name="check-button" switch class="to-right"> Switch Checkbox <b>(Checked: {{
-        checked
-    }})</b>
-    </b-form-checkbox>
-    <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
+    <b-pagination :total-rows="records.count" :per-page="perPage" v-model="currentPage" />
+    <b-alert variant="danger" :show="errorShow">{{  errorMessage  }}</b-alert>
     <b-modal id="modal-center" centered title="Eliminar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Eliminar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea eliminar al empleado <strong>{{ selectedItem.badge }} - {{
-          selectedItem.first_name
-      }} {{ selectedItem.last_name }}</strong>?</p>
+      <p class="my-4">Está seguro que desea eliminar al empleado <strong>{{  selectedItem.badge  }} - {{
+           selectedItem.first_name  }} {{  selectedItem.last_name  }}</strong>?</p>
     </b-modal>
   </b-container>
 </template>
@@ -54,7 +50,8 @@ export default {
       reactivating: false,
       errorShow: false,
       errorMessage: '',
-      checked: false,
+      onlyActive: true,
+      records: { count: 0, rows: [] },
       selectedItem: {
         badge: '',
         first_name: '',
@@ -124,6 +121,11 @@ export default {
     },
     handleOk() {
       Store.dispatch('DELETE_EMPLOYEE', this.selectedItem)
+    },
+    applyFilter(employees) {
+      const { rows } = employees
+      this.records.rows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
+      this.records.count = this.onlyActive ? this.records.rows.length : rows.length
     }
   },
   watch: {
@@ -132,6 +134,14 @@ export default {
       this.errorShow = this.reactivating ? false : results.error
       this.errorMessage = this.reactivating ? '' : results.message
       Store.dispatch('LOAD_EMPLOYEES')
+    },
+    onlyActive() {
+      this.applyFilter(Store.state.employees)
+    },
+    employees(prev, curr) {
+      const { rows } = curr
+      this.records.rows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
+      this.records.count = this.onlyActive ? this.records.rows.length : rows.length
     }
   },
   computed: {

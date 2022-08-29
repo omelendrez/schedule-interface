@@ -2,10 +2,10 @@
   <div id="app">
     <router-view />
     <b-modal id="error-modal" hide-footer conent-class="danger" centered>
-      <template #modal-title>Error #{{ errorData.code }}</template>
+      <template #modal-title>Error #{{  errorData.code  }}</template>
       <div class="d-block text-center">
-        <h3>{{ errorData.message }}</h3>
-        <p class="my-4">{{ errorData.detail }}</p>
+        <h3>{{  errorData.message  }}</h3>
+        <p class="my-4">{{  errorData.detail  }}</p>
       </div>
       <b-button class="mt-3" variant="danger" block @click="handleOk">Cerrar</b-button>
     </b-modal>
@@ -41,6 +41,8 @@ export default {
     if (user.id) {
       Store.dispatch('SET_USER', user)
       Store.dispatch('SET_MENU_OPTION', this.$route.path)
+      Store.dispatch('LOAD_BRANCHES')
+      Store.dispatch('LOAD_EMPLOYEES')
     } else {
       this.$router.push({ name: 'Login' })
     }
