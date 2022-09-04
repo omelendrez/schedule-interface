@@ -1,23 +1,23 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchPositions () {
-    return HTTP.get('position')
+  fetchPositions() {
+    return API.get('position')
   },
-  savePosition (payload) {
+  savePosition(payload) {
     if (payload.id === 0) {
-      return HTTP.post('position', payload)
+      return API.post('position', payload)
     } else {
-      return HTTP.put(`position/${payload.id}`, payload)
+      return API.put(`position/${payload.id}`, payload)
     }
   },
-  fetchSectorPositions (payload) {
-    return HTTP.get(`position/${payload.sector_id}/sector`, payload)
+  fetchSectorPositions(payload) {
+    return API.get(`position/${payload.sector_id}/sector`, payload)
   },
-  fetchPositionSector () {
-    return HTTP.get('position/sector')
+  fetchPositionSector() {
+    return API.get('position/sector')
   },
-  deletePosition (payload) {
-    return HTTP.delete(`position/${payload}`)
+  deletePosition(payload) {
+    return API.delete(`position/${payload}`)
   }
 }

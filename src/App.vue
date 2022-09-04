@@ -2,10 +2,10 @@
   <div id="app">
     <router-view />
     <b-modal id="error-modal" hide-footer conent-class="danger" centered>
-      <template #modal-title>Error #{{  errorData.code  }}</template>
+      <template #modal-title>Error #{{ errorData.code }}</template>
       <div class="d-block text-center">
-        <h3>{{  errorData.message  }}</h3>
-        <p class="my-4">{{  errorData.detail  }}</p>
+        <h3>{{ errorData.message }}</h3>
+        <p class="my-4">{{ errorData.detail }}</p>
       </div>
       <b-button class="mt-3" variant="danger" block @click="handleOk">Cerrar</b-button>
     </b-modal>
@@ -81,14 +81,14 @@ body {
 }
 
 .table-selected {
-  background-color: rgba(0, 0, 255, .1);
+  background-color: rgba(0, 255, 0, .3);
 }
 
 .btn {
   border-radius: .3rem;
   padding: 8px 16px;
   margin: 0 6px;
-  min-width: 90px;
+  min-width: 100px;
 }
 
 .modal-backdrop {

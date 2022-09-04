@@ -11,7 +11,7 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-table hover outlined :items="budgets.rows" :fields="fields" :filter="filter" :per-page="perPage"
+    <b-table hover outlined small :items="budgets.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)" v-if="isAdmin">Editar</b-btn>
@@ -51,36 +51,42 @@ export default {
         {
           key: 'weekday',
           label: 'Día',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'date',
           label: 'Fecha',
           variant: 'success',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'hours',
           label: 'Horas budget',
           variant: 'warning',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'program',
           label: 'Horas programa',
           variant: 'warning',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'branch.name',
           label: 'Local',
           variant: 'info',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'acciones',
           label: ' ',
-          class: 'text-right'
+          class: 'text-right',
+          tdClass: 'align-middle'
         }
       ]
     }

@@ -11,7 +11,7 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-table hover outlined :items="absenteeisms.rows" :fields="fields" :filter="filter" :per-page="perPage"
+    <b-table hover outlined small :items="absenteeisms.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell" v-if="isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
@@ -48,12 +48,18 @@ export default {
         {
           key: 'name',
           label: 'Nombre',
-          sortable: true
+          sortable: true,
+          tdClass: 'align-middle'
         },
         {
           key: 'status.name',
           label: 'Status',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
+        },
+        {
+          key: 'acciones',
+          class: 'text-right'
         }
       ]
     }

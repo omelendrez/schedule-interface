@@ -8,8 +8,8 @@
     </div>
     <div>
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
-      <h5 class="no-print"> Total horas presupuesto: {{ totalHoursBudget }} / Total horas asignadas:
-        {{ totalScheduledHours }} </h5>
+      <h5 class="no-print"> Total horas presupuesto: {{ totalHoursBudget }} / Total horas asignadas: {{
+      totalScheduledHours }} </h5>
       <b-form-group class="filter-form no-print">
         <b-input-group>
           <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
@@ -17,21 +17,22 @@
         </b-input-group>
       </b-form-group>
       <h4>Asignaciones</h4>
-      <b-table outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" show-empty
+      <b-table hover outlined small :items="scheduleRows" :fields="scheduleFields" :filter="filter" show-empty
         :empty-text="emptyText" head-variant="light">
-        <template slot="sectorPosition" slot-scope="row"> {{ row.item["sector"] }} / {{ row.item["position"] }} </template>
-        <template slot="fullName" slot-scope="row"> {{ row.item["badge"] }} {{ row.item["last_name"] }},
-          {{ row.item["first_name"] }} </template>
+        <template slot="sectorPosition" slot-scope="row"> {{ row.item["sector"] }} / {{ row.item["position"] }}
+        </template>
+        <template slot="fullName" slot-scope="row"> {{ row.item["badge"] }} {{ row.item["last_name"] }}, {{
+        row.item["first_name"] }} </template>
         <template slot="from" slot-scope="row"> {{ row.item["_from"] }} </template>
         <template slot="_to" slot-scope="row"> {{ row.item["_to"] }} </template>
         <template slot="hours" slot-scope="row"> {{ row.item["hours"] }} </template>
         <template slot="table-caption"> {{ scheduleRows.length }} registros </template>
       </b-table>
       <h4>Ausentes</h4>
-      <b-table outlined small :items="absenteeismRows" show-empty :empty-text="emptyText" :fields="absenteeismFields"
-        head-variant="light">
-        <template slot="fullName" slot-scope="row"> {{ row.item["badge"] }} {{ row.item["last_name"] }},
-          {{ row.item["first_name"] }} </template>
+      <b-table hover outlined small :items="absenteeismRows" show-empty :empty-text="emptyText"
+        :fields="absenteeismFields" head-variant="light">
+        <template slot="fullName" slot-scope="row"> {{ row.item["badge"] }} {{ row.item["last_name"] }}, {{
+        row.item["first_name"] }} </template>
         <template slot="table-caption"> {{ absenteeismRows.length }} empleados </template>
       </b-table>
     </div>

@@ -1,26 +1,26 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchEmployees () {
-    return HTTP.get('employee')
+  fetchEmployees() {
+    return API.get('employee')
   },
-  fetchEmployee (payload) {
-    return HTTP.get(`employee/${payload.id}`)
+  fetchEmployee(payload) {
+    return API.get(`employee/${payload.id}`)
   },
-  fetchBranchEmployees (payload) {
-    return HTTP.get(`employee/${payload.branch_id}/branch`, payload)
+  fetchBranchEmployees(payload) {
+    return API.get(`employee/${payload.branch_id}/branch`, payload)
   },
-  fetchEmployeesByPosition (payload) {
-    return HTTP.get(`employee_position/${payload.value}/position`, payload)
+  fetchEmployeesByPosition(payload) {
+    return API.get(`employee_position/${payload.value}/position`, payload)
   },
-  saveEmployee (payload) {
+  saveEmployee(payload) {
     if (payload.id === 0) {
-      return HTTP.post('employee', payload)
+      return API.post('employee', payload)
     } else {
-      return HTTP.put(`employee/${payload.id}`, payload)
+      return API.put(`employee/${payload.id}`, payload)
     }
   },
-  deleteEmployee (payload) {
-    return HTTP.delete(`employee/${payload}`)
+  deleteEmployee(payload) {
+    return API.delete(`employee/${payload}`)
   }
 }

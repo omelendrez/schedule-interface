@@ -12,7 +12,7 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-table hover outlined :items="timeoffs.rows" :fields="fields" :filter="filter" :per-page="perPage"
+    <b-table hover outlined small :items="timeoffs.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
@@ -47,29 +47,34 @@ export default {
       fields: [
         {
           key: 'employee.badge',
-          label: 'Legajo'
+          label: 'Legajo',
+          tdClass: 'align-middle'
         },
         {
           key: 'employee.first_name',
-          label: 'Nombre'
+          label: 'Nombre',
+          tdClass: 'align-middle'
         },
         {
           key: 'employee.last_name',
-          label: 'Apellido'
+          label: 'Apellido',
+          tdClass: 'align-middle'
         },
         {
           key: 'absenteeism.name',
           label: 'Ausencia',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'date',
           label: 'Día',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'acciones',
-          class: 'text-center'
+          class: 'text-right'
         }
       ]
     }

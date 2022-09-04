@@ -59,26 +59,30 @@ export default {
       fields: [
         {
           key: 'fullName',
-          label: 'Empleado'
+          label: 'Empleado',
+          tdClass: 'align-middle'
         },
         {
           key: 'branch.name',
           label: 'Local',
-          sortable: true
+          sortable: true,
+          tdClass: 'align-middle'
         },
         {
           key: '_joining_date',
           label: 'Ingreso',
-          sortable: true
+          sortable: true,
+          tdClass: 'align-middle'
         },
         {
           key: 'status.name',
           label: 'Status',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'acciones',
-          class: 'text-center'
+          class: 'text-right'
         }
       ]
     }
@@ -111,10 +115,11 @@ export default {
     handleOk() {
       Store.dispatch('DELETE_EMPLOYEE', this.selectedItem)
     },
-    applyFilter(employees) {
-      const { rows } = employees
-      this.records.rows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
-      this.records.count = this.onlyActive ? this.records.rows.length : rows.length
+    applyFilter() {
+      const { rows } = Store.state.employees
+      const newRows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
+      this.records.rows = newRows
+      this.records.count = newRows.length
     }
   },
   watch: {
@@ -127,10 +132,8 @@ export default {
     onlyActive() {
       this.applyFilter(Store.state.employees)
     },
-    employees(_, curr) {
-      const { rows } = curr
-      this.records.rows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
-      this.records.count = this.onlyActive ? this.records.rows.length : rows.length
+    employees() {
+      this.applyFilter(Store.state.employees)
     }
   },
   computed: {

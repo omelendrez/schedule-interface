@@ -1,17 +1,17 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchSectors () {
-    return HTTP.get('sector')
+  fetchSectors() {
+    return API.get('sector')
   },
-  saveSector (payload) {
+  saveSector(payload) {
     if (payload.id === 0) {
-      return HTTP.post('sector', payload)
+      return API.post('sector', payload)
     } else {
-      return HTTP.put(`sector/${payload.id}`, payload)
+      return API.put(`sector/${payload.id}`, payload)
     }
   },
-  deleteSector (payload) {
-    return HTTP.delete(`sector/${payload}`)
+  deleteSector(payload) {
+    return API.delete(`sector/${payload}`)
   }
 }

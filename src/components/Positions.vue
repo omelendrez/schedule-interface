@@ -11,7 +11,7 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-table hover outlined :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage"
+    <b-table hover outlined small :items="positions.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
       <template slot="div" slot-scope="data">
         <div v-html='data.item.div'></div>
@@ -52,22 +52,30 @@ export default {
         {
           key: 'sector.name',
           label: 'Sector',
-          sortable: true
+          sortable: true,
+          tdClass: 'align-middle'
         },
         {
           key: 'name',
           label: 'Función',
-          sortable: true
+          sortable: true,
+          tdClass: 'align-middle'
         },
         {
           key: 'div',
           label: 'Color',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
         },
         {
           key: 'div2',
           label: 'Texto',
-          class: 'text-center'
+          class: 'text-center',
+          tdClass: 'align-middle'
+        },
+        {
+          key: 'acciones',
+          class: 'text-right'
         }
       ]
     }

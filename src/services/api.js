@@ -3,11 +3,11 @@ import Store from '../store/store'
 
 import { LOCAL_STORAGE_VARS, getPersistedValue, removePersistedValues } from '../utils'
 
-const HTTP = axios.create({
+const API = axios.create({
   baseURL: process.env.VUE_APP_ENDPOINT
 })
 
-HTTP.interceptors.response.use(
+API.interceptors.response.use(
   (response) => {
     Store.dispatch('RESET_ERROR')
     return response
@@ -20,7 +20,7 @@ HTTP.interceptors.response.use(
   }
 )
 
-HTTP.interceptors.request.use(
+API.interceptors.request.use(
   (config) => {
     const token = getPersistedValue(LOCAL_STORAGE_VARS.TOKEN)
     config.headers['Authorization'] = `Bearer ${token}`
@@ -29,4 +29,4 @@ HTTP.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-export { HTTP as default }
+export { API as default }

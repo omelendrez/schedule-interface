@@ -1,7 +1,7 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchProfiles () {
-    return HTTP.get('profile')
+  fetchProfiles() {
+    return API.get('profile')
   }
 }

@@ -1,29 +1,29 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchTimeoffs () {
-    return HTTP.get('timeoff')
+  fetchTimeoffs() {
+    return API.get('timeoff')
   },
-  fetchAll () {
-    return HTTP.get('timeoff/all')
+  fetchAll() {
+    return API.get('timeoff/all')
   },
-  saveTimeoff (payload) {
+  saveTimeoff(payload) {
     if (payload.id === 0) {
-      return HTTP.post('timeoff', payload)
+      return API.post('timeoff', payload)
     } else {
-      return HTTP.put(`timeoff/${payload.id}`, payload)
+      return API.put(`timeoff/${payload.id}`, payload)
     }
   },
-  findByEmployee (payload) {
-    return HTTP.get(`timeoff/${payload}/employee`)
+  findByEmployee(payload) {
+    return API.get(`timeoff/${payload}/employee`)
   },
-  findByDate (payload) {
-    return HTTP.get(`timeoff/${payload}/date`)
+  findByDate(payload) {
+    return API.get(`timeoff/${payload}/date`)
   },
-  findByPeriod (payload) {
-    return HTTP.get(`timeoff/${payload.fromDate}/${payload.toDate}/${payload.absenteeismId}/${payload.sortBy}/period`)
+  findByPeriod(payload) {
+    return API.get(`timeoff/${payload.fromDate}/${payload.toDate}/${payload.absenteeismId}/${payload.sortBy}/period`)
   },
-  deleteTimeoff (payload) {
-    return HTTP.delete(`timeoff/${payload}`)
+  deleteTimeoff(payload) {
+    return API.delete(`timeoff/${payload}`)
   }
 }

@@ -1,7 +1,7 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchStatus () {
-    return HTTP.get('status')
+  fetchStatus() {
+    return API.get('status')
   }
 }

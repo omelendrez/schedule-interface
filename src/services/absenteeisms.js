@@ -1,17 +1,17 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchAbsenteeisms () {
-    return HTTP.get('absenteeism')
+  fetchAbsenteeisms() {
+    return API.get('absenteeism')
   },
-  saveAbsenteeism (payload) {
+  saveAbsenteeism(payload) {
     if (payload.id === 0) {
-      return HTTP.post('absenteeism', payload)
+      return API.post('absenteeism', payload)
     } else {
-      return HTTP.put(`absenteeism/${payload.id}`, payload)
+      return API.put(`absenteeism/${payload.id}`, payload)
     }
   },
-  deleteAbsenteeism (payload) {
-    return HTTP.delete(`absenteeism/${payload}`)
+  deleteAbsenteeism(payload) {
+    return API.delete(`absenteeism/${payload}`)
   }
 }

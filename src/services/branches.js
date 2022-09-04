@@ -1,17 +1,17 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchBranches () {
-    return HTTP.get('branch')
+  fetchBranches() {
+    return API.get('branch')
   },
-  saveBranch (payload) {
+  saveBranch(payload) {
     if (payload.id === 0) {
-      return HTTP.post('branch', payload)
+      return API.post('branch', payload)
     } else {
-      return HTTP.put(`branch/${payload.id}`, payload)
+      return API.put(`branch/${payload.id}`, payload)
     }
   },
-  deleteBranch (payload) {
-    return HTTP.delete(`branch/${payload}`)
+  deleteBranch(payload) {
+    return API.delete(`branch/${payload}`)
   }
 }

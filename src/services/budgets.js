@@ -1,18 +1,18 @@
-import HTTP from './http-common'
+import API from './api'
 
 export default {
-  fetchBudgets () {
-    return HTTP.get('budget')
+  fetchBudgets() {
+    return API.get('budget')
   },
-  saveBudget (payload) {
+  saveBudget(payload) {
     if (payload.id === 0) {
-      return HTTP.post('budget', payload)
+      return API.post('budget', payload)
     } else {
-      return HTTP.put(`budget/${payload.id}`, payload)
+      return API.put(`budget/${payload.id}`, payload)
     }
   },
-  deleteBudget (payload) {
-    return HTTP.delete(`budget/${payload}`)
+  deleteBudget(payload) {
+    return API.delete(`budget/${payload}`)
   },
   weekdays: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 }
