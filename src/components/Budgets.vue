@@ -25,8 +25,7 @@
     <b-modal id="modal-center" centered title="Borrar Presupuesto" v-model="show" @ok="handleOk" ok-title="Si. Eliminar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea borrar el presupuesto del día <strong>{{ selectedItem.date }} por {{
-          selectedItem.hours
-      }} horas</strong>?</p>
+      selectedItem.hours }} horas</strong>?</p>
     </b-modal>
   </b-container>
 </template>
@@ -76,16 +75,6 @@ export default {
           key: 'branch.name',
           label: 'Local',
           variant: 'info',
-          class: 'text-center'
-        },
-        {
-          key: 'created_at',
-          label: 'Creado',
-          class: 'text-center'
-        },
-        {
-          key: 'updated_at',
-          label: 'Modificado',
           class: 'text-center'
         },
         {

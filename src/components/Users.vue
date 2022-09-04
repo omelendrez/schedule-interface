@@ -24,8 +24,7 @@
     <b-modal id="modal-center" centered title="Inactivar Usuario" v-model="show" @ok="handleOk" ok-title="Si. Inactivar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea inactivar al usuario <strong>{{ selectedItem.user_name }} ({{
-          selectedItem.full_name
-      }})</strong>?</p>
+      selectedItem.full_name }})</strong>?</p>
     </b-modal>
   </b-container>
 </template>
@@ -70,16 +69,6 @@ export default {
         {
           key: 'status.name',
           label: 'Status',
-          class: 'text-center'
-        },
-        {
-          key: 'created_at',
-          label: 'Creado',
-          class: 'text-center'
-        },
-        {
-          key: 'updated_at',
-          label: 'Modificado',
           class: 'text-center'
         }
       ]

@@ -54,16 +54,6 @@ export default {
           key: 'status.name',
           label: 'Status',
           class: 'text-center'
-        },
-        {
-          key: 'created_at',
-          label: 'Creado',
-          class: 'text-center'
-        },
-        {
-          key: 'updated_at',
-          label: 'Modificado',
-          class: 'text-center'
         }
       ]
     }

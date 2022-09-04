@@ -47,16 +47,6 @@ export default {
           key: 'name',
           label: 'Nombre',
           sortable: true
-        },
-        {
-          key: 'created_at',
-          label: 'Creado',
-          class: 'text-center'
-        },
-        {
-          key: 'updated_at',
-          label: 'Modificado',
-          class: 'text-center'
         }
       ]
     }

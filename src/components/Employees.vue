@@ -14,22 +14,22 @@
     <b-checkbox v-model="onlyActive" name="check-button" class="m-2"> Sólo registros activos </b-checkbox>
     <b-table hover outlined small :items="records.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
-      <template slot="fullName" slot-scope="cell"> {{  cell.item["badge"]  }} - {{  cell.item["last_name"]  }}, {{
-         cell.item["first_name"]  }} </template>
+      <template slot="fullName" slot-scope="cell"> {{ cell.item["badge"] }} - {{ cell.item["last_name"] }}, {{
+      cell.item["first_name"] }} </template>
       <template slot="acciones" slot-scope="cell">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">
           Eliminar</b-btn>
         <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
       </template>
-      <template slot="table-caption"> {{  records.count  }} registros </template>
+      <template slot="table-caption"> {{ records.count }} registros </template>
     </b-table>
     <b-pagination :total-rows="records.count" :per-page="perPage" v-model="currentPage" />
-    <b-alert variant="danger" :show="errorShow">{{  errorMessage  }}</b-alert>
+    <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
     <b-modal id="modal-center" centered title="Eliminar Empleado" v-model="show" @ok="handleOk" ok-title="Si. Eliminar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
-      <p class="my-4">Está seguro que desea eliminar al empleado <strong>{{  selectedItem.badge  }} - {{
-           selectedItem.first_name  }} {{  selectedItem.last_name  }}</strong>?</p>
+      <p class="my-4">Está seguro que desea eliminar al empleado <strong>{{ selectedItem.badge }} - {{
+      selectedItem.first_name }} {{ selectedItem.last_name }}</strong>?</p>
     </b-modal>
   </b-container>
 </template>
@@ -74,16 +74,6 @@ export default {
         {
           key: 'status.name',
           label: 'Status',
-          class: 'text-center'
-        },
-        {
-          key: 'created_at',
-          label: 'Creado',
-          class: 'text-center'
-        },
-        {
-          key: 'updated_at',
-          label: 'Modificado',
           class: 'text-center'
         },
         {
