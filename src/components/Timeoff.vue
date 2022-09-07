@@ -73,34 +73,23 @@ export default {
       this.$router.push({ name: 'Timeoffs' })
     },
     employees() {
-      const employees = this.employees.rows
-      const options = []
-      for (let i = 0; i < employees.length; i++) {
-        const emp = employees[i]
-        if (emp.status_id === 1) {
-          options.push({
-            value: emp.id,
-            text:
-              emp.badge +
-              ' - ' +
-              emp.last_name +
-              ', ' +
-              emp.first_name
-          })
-        }
-      }
+      // Only active
+      const options = this.employees.rows
+        .filter((e) => e.status_id === 1)
+        .map((e) => ({
+          value: e.id,
+          text: `${e.last_name}, ${e.first_name}`
+        }))
       this.employeesOptions = options
     },
     absenteeisms() {
-      const absenteeisms = this.absenteeisms.rows
-      const options = []
-      for (let i = 0; i < absenteeisms.length; i++) {
-        options.push({
-          value: absenteeisms[i].id,
-          text:
-            absenteeisms[i].name
-        })
-      }
+      // Only active
+      const options = this.absenteeisms.rows
+        .filter((a) => a.status_id === 1)
+        .map((a) => ({
+          value: a.id,
+          text: a.name
+        }))
       this.absenteeismsOptions = options
     }
   },

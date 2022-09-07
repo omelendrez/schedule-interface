@@ -19,12 +19,12 @@
         <div class="buttons">
           <b-button type="submit" variant="primary">Generar</b-button>
         </div>
-        <b-alert variant="danger" :show="errorShow">{{  errorMessage  }}</b-alert>
+        <b-alert variant="danger" :show="errorShow">{{ errorMessage }}</b-alert>
       </b-form>
     </b-container>
     <b-container class="reportData" v-if="reportResults">
-      <h2>Local: {{  branches.find((b) => b.value === form.branchId).text  }}</h2>
-      <h3>Total de horas consumidas desde el {{  dateFrom  }} al {{  dateTo  }}</h3>
+      <h2>Local: {{ branches.find((b) => b.value === form.branchId).text }}</h2>
+      <h3>Total de horas consumidas desde el {{ dateFrom }} al {{ dateTo }}</h3>
       <div class="buttons">
         <b-button type="button" @click="back" variant="primary" class="no-print">Cambiar fechas</b-button>
         <b-button type="button" @click="print" variant="success" class="float-right no-print">Imprimir</b-button>
@@ -108,16 +108,14 @@ export default {
       return Store.state.results
     },
     branches() {
+      // Only active
       const branches = Store.state.branches.rows
-      const options = []
-      if (branches && branches.length) {
-        for (let i = 0; i < branches.length; i++) {
-          options.push({
-            value: branches[i].id,
-            text: branches[i].name
-          })
-        }
-      }
+      const options = branches
+        .filter((b) => b.status_id === 1)
+        .map((b) => ({
+          value: b.id,
+          text: b.name
+        }))
       return options
     }
   },

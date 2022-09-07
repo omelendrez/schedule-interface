@@ -11,7 +11,8 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-table hover outlined small :items="branches.rows" :fields="fields" :filter="filter" :per-page="perPage"
+    <b-checkbox v-model="onlyActive" name="check-button" class="m-2"> Sólo registros activos </b-checkbox>
+    <b-table hover outlined small :items="records.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell" v-if="isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
@@ -19,9 +20,9 @@
           Inactivar</b-btn>
         <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
       </template>
-      <template slot="table-caption"> {{ branches.count }} registros </template>
+      <template slot="table-caption"> {{ records.count }} registros </template>
     </b-table>
-    <b-pagination :total-rows="branches.count" :per-page="perPage" v-model="currentPage" />
+    <b-pagination :total-rows="records.count" :per-page="perPage" v-model="currentPage" />
     <b-modal id="modal-center" centered title="Inactivar local" v-model="show" @ok="handleOk" ok-title="Si. Inactivar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea inactivar el local <strong>{{ selectedItem.name }} </strong>?</p>
@@ -41,6 +42,8 @@ export default {
       currentPage: 1,
       filter: null,
       show: false,
+      onlyActive: true,
+      records: { count: 0, rows: [] },
       selectedItem: {
         name: ''
       },
@@ -86,6 +89,12 @@ export default {
     },
     handleOk() {
       Store.dispatch('DELETE_BRANCH', this.selectedItem)
+    },
+    applyFilter() {
+      const { rows } = Store.state.branches
+      const newRows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
+      this.records.rows = newRows
+      this.records.count = newRows.length
     }
   },
   watch: {
@@ -95,6 +104,12 @@ export default {
         return
       }
       Store.dispatch('LOAD_BRANCHES')
+    },
+    onlyActive() {
+      this.applyFilter(Store.state.branches)
+    },
+    branches() {
+      this.applyFilter(Store.state.branches)
     }
   },
   computed: {

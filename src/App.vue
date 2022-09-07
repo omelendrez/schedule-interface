@@ -105,6 +105,14 @@ body {
   margin-top: 60px;
 }
 
+select {
+  font-size: 16px;
+}
+
+select option {
+  padding-bottom: 6px;
+}
+
 .buttons {
   border-top: 1px solid rgba(0, 0, 0, .1);
   padding-top: 1rem;

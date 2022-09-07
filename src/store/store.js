@@ -258,8 +258,9 @@ export default new Vuex.Store({
       })
     },
 
-    async [types.LOAD_ALL_TIMEOFFS]({ commit }, payload) {
-      const allTimeoffs = await Timeoffs.fetchAll()
+    async [types.LOAD_ALL_TIMEOFFS_BY_DATE]({ commit }, date) {
+      // Personal de franco para ese día
+      const allTimeoffs = await Timeoffs.fetchAllByDate(date)
       commit(types.SET_ALL_TIMEOFFS, {
         payload: allTimeoffs.data
       })

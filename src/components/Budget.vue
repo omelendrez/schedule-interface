@@ -1,7 +1,7 @@
 <template>
   <b-container class="budget">
     <h1>Presupuesto</h1>
-    <div class="text-right">
+    <div class="text-right mb-4">
       <b-btn variant="primary" @click.stop="goProgram">Programa</b-btn>
       <b-btn variant="success" @click.stop="goGrid">Grilla</b-btn>
     </div>
@@ -71,14 +71,14 @@ export default {
       return Store.state.record
     },
     branches() {
+      // Only active
       const branches = Store.state.branches.rows
-      const options = []
-      for (let i = 0; i < branches.length; i++) {
-        options.push({
-          value: branches[i].id,
-          text: branches[i].name
-        })
-      }
+      const options = branches
+        .filter((b) => b.status_id === 1)
+        .map((b) => ({
+          value: b.id,
+          text: b.name
+        }))
       return options
     }
   },

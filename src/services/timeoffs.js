@@ -4,8 +4,8 @@ export default {
   fetchTimeoffs() {
     return API.get('timeoff')
   },
-  fetchAll() {
-    return API.get('timeoff/all')
+  fetchAllByDate(date) {
+    return API.get(`timeoff/all?date=${date}`)
   },
   saveTimeoff(payload) {
     if (payload.id === 0) {
@@ -17,11 +17,11 @@ export default {
   findByEmployee(payload) {
     return API.get(`timeoff/${payload}/employee`)
   },
-  findByDate(payload) {
-    return API.get(`timeoff/${payload}/date`)
+  findByDate(date) {
+    return API.get(`timeoff/${date}/date`)
   },
-  findByPeriod(payload) {
-    return API.get(`timeoff/${payload.fromDate}/${payload.toDate}/${payload.absenteeismId}/${payload.sortBy}/period`)
+  findByPeriod({ fromDate, toDate, absenteeismId, sortBy }) {
+    return API.get(`timeoff/${fromDate}/${toDate}/${absenteeismId}/${sortBy}/period`)
   },
   deleteTimeoff(payload) {
     return API.delete(`timeoff/${payload}`)

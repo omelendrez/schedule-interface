@@ -11,16 +11,17 @@
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
-    <b-table hover outlined small :items="users.rows" :fields="fields" head-variant="light">
+    <b-checkbox v-model="onlyActive" name="check-button" class="m-2"> Sólo registros activos </b-checkbox>
+    <b-table hover outlined small :items="records.rows" :fields="fields" head-variant="light">
       <template slot="acciones" slot-scope="cell" v-if="cell.item.id !== user.id || isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">
           Inactivar</b-btn>
         <b-btn size="sm" v-else variant="success" @click.stop="deleteItem(cell.item, 0)">Reactivar</b-btn>
       </template>
-      <template slot="table-caption"> {{ users.count }} registros </template>
+      <template slot="table-caption"> {{ records.count }} registros </template>
     </b-table>
-    <b-pagination :total-rows="users.count" :per-page="perPage" v-model="currentPage" />
+    <b-pagination :total-rows="records.count" :per-page="perPage" v-model="currentPage" />
     <b-modal id="modal-center" centered title="Inactivar Usuario" v-model="show" @ok="handleOk" ok-title="Si. Inactivar"
       cancel-title="No. Dejar como está" ok-variant="danger" cancel-variant="success">
       <p class="my-4">Está seguro que desea inactivar al usuario <strong>{{ selectedItem.user_name }} ({{
@@ -41,6 +42,8 @@ export default {
       currentPage: 1,
       filter: null,
       show: false,
+      onlyActive: true,
+      records: { count: 0, rows: [] },
       selectedItem: {
         user_name: '',
         full_name: ''
@@ -110,11 +113,23 @@ export default {
       } else {
         this.handleOk()
       }
+    },
+    applyFilter() {
+      const { rows } = Store.state.users
+      const newRows = this.onlyActive ? rows.filter((e) => e.status_id === 1) : rows
+      this.records.rows = newRows
+      this.records.count = newRows.length
     }
   },
   watch: {
     results() {
       Store.dispatch('LOAD_USERS')
+    },
+    onlyActive() {
+      this.applyFilter(Store.state.users)
+    },
+    users() {
+      this.applyFilter(Store.state.users)
     }
   },
   computed: {
