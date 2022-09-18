@@ -7,12 +7,12 @@
     </div>
     <b-form-group class="filter-form">
       <b-input-group>
-        <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
+        <b-form-input v-model="filter" placeholder="Ingrese el dato a buscar" />
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
     <b-checkbox v-model="onlyActive" name="check-button" class="m-2"> Sólo registros activos </b-checkbox>
-    <b-table hover outlined small :items="records.rows" :fields="fields" head-variant="light">
+    <b-table hover outlined small :items="records.rows" :fields="fields" head-variant="light" :filter="filter">
       <template slot="acciones" slot-scope="cell" v-if="cell.item.id !== user.id || isAdmin">
         <b-btn size="sm" variant="info" @click.stop="editItem(cell.item)">Editar</b-btn>
         <b-btn size="sm" v-if="cell.item.status_id === 1" variant="danger" @click.stop="deleteItem(cell.item, 1)">

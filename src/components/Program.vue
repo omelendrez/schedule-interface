@@ -12,7 +12,7 @@
       totalScheduledHours }} </h5>
       <b-form-group class="filter-form no-print">
         <b-input-group>
-          <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
+          <b-form-input v-model="filter" placeholder="Ingrese el dato a buscar" />
           <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
         </b-input-group>
       </b-form-group>

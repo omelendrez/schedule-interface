@@ -8,10 +8,17 @@
     </div>
     <b-form-group class="filter-form">
       <b-input-group>
-        <b-form-input v-model="filter" placeholder="Entre el dato a buscar" />
+        <b-form-input v-model="filter" type="text" placeholder="Ingrese el dato a buscar" debounce="500" />
         <b-btn :disabled="!filter" @click="filter = ''" variant="info" class="reset-button">Reset</b-btn>
       </b-input-group>
     </b-form-group>
+    <div class="calendar" v-if="date">
+      <b-btn size="sm" variant="outline-info" @click="goPrevMonth">{{this.monthName(date.prevMonth)}} {{date.prevYear}}
+      </b-btn>
+      <div class="current">{{this.monthName(date.month)}} {{date.year}}</div>
+      <b-btn size="sm" variant="outline-info" @click="goNextMonth">{{this.monthName(date.nextMonth)}} {{date.nextYear}}
+      </b-btn>
+    </div>
     <b-table hover outlined small :items="timeoffs.rows" :fields="fields" :filter="filter" :per-page="perPage"
       :current-page="currentPage" head-variant="light">
       <template slot="acciones" slot-scope="cell">
@@ -32,6 +39,9 @@
 <script>
 import Store from '../store/store'
 import Header from './Header'
+import { DateHandler } from '../utils'
+
+const CalendarData = new DateHandler()
 
 export default {
   name: 'Timeoffs',
@@ -41,6 +51,7 @@ export default {
       currentPage: 1,
       filter: null,
       show: false,
+      date: null,
       selectedItem: {
         date: ''
       },
@@ -104,6 +115,22 @@ export default {
     },
     printReport() {
       this.$router.push({ name: 'TimeoffReport' })
+    },
+    monthName(month) {
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Deciembre']
+      return monthNames[month - 1]
+    },
+    goPrevMonth() {
+      CalendarData.setPrevMonth()
+      this.loadData()
+    },
+    goNextMonth() {
+      CalendarData.setNextMonth()
+      this.loadData()
+    },
+    loadData() {
+      this.date = CalendarData.getDateInfo()
+      Store.dispatch('LOAD_TIMEOFFS', { from: this.date.from, to: this.date.to })
     }
   },
   watch: {
@@ -112,7 +139,7 @@ export default {
       if (results.error) {
         return
       }
-      Store.dispatch('LOAD_TIMEOFFS')
+      this.loadData()
     }
   },
   computed: {
@@ -131,8 +158,9 @@ export default {
       this.$router.push({ name: 'Login' })
       return
     }
+    this.date = CalendarData.getDateInfo()
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
-    Store.dispatch('LOAD_TIMEOFFS')
+    this.loadData()
     Store.dispatch('LOAD_EMPLOYEES')
   }
 }
@@ -156,5 +184,21 @@ export default {
 
 .reset-button {
   margin-left: 10px;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 1rem;
+}
+
+.calendar .current {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0 1rem;
 }
 </style>

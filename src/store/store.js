@@ -379,7 +379,7 @@ export default new Vuex.Store({
     },
 
     async [types.LOAD_TIMEOFFS]({ commit }, payload) {
-      const timeoffs = await Timeoffs.fetchTimeoffs()
+      const timeoffs = await Timeoffs.fetchTimeoffs(payload)
       commit(types.SET_TIMEOFFS, {
         payload: timeoffs.data
       })

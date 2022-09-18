@@ -1,8 +1,9 @@
 import API from './api'
 
 export default {
-  fetchTimeoffs() {
-    return API.get('timeoff')
+  fetchTimeoffs(payload) {
+    const { from, to } = payload
+    return API.get(`timeoff?date_from=${from}&date_to=${to}`)
   },
   fetchAllByDate(date) {
     return API.get(`timeoff/all?date=${date}`)
