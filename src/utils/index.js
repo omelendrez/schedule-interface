@@ -61,7 +61,7 @@ export class DateHandler {
     }
     const from = this.formatDate(year, month, day)
     const to = this.formatDate(year, month, lastDay)
-    console.log(from, to)
+
     return { year, month, day, lastDay, nextYear, nextMonth, prevYear, prevMonth, from, to }
   }
 
