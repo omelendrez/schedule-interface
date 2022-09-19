@@ -138,7 +138,7 @@ export default {
       }
       persistValue(LOCAL_STORAGE_VARS.GRID, data)
       Store.dispatch('LOAD_SCHEDULES', data)
-      Store.dispatch('LOAD_TIMEOFFS_BY_DATE', this.item._date)
+      Store.dispatch('LOAD_TIMEOFFS_BY_DATE', data.date)
     }
   },
   watch: {

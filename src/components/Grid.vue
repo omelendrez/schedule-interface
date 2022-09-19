@@ -402,7 +402,9 @@ export default {
     }
     Store.dispatch('LOAD_POSITIONS')
     Store.dispatch('SET_MENU_OPTION', this.$route.path)
-    Store.dispatch('LOAD_ALL_TIMEOFFS_BY_DATE', this.record._date)
+    const prevData = getPersistedValue(LOCAL_STORAGE_VARS.GRID)
+    const date =  this.record._date || prevData.date
+    Store.dispatch('LOAD_ALL_TIMEOFFS_BY_DATE', date)
     this.selectedPosition.name = this.text
   }
 }
