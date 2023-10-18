@@ -10,10 +10,10 @@
       <h4>Grilla de programación {{ budget["branch.name"] }} para el {{ budget["weekday"] }} {{ budget["date"] }}</h4>
       <h5 class="no-print">Total horas presupuesto: {{ totalHoursBudget }} / Total horas asignadas: {{
       totalScheduledHours }}</h5>
-      <div @click="showPositions = true" class="position-group no-print">
+      <div class="position-group no-print">
         <div class="position">Sector seleccionado:</div>
-        <div class="position-color" v-bind:style="{ background: selectedPosition.color }">&nbsp;</div>
-        <div class="position-name">{{ selectedPosition.name }}</div>
+        <div @click="showPositions = true" class="position-color" v-bind:style="{ background: selectedPosition.color }">&nbsp;</div>
+        <div @click="showPositions = true" class="position-name">{{ selectedPosition.name }}</div>
         <div class="pull-right error" :show="showError">{{ errorMessage }}</div>
       </div>
       <b-table small bordered :items="scheduleRows" @click.native="selectCell($event)" :fields="fields"
@@ -458,14 +458,24 @@ export default {
   display: inline-block;
 }
 
+.position-color,
 .position-name {
+  cursor: pointer;
   display: inline-block;
-  font-weight: bold;
-  font-size: 1.2em;
 }
 
-.position-group {
-  cursor: pointer;
+.position-color {
+  width: 21px;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #ccc;
+}
+
+.position-name {
+  width: fit-content;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .error {
